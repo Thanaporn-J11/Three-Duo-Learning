@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'fruit_vocabulary_screen.dart'; // 1. หน้าคำศัพท์หมวดผลไม้
-import 'animal_vocabulary_screen.dart'; // 2. หน้าคำศัพท์หมวดสัตว์
-import 'color_vocabulary_screen.dart'; // 3. หน้าคำศัพท์หมวดสี
-import 'clothes_vocabulary_screen.dart'; // 4. หน้าคำศัพท์หมวดเสื้อผ้า
-import 'family_vocabulary_screen.dart'; // 5. หน้าคำศัพท์หมวดครอบครัว
-import 'vehicle_vocabulary_screen.dart'; // 6. หน้าคำศัพท์หมวดยานพาหนะ
-import 'career_vocabulary_screen.dart'; // 7. หน้าคำศัพท์หมวดอาชีพ
-import 'sport_vocabulary_screen.dart'; // 8. หน้าคำศัพท์หมวดกีฬา
-import 'day_vocabulary_screen.dart'; // 9. หน้าคำศัพท์หมวดวัน
-import 'month_vocabulary_screen.dart'; // 10. หน้าคำศัพท์หมวดเดือน
-import 'body_vocabulary_screen.dart'; // 11. หน้าคำศัพท์หมวดร่างกาย
-import 'number_vocabulary_screen.dart'; // 12. หน้าคำศัพท์หมวดตัวเลข
-import 'place_vocabulary_screen.dart'; // 13. หน้าคำศัพท์หมวดสถานที่
+import 'vocabulary/fruit_vocabulary_screen.dart'; // 1. หน้าคำศัพท์หมวดผลไม้
+import 'vocabulary/animal_vocabulary_screen.dart'; // 2. หน้าคำศัพท์หมวดสัตว์
+import 'vocabulary/color_vocabulary_screen.dart'; // 3. หน้าคำศัพท์หมวดสี
+import 'vocabulary/clothes_vocabulary_screen.dart'; // 4. หน้าคำศัพท์หมวดเสื้อผ้า
+import 'vocabulary/family_vocabulary_screen.dart'; // 5. หน้าคำศัพท์หมวดครอบครัว
+import 'vocabulary/vehicle_vocabulary_screen.dart'; // 6. หน้าคำศัพท์หมวดยานพาหนะ
+import 'vocabulary/career_vocabulary_screen.dart'; // 7. หน้าคำศัพท์หมวดอาชีพ
+import 'vocabulary/sport_vocabulary_screen.dart'; // 8. หน้าคำศัพท์หมวดกีฬา
+import 'vocabulary/day_vocabulary_screen.dart'; // 9. หน้าคำศัพท์หมวดวัน
+import 'vocabulary/month_vocabulary_screen.dart'; // 10. หน้าคำศัพท์หมวดเดือน
+import 'vocabulary/body_vocabulary_screen.dart'; // 11. หน้าคำศัพท์หมวดร่างกาย
+import 'vocabulary/number_vocabulary_screen.dart'; // 12. หน้าคำศัพท์หมวดตัวเลข
+import 'vocabulary/place_vocabulary_screen.dart'; // 13. หน้าคำศัพท์หมวดสถานที่
 
 // Model ข้อมูลหมวดหมู่
 class CategoryItem {

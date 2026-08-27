@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/vocabulary/category_screen.dart';
+import 'screens/category_vocabulary_screen.dart';
 
 void main() {
   runApp(const MyApp());

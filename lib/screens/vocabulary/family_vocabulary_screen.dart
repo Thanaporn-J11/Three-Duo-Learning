@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import '../quiz_vocabulary/graduation_screen.dart';
+import '../../models/quiz_vocabulary_item.dart';
 
 class FamilyItem {
   final String word;
@@ -27,7 +29,7 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
   late FlutterTts flutterTts;
   bool isSpeaking = false;
 
-  // 👨‍👩‍👧‍👦 ข้อมูลคำศัพท์หมวดครอบครัว (Family) ทั้ง 16 คำตรงตามไฟล์รูปภาพ
+  // 👨‍👩‍👧‍👦 ข้อมูลคำศัพท์หมวดครอบครัว (Family) ทั้ง 16 คำ
   final List<FamilyItem> familyList = [
     FamilyItem(
       word: 'Baby',
@@ -156,11 +158,71 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
     super.dispose();
   }
 
+  // สร้างแบบทดสอบสุ่ม 10 ข้อสำหรับหมวดครอบครัว
+  List<QuizItem> _generateFamilyQuiz() {
+    final List<QuizItem> quizList = [];
+    final List<FamilyItem> shuffledList = List<FamilyItem>.from(familyList)..shuffle();
+
+    for (int i = 0; i < 10 && i < shuffledList.length; i++) {
+      final current = shuffledList[i];
+      final otherOptions = familyList.where((item) => item.word != current.word).toList()..shuffle();
+
+      if (i % 2 == 0) {
+        // รูปแบบที่ 1: ดูรูปภาพ -> เลือกคำศัพท์
+        final wordOptions = [
+          current.word,
+          otherOptions[0].word,
+          otherOptions[1].word,
+          otherOptions[2].word,
+        ]..shuffle();
+
+        quizList.add(QuizItem(
+          questionText: 'รูปภาพนี้ตรงกับคำศัพท์ใด',
+          questionImage: current.imagePath,
+          correctWord: current.word,
+          correctTranslation: current.translation,
+          correctImage: current.imagePath,
+          options: wordOptions,
+          isImageOption: false,
+        ));
+      } else {
+        // รูปแบบที่ 2: ดูคำศัพท์ -> เลือกรูปภาพ
+        final imageOptions = [
+          current.imagePath,
+          otherOptions[0].imagePath,
+          otherOptions[1].imagePath,
+          otherOptions[2].imagePath,
+        ]..shuffle();
+
+        quizList.add(QuizItem(
+          questionText: 'รูปภาพใด คือ ${current.word}',
+          targetWord: current.word,
+          correctWord: current.word,
+          correctTranslation: current.translation,
+          correctImage: current.imagePath,
+          options: imageOptions,
+          isImageOption: true,
+        ));
+      }
+    }
+    quizList.shuffle();
+    return quizList;
+  }
+
   void _nextWord() {
     if (currentIndex < familyList.length - 1) {
       setState(() => currentIndex++);
     } else {
-      _showCompletionDialog();
+      // เปิดหน้า GraduationScreen เพื่อเตรียมเริ่มทำแบบฝึกหัด
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GraduationScreen(
+            categoryTitle: 'ครอบครัว',
+            quizItems: _generateFamilyQuiz(),
+          ),
+        ),
+      );
     }
   }
 
@@ -168,101 +230,6 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
     if (currentIndex > 0) {
       setState(() => currentIndex--);
     }
-  }
-
-  void _showCompletionDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.35),
-      builder: (context) => Dialog(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 170,
-                height: 170,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFE8F5FE),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF0088FF).withOpacity(0.12),
-                      blurRadius: 20,
-                      spreadRadius: 4,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/character/bravo.png',
-                    height: 145,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.stars_rounded, size: 80, color: Color(0xFF0088FF)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 22),
-              const Text(
-                'เยี่ยมมาก!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 26,
-                  color: Color(0xFF0D5C9E),
-                  letterSpacing: -0.3,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'คุณเรียนรู้คำศัพท์ครบทั้ง ${familyList.length} คำแล้ว',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // ปิด Dialog
-                    Navigator.pop(context); // กลับหน้า Category
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0088FF),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    shadowColor: const Color(0xFF0088FF).withOpacity(0.35),
-                  ),
-                  child: const Text(
-                    'กลับหน้าหลัก',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -294,7 +261,7 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
           ),
         ),
         title: const Text(
-          'คำศัพท์หมวดครอบครัว', // ✅ เปลี่ยนเป็นภาษาไทย
+          'คำศัพท์หมวดครอบครัว',
           style: TextStyle(
             color: Color(0xFF0D5C9E),
             fontWeight: FontWeight.w800,
@@ -343,7 +310,7 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
                               ],
                             ),
                             child: const Text(
-                              'คำศัพท์', // ✅ เปลี่ยนเป็นภาษาไทย
+                              'คำศัพท์',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800,
@@ -497,14 +464,14 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
 
                       const Spacer(flex: 2),
 
-                      // ปุ่มย้อนกลับและปุ่มถัดไป (ภาษาไทย)
+                      // ปุ่มย้อนกลับและปุ่มถัดไป
                       Row(
                         children: [
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: currentIndex > 0 ? _previousWord : null,
                               icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                              label: const Text('ย้อนกลับ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)), // ✅ ภาษาไทย
+                              label: const Text('ย้อนกลับ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                               style: OutlinedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: const Color(0xFF0D5C9E),
@@ -523,7 +490,7 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
                                 size: 18,
                               ),
                               label: Text(
-                                currentIndex == familyList.length - 1 ? 'เสร็จสิ้น' : 'ถัดไป', // ✅ ภาษาไทย
+                                currentIndex == familyList.length - 1 ? 'เสร็จสิ้น' : 'ถัดไป',
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               style: ElevatedButton.styleFrom(
