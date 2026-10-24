@@ -618,12 +618,14 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
               _lastSpokenWords = val.recognizedWords;
             });
           },
-          localeId: 'en_US',
-          listenFor: const Duration(seconds: 30),
-          pauseFor: const Duration(seconds: 5),
-          partialResults: true,
-          cancelOnError: false,
-          listenMode: stt.ListenMode.dictation,
+          listenOptions: stt.SpeechListenOptions(
+            localeId: 'en_US',
+            listenFor: const Duration(seconds: 30),
+            pauseFor: const Duration(seconds: 5),
+            partialResults: true,
+            cancelOnError: false,
+            listenMode: stt.ListenMode.dictation,
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -326,9 +326,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
             );
           });
         },
-        localeId: _sourceLanguage == 'Thai' ? 'th_TH' : 'en_US',
-        listenFor: const Duration(seconds: 20),
-        pauseFor: const Duration(seconds: 3),
+        listenOptions: stt.SpeechListenOptions(
+          localeId: _sourceLanguage == 'Thai' ? 'th_TH' : 'en_US',
+          listenFor: const Duration(seconds: 20),
+          pauseFor: const Duration(seconds: 3),
+        ),
       );
     } catch (e) {
       debugPrint('STT Listen Error: $e');
