@@ -299,7 +299,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
     try {
       final int count = await DeviceApiService.logoutOtherDevices();
 
-      if (!mounted) return;
+      if (!context.mounted) return;
       Navigator.of(context).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -314,7 +314,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
 
       await _loadActiveDeviceCount();
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       Navigator.of(context).pop();
 

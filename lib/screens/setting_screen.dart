@@ -249,7 +249,7 @@ class _SettingScreenState extends State<SettingScreen> {
   }) async {
     final hasPin = await ParentPin.hasPin();
 
-    if (!mounted) return;
+    if (!context.mounted) return;
 
     if (!hasPin) {
       _showSetupPinDialog(context, onPinCreated: onSuccess);
@@ -1766,7 +1766,7 @@ Widget _sectionLabel(String text, [IconData? icon]) {
                 // this account's scheduled reminders before leaving.
                 await UserAccountPreferences.logout();
 
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

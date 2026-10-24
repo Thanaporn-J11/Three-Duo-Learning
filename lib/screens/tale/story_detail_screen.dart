@@ -602,6 +602,8 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
         available = await _speech.initialize();
       }
 
+      if (!mounted) return;
+
       if (available) {
         setState(() {
           _isListening = true;
