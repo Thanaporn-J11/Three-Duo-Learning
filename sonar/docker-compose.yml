@@ -1,0 +1,36 @@
+# Local SonarQube.
+#   Main server:      docker compose -f sonar/docker-compose.yml up -d            -> http://localhost:9000
+#   Fallback (10.x):  docker compose -f sonar/docker-compose.yml --profile legacy up -d sonarqube-legacy -> http://localhost:9001
+# First login admin / admin, then change the password.
+services:
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+      - sonar_logs:/opt/sonarqube/logs
+
+  # Older server for the Flutter plugin, in case the plugin does not load on the newest one.
+  sonarqube-legacy:
+    image: sonarqube:10.7.0-community
+    profiles: ["legacy"]
+    ports:
+      - "9001:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonar_legacy_data:/opt/sonarqube/data
+      - sonar_legacy_extensions:/opt/sonarqube/extensions
+      - sonar_legacy_logs:/opt/sonarqube/logs
+
+volumes:
+  sonar_data:
+  sonar_extensions:
+  sonar_logs:
+  sonar_legacy_data:
+  sonar_legacy_extensions:
+  sonar_legacy_logs:

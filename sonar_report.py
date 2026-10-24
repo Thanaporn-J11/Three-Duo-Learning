@@ -86,6 +86,7 @@ def fetch_issues_by_severity(host, token, project_key):
         params = {
             "componentKeys": project_key,
             "severities": sev,
+            "resolved": "false",  # only issues that are still open
             "ps": 1,  # ไม่ต้องดึงรายละเอียดทั้งหมด เอาแค่ total
         }
         resp = requests.get(url, params=params, auth=(token, ""))
@@ -100,6 +101,7 @@ def fetch_top_issues(host, token, project_key, limit=15):
     params = {
         "componentKeys": project_key,
         "ps": limit,
+        "resolved": "false",  # only issues that are still open
         "s": "SEVERITY",
         "asc": "false",
     }
