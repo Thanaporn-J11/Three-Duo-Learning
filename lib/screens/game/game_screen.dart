@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 // Import หน้าเกมเดิม
-import 'flashcards/flashcard_category_screen.dart';
 import 'guess/guess_screen.dart';
 import 'First Letter Game/lettergame.dart';
 import 'AnimalSound/animalsound.dart';
@@ -29,15 +28,6 @@ class _GameScreenState extends State<GameScreen> {
   static const Color headerGreen = Color(0xFF10B981);
 
   final List<Map<String, dynamic>> gameItems = const [
-    {
-      'title': 'Flashcards',
-      'label': 'แฟลชการ์ด',
-      'subtitle': 'พลิกการ์ดจำคำ',
-      'imagePath': 'assets/images/Background/gameflashcard.png',
-      'icon': Icons.style_rounded,
-      'bgGradient': [Color(0xFFFB923C), Color(0xFFEA580C)],
-      'borderDark': Color(0xFF9A3412),
-    },
     {
       'title': 'Guess',
       'label': 'ทายภาพ',
@@ -133,12 +123,6 @@ class _GameScreenState extends State<GameScreen> {
 
   void _navigateToGame(String title) {
     switch (title) {
-      case 'Flashcards':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const FlashcardCategoryScreen()),
-        );
-        break;
       case 'Guess':
         Navigator.push(
           context,
