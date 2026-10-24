@@ -1388,7 +1388,7 @@ class _SettingScreenState extends State<SettingScreen> {
         boxShadow: [
           const BoxShadow(color: Color(0xFF3A63D8), offset: Offset(0, 6)),
           BoxShadow(
-            color: const Color(0xFF4D7CFE).withOpacity(0.30),
+            color: const Color(0xFF4D7CFE).withValues(alpha: 0.30),
             blurRadius: 22,
             offset: const Offset(0, 14),
           ),
@@ -1405,7 +1405,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.12),
+                  color: Colors.white.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1417,7 +1417,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.10),
+                  color: Colors.white.withValues(alpha: 0.10),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1460,7 +1460,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
+                                color: Colors.black.withValues(alpha: 0.15),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
                               ),
@@ -1558,10 +1558,10 @@ Widget _sectionLabel(String text, [IconData? icon]) {
     return BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: color.withOpacity(0.28), width: 2.5),
+      border: Border.all(color: color.withValues(alpha: 0.28), width: 2.5),
       boxShadow: [
         BoxShadow(
-          color: color.withOpacity(0.14),
+          color: color.withValues(alpha: 0.14),
           blurRadius: 14,
           offset: const Offset(0, 7),
         ),
@@ -1574,7 +1574,7 @@ Widget _sectionLabel(String text, [IconData? icon]) {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color.withOpacity(0.30), color.withOpacity(0.10)],
+          colors: [color.withValues(alpha: 0.30), color.withValues(alpha: 0.10)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -1631,7 +1631,7 @@ Widget _sectionLabel(String text, [IconData? icon]) {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

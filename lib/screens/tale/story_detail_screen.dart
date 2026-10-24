@@ -24,8 +24,7 @@ class StoryDetailScreen extends StatefulWidget {
 
   static String? taleIdForTitle(String title) => taleIds[title];
 
-  const StoryDetailScreen({Key? key, this.title = 'Little Red Riding Hood'})
-      : super(key: key);
+  const StoryDetailScreen({super.key, this.title = 'Little Red Riding Hood'});
 
   @override
   State<StoryDetailScreen> createState() => _StoryDetailScreenState();
@@ -819,7 +818,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                   borderRadius: BorderRadius.circular(36),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.45),
+                      color: Colors.black.withValues(alpha: 0.45),
                       blurRadius: 26,
                       offset: const Offset(0, 12),
                     ),
@@ -986,7 +985,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -1076,7 +1075,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -1149,7 +1148,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.35),
+                              color: Colors.black.withValues(alpha: 0.35),
                               blurRadius: 10,
                               offset: const Offset(0, 6),
                             ),
@@ -1190,7 +1189,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.35),
+                              color: Colors.black.withValues(alpha: 0.35),
                               blurRadius: 10,
                               offset: const Offset(0, 6),
                             ),
@@ -1379,7 +1378,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                           borderRadius: BorderRadius.circular(28),
                           boxShadow: [
                             BoxShadow(
-                              color: tvFrameBevel.withOpacity(0.22),
+                              color: tvFrameBevel.withValues(alpha: 0.22),
                               blurRadius: 16,
                               offset: const Offset(0, 8),
                             ),
@@ -1427,7 +1426,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: CircleAvatar(
-                                            backgroundColor: Colors.black.withOpacity(0.6),
+                                            backgroundColor: Colors.black.withValues(alpha: 0.6),
                                             radius: 17,
                                             child: IconButton(
                                               padding: EdgeInsets.zero,
@@ -1520,7 +1519,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.greenAccent.withOpacity(0.5),
+                                                color: Colors.greenAccent.withValues(alpha: 0.5),
                                                 blurRadius: 4,
                                               ),
                                             ],
@@ -2123,8 +2122,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> with WidgetsBindi
 class FullScreenVideoPlayer extends StatefulWidget {
   final VideoPlayerController controller;
 
-  const FullScreenVideoPlayer({Key? key, required this.controller})
-      : super(key: key);
+  const FullScreenVideoPlayer({super.key, required this.controller});
 
   @override
   State<FullScreenVideoPlayer> createState() => _FullScreenVideoPlayerState();

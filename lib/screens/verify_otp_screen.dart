@@ -323,11 +323,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF2E4ECB).withOpacity(0.08),
+                            color: const Color(0xFF2E4ECB).withValues(alpha: 0.08),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -386,7 +386,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           borderRadius: BorderRadius.circular(28),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF4A72FF).withOpacity(0.12),
+                              color: const Color(0xFF4A72FF).withValues(alpha: 0.12),
                               blurRadius: 24,
                               offset: const Offset(0, 8),
                             ),
@@ -549,7 +549,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                   BoxShadow(
                                     color: const Color(
                                       0xFF5559FF,
-                                    ).withOpacity(0.32),
+                                    ).withValues(alpha: 0.32),
                                     blurRadius: 12,
                                     offset: const Offset(0, 5),
                                   ),

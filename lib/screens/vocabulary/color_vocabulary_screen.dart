@@ -12,10 +12,15 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class ColorItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String phonetics;
+  @override
   final String thaiPhonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   ColorItem({
@@ -394,7 +399,7 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -435,12 +440,12 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
               border: Border.all(color: const Color(0xFFB71C1C), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFB71C1C).withOpacity(0.3),
+                  color: const Color(0xFFB71C1C).withValues(alpha: 0.3),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -542,7 +547,7 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -578,7 +583,7 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -653,7 +658,7 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
                                     color: (isSpeaking
                                             ? const Color(0xFF00C853)
                                             : const Color(0xFFE53935))
-                                        .withOpacity(0.35),
+                                        .withValues(alpha: 0.35),
                                     blurRadius: 10,
                                     offset: const Offset(0, 3),
                                   ),

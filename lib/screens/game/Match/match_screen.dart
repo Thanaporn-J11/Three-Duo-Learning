@@ -7,10 +7,10 @@ class MatchScreen extends StatefulWidget {
   final int rewardCoins;
 
   const MatchScreen({
-    Key? key,
+    super.key,
     this.difficulty = GameDifficulty.medium,
     this.rewardCoins = 25,
-  }) : super(key: key);
+  });
 
   @override
   State<MatchScreen> createState() => _MatchScreenState();
@@ -213,7 +213,7 @@ class _MatchScreenState extends State<MatchScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),

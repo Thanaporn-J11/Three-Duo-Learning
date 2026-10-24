@@ -1004,12 +1004,9 @@ class _GuessScreenState extends State<GuessScreen> {
         child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
       );
     }
-    final bool resume = unfinished != null;
-    final Color color = resume ? const Color(0xFFF59E0B) : const Color(0xFF16A34A);
-    final String text =
-        unfinished != null
-            ? 'เล่นต่อ ${unfinished.index + 1} / ${unfinished.total}'
-            : 'ดีที่สุด $best%';
+    // Only an unfinished round reaches this point (finished ones returned above).
+    const Color color = Color(0xFFF59E0B);
+    final String text = 'เล่นต่อ ${unfinished.index + 1} / ${unfinished.total}';
     return Container(
       padding: const EdgeInsets.fromLTRB(6, 3, 8, 3),
       decoration: BoxDecoration(
@@ -1027,7 +1024,7 @@ class _GuessScreenState extends State<GuessScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            resume ? Icons.play_arrow_rounded : Icons.check_circle_rounded,
+            Icons.play_arrow_rounded,
             size: 14,
             color: color,
           ),

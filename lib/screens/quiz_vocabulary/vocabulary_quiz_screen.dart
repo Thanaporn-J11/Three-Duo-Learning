@@ -77,7 +77,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: boxColor.withOpacity(0.35),
+              color: boxColor.withValues(alpha: 0.35),
               blurRadius: 14,
               offset: const Offset(0, 5),
             ),
@@ -177,7 +177,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.14),
+                color: Colors.black.withValues(alpha: 0.14),
                 blurRadius: 22,
                 offset: const Offset(0, -4),
               ),
@@ -193,7 +193,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
                   width: 44,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: mainColor.withOpacity(0.35),
+                    color: mainColor.withValues(alpha: 0.35),
                     borderRadius: BorderRadius.circular(3),
                   ),
                 ),
@@ -211,7 +211,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: mainColor.withOpacity(0.3),
+                            color: mainColor.withValues(alpha: 0.3),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -255,7 +255,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
                   Container(
                     padding: const EdgeInsets.only(bottom: 4),
                     decoration: BoxDecoration(
-                      color: mainColor.withOpacity(0.25),
+                      color: mainColor.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Container(
@@ -414,7 +414,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
               right: -60,
               child: _DecorativeCircle(
                 size: 270,
-                color: Colors.white.withOpacity(0.16),
+                color: Colors.white.withValues(alpha: 0.16),
               ),
             ),
             Positioned(
@@ -422,7 +422,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
               left: -90,
               child: _DecorativeCircle(
                 size: 200,
-                color: Colors.white.withOpacity(0.07),
+                color: Colors.white.withValues(alpha: 0.07),
               ),
             ),
             Positioned(
@@ -430,7 +430,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
               right: -80,
               child: _DecorativeCircle(
                 size: 200,
-                color: const Color(0xFFB3E5FC).withOpacity(0.14),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.14),
               ),
             ),
             Positioned(
@@ -438,7 +438,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
               left: -70,
               child: _DecorativeCircle(
                 size: 260,
-                color: const Color(0xFFB3E5FC).withOpacity(0.16),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.16),
               ),
             ),
 
@@ -645,7 +645,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.12),
+                      color: Colors.black.withValues(alpha: 0.12),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -774,9 +774,9 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
       height: 18,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
+        color: Colors.white.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 1.5),
       ),
       child: LayoutBuilder(
         builder: (context, c) {
@@ -814,7 +814,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFF9800).withOpacity(0.18),
+            color: const Color(0xFFFF9800).withValues(alpha: 0.18),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -884,7 +884,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: _ink.withOpacity(0.08),
+            color: _ink.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -1017,7 +1017,7 @@ class _OptionTile extends StatelessWidget {
           colors: [palette.top, palette.bottom],
         ),
         border: Border.all(
-          color: selected ? Colors.white : Colors.white.withOpacity(0.35),
+          color: selected ? Colors.white : Colors.white.withValues(alpha: 0.35),
           width: selected ? 3.5 : 1.5,
         ),
       );
@@ -1026,7 +1026,7 @@ class _OptionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius - 2),
         color: selected ? palette.tint : Colors.white,
         border: Border.all(
-          color: selected ? palette.strong : palette.top.withOpacity(0.55),
+          color: selected ? palette.strong : palette.top.withValues(alpha: 0.55),
           width: selected ? 4 : 2.5,
         ),
       );
@@ -1048,8 +1048,8 @@ class _OptionTile extends StatelessWidget {
                   BoxShadow(
                     color: selected
                         ? (vivid ? Colors.white : palette.strong)
-                            .withOpacity(0.55)
-                        : Colors.black.withOpacity(0.18),
+                            .withValues(alpha: 0.55)
+                        : Colors.black.withValues(alpha: 0.18),
                     blurRadius: selected ? 16 : 10,
                     offset: Offset(0, selected ? 2 : 5),
                   ),
@@ -1126,9 +1126,9 @@ class _Chunky3DButtonState extends State<_Chunky3DButton> {
     const depth = 5.0;
     final enabled = widget.onTap != null;
 
-    final face = enabled ? widget.color : Colors.white.withOpacity(0.28);
-    final edge = enabled ? widget.edgeColor : Colors.white.withOpacity(0.16);
-    final fg = enabled ? Colors.white : Colors.white.withOpacity(0.85);
+    final face = enabled ? widget.color : Colors.white.withValues(alpha: 0.28);
+    final edge = enabled ? widget.edgeColor : Colors.white.withValues(alpha: 0.16);
+    final fg = enabled ? Colors.white : Colors.white.withValues(alpha: 0.85);
 
     return GestureDetector(
       onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,

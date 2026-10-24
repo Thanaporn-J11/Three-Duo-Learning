@@ -165,11 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   final title = item['title'] as String;
                   final route = item['route'] as String;
                   final paleColor = Color.alphaBlend(
-                    color.withOpacity(.19),
+                    color.withValues(alpha: .19),
                     Colors.white,
                   );
                   final lighterColor = Color.alphaBlend(
-                    color.withOpacity(.11),
+                    color.withValues(alpha: .11),
                     Colors.white,
                   );
 
@@ -188,12 +188,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: color.withOpacity(.34),
+                            color: color.withValues(alpha: .34),
                             width: 1.2,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: color.withOpacity(.16),
+                              color: color.withValues(alpha: .16),
                               blurRadius: 12,
                               offset: const Offset(0, 5),
                             ),
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Icon(
                                 Icons.auto_awesome_rounded,
                                 size: 17,
-                                color: color.withOpacity(.42),
+                                color: color.withValues(alpha: .42),
                               ),
                             ),
                             Positioned(
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 7,
                                 height: 7,
                                 decoration: BoxDecoration(
-                                  color: color.withOpacity(.35),
+                                  color: color.withValues(alpha: .35),
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         backgroundColor: color,
                                         foregroundColor: Colors.white,
                                         elevation: 2,
-                                        shadowColor: color.withOpacity(.25),
+                                        shadowColor: color.withValues(alpha: .25),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(13),
                                         ),

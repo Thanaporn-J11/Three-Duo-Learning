@@ -100,7 +100,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
         _doneSlugs.contains(slug) || (total != null && total > 0 && learned >= total);
     if (finished) return const Color(0xFF22C55E);
     if (_startedSlugs.contains(slug) || learned > 0) return const Color(0xFFFACC15);
-    return Colors.white.withOpacity(0.85);
+    return Colors.white.withValues(alpha: 0.85);
   }
 
   Future<void> _loadCategories() async {
@@ -435,7 +435,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF2563EB).withOpacity(0.3),
+                                color: const Color(0xFF2563EB).withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 3),
                               ),
@@ -488,7 +488,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: item.cardColor.withOpacity(0.35),
+                                color: item.cardColor.withValues(alpha: 0.35),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                               ),
@@ -521,7 +521,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.12),
+                                            color: Colors.black.withValues(alpha: 0.12),
                                             blurRadius: 3,
                                             offset: const Offset(0, 1.5),
                                           ),
@@ -542,7 +542,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
                                             width: 120,
                                             height: 120,
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withOpacity(0.18),
+                                              color: Colors.white.withValues(alpha: 0.18),
                                               shape: BoxShape.circle,
                                             ),
                                           ),
@@ -579,7 +579,7 @@ class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
                                         border: Border.all(color: Colors.white, width: 2.2),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: const Color(0xFFB45309).withOpacity(0.45),
+                                            color: const Color(0xFFB45309).withValues(alpha: 0.45),
                                             blurRadius: 6,
                                             offset: const Offset(0, 3),
                                           ),

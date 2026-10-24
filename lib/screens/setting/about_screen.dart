@@ -22,7 +22,7 @@ class AboutScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0F172A).withOpacity(0.04),
+                color: const Color(0xFF0F172A).withValues(alpha: 0.04),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -71,7 +71,7 @@ class AboutScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2563EB).withOpacity(0.35),
+                      color: const Color(0xFF2563EB).withValues(alpha: 0.35),
                       blurRadius: 24,
                       offset: const Offset(0, 10),
                     ),
@@ -82,7 +82,7 @@ class AboutScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(26),
                       ),
                       child: Container(
@@ -94,7 +94,7 @@ class AboutScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(22),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -126,17 +126,17 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                       ),
                     ),
                     const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
@@ -171,7 +171,7 @@ class AboutScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF64748B).withOpacity(0.06),
+                      color: const Color(0xFF64748B).withValues(alpha: 0.06),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -243,7 +243,7 @@ class AboutScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF64748B).withOpacity(0.06),
+                      color: const Color(0xFF64748B).withValues(alpha: 0.06),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -299,7 +299,7 @@ class AboutScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF475569).withOpacity(0.8),
+                          color: const Color(0xFF475569).withValues(alpha: 0.8),
                         ),
                       ),
                     ],

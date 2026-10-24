@@ -135,7 +135,7 @@ class _ToyCardCategoryState extends State<_ToyCardCategory> {
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                color: themeColor.withOpacity(0.18),
+                color: themeColor.withValues(alpha: 0.18),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -216,7 +216,7 @@ class _ToyCardCategoryState extends State<_ToyCardCategory> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: themeColor.withOpacity(0.4),
+                                  color: themeColor.withValues(alpha: 0.4),
                                   blurRadius: 6,
                                   offset: const Offset(0, 3),
                                 ),
@@ -276,7 +276,7 @@ class _CoinPill extends StatelessWidget {
         border: Border.all(color: const Color(0xFFFFD43B), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

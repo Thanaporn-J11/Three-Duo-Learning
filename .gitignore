@@ -46,3 +46,6 @@ app.*.map.json
 coverage/
 .scannerwork/
 tests.output
+
+analyze.txt
+*.bak_*

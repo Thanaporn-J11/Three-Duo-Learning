@@ -113,12 +113,12 @@ class PhonicsPracticeScreen extends StatefulWidget {
   final List<PhonicsCardItem> items;
 
   const PhonicsPracticeScreen({
-    Key? key,
+    super.key,
     required this.categoryId,
     required this.categoryTitle,
     required this.badgeColor,
     required this.items,
-  }) : super(key: key);
+  });
 
   @override
   State<PhonicsPracticeScreen> createState() => _PhonicsPracticeScreenState();
@@ -227,9 +227,9 @@ class _PhonicsPracticeScreenState extends State<PhonicsPracticeScreen> {
     } else {
       // หมวดที่ 1 (เสียงพยัญชนะ A-Z)
       backgroundGradient = [
-        widget.badgeColor.withOpacity(0.18),
-        widget.badgeColor.withOpacity(0.08),
-        Colors.white.withOpacity(0.95),
+        widget.badgeColor.withValues(alpha: 0.18),
+        widget.badgeColor.withValues(alpha: 0.08),
+        Colors.white.withValues(alpha: 0.95),
       ];
     }
 
@@ -305,7 +305,7 @@ class _PhonicsPracticeScreenState extends State<PhonicsPracticeScreen> {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: theme['bevel']!.withOpacity(0.35),
+                              color: theme['bevel']!.withValues(alpha: 0.35),
                               blurRadius: 8,
                               offset: const Offset(0, 5),
                             ),
@@ -482,14 +482,14 @@ class PhonicsFlashcardDialog extends StatefulWidget {
   final String categoryTitle;
 
   const PhonicsFlashcardDialog({
-    Key? key,
+    super.key,
     required this.items,
     required this.initialIndex,
     required this.toyColors,
     required this.flutterTts,
     required this.categoryId,
     required this.categoryTitle,
-  }) : super(key: key);
+  });
 
   @override
   State<PhonicsFlashcardDialog> createState() => _PhonicsFlashcardDialogState();
@@ -645,7 +645,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
             blurRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             offset: const Offset(0, 10),
             blurRadius: 16,
           ),
@@ -751,10 +751,10 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF8FAFC),
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: cardColor.withOpacity(0.6), width: 2),
+                                border: Border.all(color: cardColor.withValues(alpha: 0.6), width: 2),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: cardColor.withOpacity(0.35),
+                                    color: cardColor.withValues(alpha: 0.35),
                                     offset: const Offset(0, 3.5),
                                     blurRadius: 0,
                                   ),
@@ -818,10 +818,10 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                         decoration: BoxDecoration(
                           color: const Color(0xFFF8FAFC),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: cardColor.withOpacity(0.6), width: 2),
+                          border: Border.all(color: cardColor.withValues(alpha: 0.6), width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: cardColor.withOpacity(0.35),
+                              color: cardColor.withValues(alpha: 0.35),
                               offset: const Offset(0, 3.5),
                               blurRadius: 0,
                             ),
@@ -905,7 +905,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
             width: 170,
             height: 170,
             decoration: BoxDecoration(
-              color: cardColor.withOpacity(0.08),
+              color: cardColor.withValues(alpha: 0.08),
               shape: BoxShape.circle,
               border: Border.all(color: cardColor, width: 3.5),
             ),
@@ -934,7 +934,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
               border: Border.all(color: cardColor, width: 2.5),
               boxShadow: [
                 BoxShadow(
-                  color: bevelColor.withOpacity(0.3),
+                  color: bevelColor.withValues(alpha: 0.3),
                   offset: const Offset(0, 3),
                   blurRadius: 0,
                 ),
@@ -971,7 +971,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: cardColor.withOpacity(0.95),
+                          color: cardColor.withValues(alpha: 0.95),
                           height: 1.15,
                         ),
                       ),
@@ -1011,7 +1011,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                             style: TextStyle(
                               fontSize: 13.5,
                               fontWeight: FontWeight.w800,
-                              color: cardColor.withOpacity(0.9),
+                              color: cardColor.withValues(alpha: 0.9),
                             ),
                           ),
                         ],
@@ -1078,7 +1078,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: bevelColor.withOpacity(0.4),
+                      color: bevelColor.withValues(alpha: 0.4),
                       offset: const Offset(0, 3),
                       blurRadius: 0,
                     ),
@@ -1126,7 +1126,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: bevelColor.withOpacity(0.4),
+                        color: bevelColor.withValues(alpha: 0.4),
                         offset: const Offset(0, 3),
                         blurRadius: 0,
                       ),
@@ -1191,7 +1191,7 @@ class _PhonicsFlashcardDialogState extends State<PhonicsFlashcardDialog>
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
-                    color: bevelColor.withOpacity(0.35),
+                    color: bevelColor.withValues(alpha: 0.35),
                     offset: const Offset(0, 2.5),
                     blurRadius: 0,
                   ),

@@ -90,7 +90,7 @@ String karaokeShareText(SongItem song) =>
 // 2. หน้าเลือกเพลงคาราโอเกะ (Song Selection Screen)
 // -------------------------------------------------------------
 class KaraokeRecordScreen extends StatefulWidget {
-  const KaraokeRecordScreen({Key? key}) : super(key: key);
+  const KaraokeRecordScreen({super.key});
 
   @override
   State<KaraokeRecordScreen> createState() => _KaraokeRecordScreenState();
@@ -597,7 +597,7 @@ class _KaraokeRecordScreenState extends State<KaraokeRecordScreen> {
 class KaraokeDetailScreen extends StatefulWidget {
   final SongItem song;
 
-  const KaraokeDetailScreen({Key? key, required this.song}) : super(key: key);
+  const KaraokeDetailScreen({super.key, required this.song});
 
   @override
   State<KaraokeDetailScreen> createState() => _KaraokeDetailScreenState();

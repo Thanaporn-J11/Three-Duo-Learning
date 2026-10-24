@@ -225,7 +225,7 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF64748B).withOpacity(0.06),
+            color: const Color(0xFF64748B).withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -339,7 +339,7 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0F172A).withOpacity(0.04),
+                color: const Color(0xFF0F172A).withValues(alpha: 0.04),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),

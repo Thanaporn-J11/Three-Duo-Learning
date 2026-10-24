@@ -202,12 +202,12 @@ class CategorySelectionScreen extends StatelessWidget {
                               border: Border.all(color: cardBg, width: 2),
                               boxShadow: [
                                 BoxShadow(
-                                  color: primaryColor.withOpacity(0.25),
+                                  color: primaryColor.withValues(alpha: 0.25),
                                   blurRadius: 0,
                                   offset: const Offset(0, 6),
                                 ),
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
+                                  color: Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 16,
                                   offset: const Offset(0, 8),
                                 ),
@@ -240,7 +240,7 @@ class CategorySelectionScreen extends StatelessWidget {
                                           border: Border.all(color: Colors.white, width: 3),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: primaryColor.withOpacity(0.12),
+                                              color: primaryColor.withValues(alpha: 0.12),
                                               blurRadius: 8,
                                               offset: const Offset(0, 4),
                                             ),
@@ -271,7 +271,7 @@ class CategorySelectionScreen extends StatelessWidget {
                                               padding: const EdgeInsets.symmetric(
                                                   horizontal: 8, vertical: 3),
                                               decoration: BoxDecoration(
-                                                color: primaryColor.withOpacity(0.1),
+                                                color: primaryColor.withValues(alpha: 0.1),
                                                 borderRadius: BorderRadius.circular(8),
                                               ),
                                               child: Text(
@@ -380,27 +380,27 @@ class _SkyBackground extends StatelessWidget {
           Positioned(
             top: -40,
             left: -50,
-            child: _bubble(170, Colors.white.withOpacity(0.18)),
+            child: _bubble(170, Colors.white.withValues(alpha: 0.18)),
           ),
           Positioned(
             top: 120,
             right: -60,
-            child: _bubble(150, Colors.white.withOpacity(0.16)),
+            child: _bubble(150, Colors.white.withValues(alpha: 0.16)),
           ),
           Positioned(
             top: 330,
             left: -70,
-            child: _bubble(140, const Color(0xFF29ABE2).withOpacity(0.07)),
+            child: _bubble(140, const Color(0xFF29ABE2).withValues(alpha: 0.07)),
           ),
           Positioned(
             bottom: 90,
             right: -40,
-            child: _bubble(120, const Color(0xFF29ABE2).withOpacity(0.07)),
+            child: _bubble(120, const Color(0xFF29ABE2).withValues(alpha: 0.07)),
           ),
           Positioned(
             bottom: -50,
             left: 40,
-            child: _bubble(150, Colors.white.withOpacity(0.35)),
+            child: _bubble(150, Colors.white.withValues(alpha: 0.35)),
           ),
           child,
         ],
@@ -719,7 +719,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(28),
-          side: BorderSide(color: _primary.withOpacity(0.35), width: 2.5),
+          side: BorderSide(color: _primary.withValues(alpha: 0.35), width: 2.5),
         ),
         title: Row(
           children: [
@@ -750,7 +750,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: _primary,
-                    side: BorderSide(color: _primary.withOpacity(0.5), width: 2),
+                    side: BorderSide(color: _primary.withValues(alpha: 0.5), width: 2),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -885,7 +885,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
               return Container(
                 height: 14,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.10),
+                  color: Colors.black.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Align(
@@ -917,11 +917,11 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.93),
+            color: Colors.white.withValues(alpha: 0.93),
             borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -980,13 +980,13 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
         boxShadow: [
           BoxShadow(color: edge, offset: Offset(0, size * 0.07)),
           BoxShadow(
-            color: Colors.black.withOpacity(0.22),
+            color: Colors.black.withValues(alpha: 0.22),
             blurRadius: 8,
             offset: Offset(0, size * 0.12),
           ),
           if (isCurrent)
             BoxShadow(
-              color: const Color(0xFFFFE680).withOpacity(0.85),
+              color: const Color(0xFFFFE680).withValues(alpha: 0.85),
               blurRadius: 18,
               spreadRadius: 3,
             ),
@@ -1002,7 +1002,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
             child: Container(
               height: size * 0.16,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(unlocked ? 0.28 : 0.12),
+                color: Colors.white.withValues(alpha: unlocked ? 0.28 : 0.12),
                 borderRadius: BorderRadius.circular(size * 0.1),
               ),
             ),
@@ -1211,7 +1211,7 @@ class _StarsPainter extends CustomPainter {
         canvas.drawCircle(
           centers[i].translate(-r * 0.25, -r * 0.3),
           r * 0.16,
-          Paint()..color = Colors.white.withOpacity(0.7),
+          Paint()..color = Colors.white.withValues(alpha: 0.7),
         );
       }
     }
@@ -1390,7 +1390,7 @@ class _LevelPathPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.2
       ..strokeCap = StrokeCap.round
-      ..color = Colors.white.withOpacity(0.38);
+      ..color = Colors.white.withValues(alpha: 0.38);
     for (int i = 0; i < 9; i++) {
       final double x = rnd.nextDouble() * size.width;
       final double yb = botTop + 26 + rnd.nextDouble() * (_bottomWater - 44);
@@ -1845,7 +1845,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
-                    color: tone.withOpacity(0.3),
+                    color: tone.withValues(alpha: 0.3),
                     blurRadius: 30,
                     offset: const Offset(0, 12))
               ],
@@ -1884,7 +1884,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                   decoration: BoxDecoration(
-                    color: _bgGradient.first.withOpacity(0.5),
+                    color: _bgGradient.first.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -2015,7 +2015,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
               borderRadius: BorderRadius.circular(36),
               boxShadow: [
                 BoxShadow(
-                    color: _primaryColor.withOpacity(0.35),
+                    color: _primaryColor.withValues(alpha: 0.35),
                     blurRadius: 34,
                     offset: const Offset(0, 14))
               ],
@@ -2049,7 +2049,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: _primaryColor.withOpacity(0.12),
+                      color: _primaryColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: Column(
@@ -2183,7 +2183,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _primaryColor.withOpacity(0.3), width: 1.5),
+                    border: Border.all(color: _primaryColor.withValues(alpha: 0.3), width: 1.5),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -2240,7 +2240,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
         ),
         boxShadow: [
           BoxShadow(
-              color: _primaryColor.withOpacity(0.35),
+              color: _primaryColor.withValues(alpha: 0.35),
               blurRadius: 24,
               offset: const Offset(0, 10))
         ],
@@ -2304,17 +2304,17 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
           height: h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isMissing ? _primaryColor.withOpacity(0.12) : Colors.white,
+            color: isMissing ? _primaryColor.withValues(alpha: 0.12) : Colors.white,
             borderRadius: BorderRadius.circular(h * 0.28),
             border: Border.all(
-              color: isMissing ? _primaryColor : _primaryColor.withOpacity(0.25),
+              color: isMissing ? _primaryColor : _primaryColor.withValues(alpha: 0.25),
               width: isMissing ? 3 : 2,
             ),
             boxShadow: isMissing
                 ? null
                 : [
                     BoxShadow(
-                        color: _primaryColor.withOpacity(0.15),
+                        color: _primaryColor.withValues(alpha: 0.15),
                         offset: const Offset(0, 4))
                   ],
           ),
@@ -2365,10 +2365,10 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
               border:
-                  Border.all(color: _primaryColor.withOpacity(0.2), width: 1.5),
+                  Border.all(color: _primaryColor.withValues(alpha: 0.2), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: _primaryColor.withOpacity(0.08),
+                  color: _primaryColor.withValues(alpha: 0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -2405,7 +2405,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
                     boxShadow: [
                       BoxShadow(color: darken(c), offset: const Offset(0, 5)),
                       BoxShadow(
-                          color: c.withOpacity(0.35),
+                          color: c.withValues(alpha: 0.35),
                           blurRadius: 10,
                           offset: const Offset(0, 8)),
                     ],
@@ -2507,7 +2507,7 @@ class _CoinPillState extends State<_CoinPill> {
         border: Border.all(color: const Color(0xFFFFD43B), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

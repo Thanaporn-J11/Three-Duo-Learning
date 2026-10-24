@@ -138,7 +138,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0F172A).withOpacity(0.05),
+                color: const Color(0xFF0F172A).withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -275,7 +275,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF2563EB).withOpacity(0.1),
+              color: const Color(0xFF2563EB).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
@@ -504,7 +504,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2563EB).withOpacity(0.35),
+            color: const Color(0xFF2563EB).withValues(alpha: 0.35),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),

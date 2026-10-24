@@ -8,13 +8,13 @@ class AvatarCustomizerScreen extends StatefulWidget {
   final int initialHat;
 
   const AvatarCustomizerScreen({
-    Key? key,
+    super.key,
     this.initialSkinColor = const Color(0xFFFFDFC4),
     this.initialHair = -1,
     this.initialShirt = -1,
     this.initialGlasses = -1,
     this.initialHat = -1,
-  }) : super(key: key);
+  });
 
   @override
   State<AvatarCustomizerScreen> createState() => _AvatarCustomizerScreenState();
@@ -286,7 +286,7 @@ class _AvatarCustomizerScreenState extends State<AvatarCustomizerScreen> {
                   border: isSelected ? Border.all(color: const Color(0xFF0088FF), width: 3.5) : null,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -377,7 +377,7 @@ class _AvatarCustomizerScreenState extends State<AvatarCustomizerScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),

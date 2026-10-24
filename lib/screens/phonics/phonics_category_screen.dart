@@ -25,7 +25,7 @@ class PhonicsCategoryModel {
 }
 
 class PhonicsCategoryScreen extends StatefulWidget {
-  const PhonicsCategoryScreen({Key? key}) : super(key: key);
+  const PhonicsCategoryScreen({super.key});
 
   static const String _basePath = 'assets/images/phonics';
 
@@ -306,7 +306,7 @@ class _PhonicsCategoryScreenState extends State<PhonicsCategoryScreen> {
                     color: cat.accentColor,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -318,7 +318,7 @@ class _PhonicsCategoryScreenState extends State<PhonicsCategoryScreen> {
                     child: CustomPaint(
                       painter: DashedLinePainter(
                         // ใช้สีฟ้าน้ำทะเลเข้ม คมชัดบนพื้นสว่าง
-                        color: const Color(0xFF0277BD).withOpacity(0.45),
+                        color: const Color(0xFF0277BD).withValues(alpha: 0.45),
                       ),
                     ),
                   ),
@@ -337,11 +337,11 @@ class _PhonicsCategoryScreenState extends State<PhonicsCategoryScreen> {
                 border: Border.all(color: Colors.white, width: 2.5),
                 boxShadow: [
                   BoxShadow(
-                    color: cat.bevelColor.withOpacity(0.85),
+                    color: cat.bevelColor.withValues(alpha: 0.85),
                     offset: const Offset(0, 6.5),
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
+                    color: Colors.black.withValues(alpha: 0.12),
                     blurRadius: 10,
                     offset: const Offset(0, 6),
                   ),
@@ -374,7 +374,7 @@ class _PhonicsCategoryScreenState extends State<PhonicsCategoryScreen> {
                           width: 54,
                           height: 54,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             shape: BoxShape.circle,
                           ),
                           alignment: Alignment.center,
@@ -468,7 +468,7 @@ Widget _progressPill({
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.12),
+      color: color.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(20),
     ),
     child: Row(

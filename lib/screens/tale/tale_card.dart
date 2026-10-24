@@ -41,7 +41,7 @@ class TaleCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Material(
-                color: Colors.white.withOpacity(.94),
+                color: Colors.white.withValues(alpha: .94),
                 shape: const CircleBorder(),
                 child: IconButton(
                   tooltip: isFavorite ? 'นำออกจากรายการโปรด' : 'เพิ่มในรายการโปรด',

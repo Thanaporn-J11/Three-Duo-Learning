@@ -5,7 +5,7 @@ import 'karaoke_record_screen.dart';
 import '../../services/lesson_progress.dart';
 
 class ListenScreen extends StatefulWidget {
-  const ListenScreen({Key? key}) : super(key: key);
+  const ListenScreen({super.key});
 
   @override
   State<ListenScreen> createState() => _ListenScreenState();

@@ -12,9 +12,13 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class DayItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String thaiPhonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   DayItem({
@@ -384,12 +388,12 @@ class _DayVocabularyScreenState extends State<DayVocabularyScreen> {
               border: Border.all(color: const Color(0xFF38006B), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF260049).withOpacity(0.35),
+                  color: const Color(0xFF260049).withValues(alpha: 0.35),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -473,7 +477,7 @@ class _DayVocabularyScreenState extends State<DayVocabularyScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: ' / ${_wordCount}',
+                              text: ' / $_wordCount',
                               style: GoogleFonts.fredoka(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -496,7 +500,7 @@ class _DayVocabularyScreenState extends State<DayVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -599,7 +603,7 @@ class _DayVocabularyScreenState extends State<DayVocabularyScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF38006B).withOpacity(0.35),
+                                    color: const Color(0xFF38006B).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),

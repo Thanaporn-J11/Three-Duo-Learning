@@ -4,7 +4,7 @@ import 'match_screen.dart';
 enum GameDifficulty { easy, medium, hard }
 
 class LevelSelectionScreen extends StatelessWidget {
-  const LevelSelectionScreen({Key? key}) : super(key: key);
+  const LevelSelectionScreen({super.key});
 
   final List<Map<String, dynamic>> levels = const [
     {
@@ -99,12 +99,12 @@ class LevelSelectionScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(22),
                           boxShadow: [
                             BoxShadow(
-                              color: shadowColor.withOpacity(0.15),
+                              color: shadowColor.withValues(alpha: 0.15),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
                           ],
-                          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+                          border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
                         ),
                         child: Row(
                           children: [

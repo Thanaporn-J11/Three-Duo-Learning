@@ -173,7 +173,7 @@ class _GraduationScreenState extends State<GraduationScreen>
               right: -60,
               child: _DecorativeCircle(
                 size: 270,
-                color: Colors.white.withOpacity(0.16),
+                color: Colors.white.withValues(alpha: 0.16),
               ),
             ),
             Positioned(
@@ -181,7 +181,7 @@ class _GraduationScreenState extends State<GraduationScreen>
               left: -90,
               child: _DecorativeCircle(
                 size: 200,
-                color: Colors.white.withOpacity(0.07),
+                color: Colors.white.withValues(alpha: 0.07),
               ),
             ),
             Positioned(
@@ -189,7 +189,7 @@ class _GraduationScreenState extends State<GraduationScreen>
               right: -70,
               child: _DecorativeCircle(
                 size: 280,
-                color: const Color(0xFFB3E5FC).withOpacity(0.14),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.14),
               ),
             ),
             Positioned(
@@ -197,7 +197,7 @@ class _GraduationScreenState extends State<GraduationScreen>
               left: -70,
               child: _DecorativeCircle(
                 size: 220,
-                color: const Color(0xFFB3E5FC).withOpacity(0.14),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.14),
               ),
             ),
 
@@ -286,7 +286,7 @@ class _GraduationScreenState extends State<GraduationScreen>
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.12),
+                      color: Colors.black.withValues(alpha: 0.12),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -367,9 +367,9 @@ class _GraduationScreenState extends State<GraduationScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.white.withOpacity(0.50),
-                    Colors.white.withOpacity(0.18),
-                    Colors.white.withOpacity(0.0),
+                    Colors.white.withValues(alpha: 0.50),
+                    Colors.white.withValues(alpha: 0.18),
+                    Colors.white.withValues(alpha: 0.0),
                   ],
                   stops: const [0.0, 0.55, 1.0],
                 ),
@@ -385,7 +385,7 @@ class _GraduationScreenState extends State<GraduationScreen>
               height: 12,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: Colors.black.withOpacity(0.10),
+                color: Colors.black.withValues(alpha: 0.10),
               ),
             ),
           ),
@@ -405,7 +405,7 @@ class _GraduationScreenState extends State<GraduationScreen>
                       height: 200,
                       width: 260,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(24),
                       ),
                       child: const Center(
@@ -491,7 +491,7 @@ class _GraduationScreenState extends State<GraduationScreen>
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withOpacity(0.95),
+              color: Colors.white.withValues(alpha: 0.95),
               height: 1.5,
             ),
           ),
@@ -581,8 +581,8 @@ class _GraduationScreenState extends State<GraduationScreen>
         ),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: Colors.white.withOpacity(0.12),
-          side: BorderSide(color: Colors.white.withOpacity(0.5), width: 1.5),
+          backgroundColor: Colors.white.withValues(alpha: 0.12),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.5), width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -618,7 +618,7 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: edgeColor.withOpacity(0.45),
+            color: edgeColor.withValues(alpha: 0.45),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -633,7 +633,7 @@ class _StatCard extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: gradient,
           ),
-          border: Border.all(color: Colors.white.withOpacity(0.55), width: 1.5),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.55), width: 1.5),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -645,7 +645,7 @@ class _StatCard extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: edgeColor.withOpacity(0.35),
+                    color: edgeColor.withValues(alpha: 0.35),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),
@@ -675,7 +675,7 @@ class _StatCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 shadows: const [

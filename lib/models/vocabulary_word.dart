@@ -23,9 +23,11 @@ class VocabularyWord implements VocabularyWordView {
   final String id;
   final String categorySlug;
   final String term;
+  @override
   final String translation;
   final String? thaiPronunciation;
   final String? imageUrl;
+  @override
   final String? audioUrl;
   final int sortOrder;
 

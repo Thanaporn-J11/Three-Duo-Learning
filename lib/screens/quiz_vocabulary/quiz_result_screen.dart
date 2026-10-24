@@ -100,7 +100,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
               right: -60,
               child: _DecorativeCircle(
                 size: 270,
-                color: Colors.white.withOpacity(0.16),
+                color: Colors.white.withValues(alpha: 0.16),
               ),
             ),
             Positioned(
@@ -108,7 +108,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
               left: -90,
               child: _DecorativeCircle(
                 size: 200,
-                color: Colors.white.withOpacity(0.07),
+                color: Colors.white.withValues(alpha: 0.07),
               ),
             ),
             Positioned(
@@ -116,7 +116,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
               right: -80,
               child: _DecorativeCircle(
                 size: 200,
-                color: const Color(0xFFB3E5FC).withOpacity(0.14),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.14),
               ),
             ),
             Positioned(
@@ -124,7 +124,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
               left: -70,
               child: _DecorativeCircle(
                 size: 260,
-                color: const Color(0xFFB3E5FC).withOpacity(0.16),
+                color: const Color(0xFFB3E5FC).withValues(alpha: 0.16),
               ),
             ),
 
@@ -223,9 +223,9 @@ class _QuizResultScreenState extends State<QuizResultScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.white.withOpacity(0.50),
-                    Colors.white.withOpacity(0.18),
-                    Colors.white.withOpacity(0.0),
+                    Colors.white.withValues(alpha: 0.50),
+                    Colors.white.withValues(alpha: 0.18),
+                    Colors.white.withValues(alpha: 0.0),
                   ],
                   stops: const [0.0, 0.55, 1.0],
                 ),
@@ -241,7 +241,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
               height: 12,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: Colors.black.withOpacity(0.10),
+                color: Colors.black.withValues(alpha: 0.10),
               ),
             ),
           ),
@@ -287,7 +287,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
             size: size,
             color: filled
                 ? const Color(0xFFFFD54F)
-                : Colors.white.withOpacity(0.35),
+                : Colors.white.withValues(alpha: 0.35),
             shadows: filled
                 ? const [
                     Shadow(
@@ -345,7 +345,7 @@ class _QuizResultScreenState extends State<QuizResultScreen>
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withOpacity(0.95),
+              color: Colors.white.withValues(alpha: 0.95),
               height: 1.45,
             ),
           ),
@@ -418,7 +418,7 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: edgeColor.withOpacity(0.45),
+            color: edgeColor.withValues(alpha: 0.45),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -433,7 +433,7 @@ class _StatCard extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: gradient,
           ),
-          border: Border.all(color: Colors.white.withOpacity(0.55), width: 1.5),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.55), width: 1.5),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -445,7 +445,7 @@ class _StatCard extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: edgeColor.withOpacity(0.35),
+                    color: edgeColor.withValues(alpha: 0.35),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),
@@ -480,7 +480,7 @@ class _StatCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 shadows: const [

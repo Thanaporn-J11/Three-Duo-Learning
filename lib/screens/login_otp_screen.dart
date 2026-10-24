@@ -280,7 +280,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
               height: 170,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF5BA4FC).withOpacity(0.35),
+                color: const Color(0xFF5BA4FC).withValues(alpha: 0.35),
               ),
             ),
           ),
@@ -293,7 +293,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
               height: 130,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFFFD54F).withOpacity(0.40),
+                color: const Color(0xFFFFD54F).withValues(alpha: 0.40),
               ),
             ),
           ),
@@ -306,7 +306,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
               height: 155,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFC084FC).withOpacity(0.35),
+                color: const Color(0xFFC084FC).withValues(alpha: 0.35),
               ),
             ),
           ),
@@ -319,7 +319,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
               height: 90,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF6EE7B7).withOpacity(0.35),
+                color: const Color(0xFF6EE7B7).withValues(alpha: 0.35),
               ),
             ),
           ),
@@ -343,12 +343,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.92),
+                          color: Colors.white.withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: const Color(0xFF2E4ECB)
-                                  .withOpacity(0.08),
+                                  .withValues(alpha: 0.08),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -405,7 +405,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.white
-                                                .withOpacity(0.65),
+                                                .withValues(alpha: 0.65),
                                             blurRadius: 36,
                                             spreadRadius: 8,
                                           ),
@@ -441,7 +441,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                                     boxShadow: [
                                       BoxShadow(
                                         color: const Color(0xFF4A72FF)
-                                            .withOpacity(0.12),
+                                            .withValues(alpha: 0.12),
                                         blurRadius: 24,
                                         offset: const Offset(0, 8),
                                       ),
@@ -617,7 +617,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                               color: const Color(0xFF5559FF)
-                                                  .withOpacity(0.32),
+                                                  .withValues(alpha: 0.32),
                                               blurRadius: 12,
                                               offset: const Offset(0, 5),
                                             ),

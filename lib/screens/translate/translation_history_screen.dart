@@ -302,7 +302,7 @@ class _TranslationHistoryScreenState
         border: Border.all(color: _line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.025),
+            color: Colors.black.withValues(alpha: 0.025),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -319,7 +319,7 @@ class _TranslationHistoryScreenState
                 decoration: BoxDecoration(
                   color: _mintGreenLight,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: _mintGreen.withOpacity(0.35)),
+                  border: Border.all(color: _mintGreen.withValues(alpha: 0.35)),
                 ),
                 child: Text(
                   _langCode(sourceLang),
@@ -344,7 +344,7 @@ class _TranslationHistoryScreenState
                 decoration: BoxDecoration(
                   color: _primaryBlueLight,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: _primaryBlue.withOpacity(0.35)),
+                  border: Border.all(color: _primaryBlue.withValues(alpha: 0.35)),
                 ),
                 child: Text(
                   _langCode(targetLang),
@@ -504,7 +504,7 @@ class _TranslationHistoryScreenState
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: _primaryBlue.withOpacity(0.28),
+                        color: _primaryBlue.withValues(alpha: 0.28),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -583,7 +583,7 @@ class _TranslationHistoryScreenState
               right: -40,
               child: _buildBlurBubble(
                 size: 150,
-                color: _primaryBlue.withOpacity(0.14),
+                color: _primaryBlue.withValues(alpha: 0.14),
               ),
             ),
             Positioned(
@@ -591,7 +591,7 @@ class _TranslationHistoryScreenState
               left: -40,
               child: _buildBlurBubble(
                 size: 140,
-                color: const Color(0xffFFD166).withOpacity(0.18),
+                color: const Color(0xffFFD166).withValues(alpha: 0.18),
               ),
             ),
             Positioned(
@@ -599,7 +599,7 @@ class _TranslationHistoryScreenState
               right: -30,
               child: _buildBlurBubble(
                 size: 160,
-                color: _pastelPink.withOpacity(0.13),
+                color: _pastelPink.withValues(alpha: 0.13),
               ),
             ),
 

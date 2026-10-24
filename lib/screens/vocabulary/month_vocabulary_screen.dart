@@ -12,9 +12,13 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class MonthItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String thaiPhonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   MonthItem({
@@ -415,12 +419,12 @@ class _MonthVocabularyScreenState extends State<MonthVocabularyScreen> {
               border: Border.all(color: const Color(0xFFBF360C), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF5D1A06).withOpacity(0.35),
+                  color: const Color(0xFF5D1A06).withValues(alpha: 0.35),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -504,7 +508,7 @@ class _MonthVocabularyScreenState extends State<MonthVocabularyScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: ' / ${_wordCount}',
+                              text: ' / $_wordCount',
                               style: GoogleFonts.fredoka(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -527,7 +531,7 @@ class _MonthVocabularyScreenState extends State<MonthVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -631,7 +635,7 @@ class _MonthVocabularyScreenState extends State<MonthVocabularyScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFBF360C).withOpacity(0.35),
+                                    color: const Color(0xFFBF360C).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),

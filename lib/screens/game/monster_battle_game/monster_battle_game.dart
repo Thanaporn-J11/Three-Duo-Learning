@@ -2270,7 +2270,7 @@ class _LevelSelectView extends StatelessWidget {
       ['👑', 'นักล่าบอส', 'ล้มบอสครั้งแรก', p.bossKills >= 1],
       ['🔥', 'เซียนคอมโบ', 'ทำคอมโบ x8 ขึ้นไป', p.bestCombo >= 8],
       ['🗡️', 'นักล่ามอนสเตอร์', 'ล้มมอนสเตอร์ 50 ตัว (${p.kills} / 50)', p.kills >= 50],
-      ['🌟', 'เจ้าแห่งด่าน', 'ผ่านครบ ${kMonsterLevels} ด่าน ($cleared / $kMonsterLevels)', cleared >= kMonsterLevels],
+      ['🌟', 'เจ้าแห่งด่าน', 'ผ่านครบ $kMonsterLevels ด่าน ($cleared / $kMonsterLevels)', cleared >= kMonsterLevels],
     ];
     showDialog<void>(
       context: context,

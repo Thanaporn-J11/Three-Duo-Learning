@@ -261,9 +261,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xff5FB5F7).withOpacity(0.14),
-                    Colors.white.withOpacity(0.04),
-                    const Color(0xffEAF7FF).withOpacity(0.20),
+                    const Color(0xff5FB5F7).withValues(alpha: 0.14),
+                    Colors.white.withValues(alpha: 0.04),
+                    const Color(0xffEAF7FF).withValues(alpha: 0.20),
                   ],
                 ),
               ),
@@ -275,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
             right: -45,
             child: _DecorCircle(
               size: 150,
-              color: const Color(0xff7EBBFF).withOpacity(0.18),
+              color: const Color(0xff7EBBFF).withValues(alpha: 0.18),
             ),
           ),
 
@@ -284,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
             left: -50,
             child: _DecorCircle(
               size: 100,
-              color: const Color(0xffFFD36A).withOpacity(0.18),
+              color: const Color(0xffFFD36A).withValues(alpha: 0.18),
             ),
           ),
 
@@ -457,7 +457,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _isOtpLoading ? null : _handleSendLoginOtp,
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: BrandColors.skyBlueDark,
-                                  backgroundColor: Colors.white.withOpacity(
+                                  backgroundColor: Colors.white.withValues(alpha: 
                                     0.85,
                                   ),
                                   side: const BorderSide(
@@ -559,7 +559,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     top: topInset + 8,
                     left: 16,
                     child: Material(
-                      color: Colors.white.withOpacity(0.75),
+                      color: Colors.white.withValues(alpha: 0.75),
                       borderRadius: BorderRadius.circular(22),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(22),
@@ -613,7 +613,7 @@ class _GlassSheet extends StatelessWidget {
         borderRadius: radius,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff4D7CFE).withOpacity(0.14),
+            color: const Color(0xff4D7CFE).withValues(alpha: 0.14),
             blurRadius: 30,
             offset: const Offset(0, -8),
           ),
@@ -630,13 +630,13 @@ class _GlassSheet extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.88),
-                  Colors.white.withOpacity(0.76),
+                  Colors.white.withValues(alpha: 0.88),
+                  Colors.white.withValues(alpha: 0.76),
                 ],
               ),
               border: Border(
                 top: BorderSide(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
                   width: 1.5,
                 ),
               ),
@@ -706,7 +706,7 @@ class _MiniMascot extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   blurRadius: 40,
                   spreadRadius: 8,
                 ),
@@ -920,7 +920,7 @@ class _GradientButton extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff4D7CFE).withOpacity(0.45),
+            color: const Color(0xff4D7CFE).withValues(alpha: 0.45),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),

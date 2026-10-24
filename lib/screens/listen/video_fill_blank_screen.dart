@@ -72,10 +72,10 @@ class VideoFillBlankScreen extends StatefulWidget {
   final String? topicTitle;
 
   const VideoFillBlankScreen({
-    Key? key,
+    super.key,
     this.topicLessons,
     this.topicTitle,
-  }) : super(key: key);
+  });
 
   @override
   State<VideoFillBlankScreen> createState() => _VideoFillBlankScreenState();
@@ -990,13 +990,13 @@ class VideoFillBlankExerciseScreen extends StatefulWidget {
   final int startCorrect;
 
   const VideoFillBlankExerciseScreen({
-    Key? key,
+    super.key,
     required this.lessons,
     required this.topicTitle,
     this.topicId,
     this.startIndex = 0,
     this.startCorrect = 0,
-  }) : super(key: key);
+  });
 
   @override
   State<VideoFillBlankExerciseScreen> createState() => _VideoFillBlankExerciseScreenState();
@@ -1855,7 +1855,7 @@ class _VideoFillBlankExerciseScreenState extends State<VideoFillBlankExerciseScr
           ),
           const SizedBox(height: 6),
           Text(
-            '${item.thaiTranslation}',
+            item.thaiTranslation,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 14.5,

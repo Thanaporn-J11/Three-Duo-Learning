@@ -12,10 +12,15 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class BodyItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String phonetics;
+  @override
   final String thaiPhonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   BodyItem({
@@ -528,12 +533,12 @@ class _BodyVocabularyScreenState extends State<BodyVocabularyScreen> {
               border: Border.all(color: const Color(0xFF004D40), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00332C).withOpacity(0.35),
+                  color: const Color(0xFF00332C).withValues(alpha: 0.35),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -617,7 +622,7 @@ class _BodyVocabularyScreenState extends State<BodyVocabularyScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: ' / ${_wordCount}',
+                              text: ' / $_wordCount',
                               style: GoogleFonts.fredoka(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -640,7 +645,7 @@ class _BodyVocabularyScreenState extends State<BodyVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -744,7 +749,7 @@ class _BodyVocabularyScreenState extends State<BodyVocabularyScreen> {
                                   BoxShadow(
                                     color: const Color(
                                       0xFF004D40,
-                                    ).withOpacity(0.35),
+                                    ).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),

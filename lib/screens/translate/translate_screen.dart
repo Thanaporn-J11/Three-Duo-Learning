@@ -484,7 +484,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               right: -50,
               child: _buildBlurBubble(
                 size: 190,
-                color: const Color(0xff3B9EFF).withOpacity(0.18),
+                color: const Color(0xff3B9EFF).withValues(alpha: 0.18),
               ),
             ),
 
@@ -494,7 +494,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               left: -40,
               child: _buildBlurBubble(
                 size: 140,
-                color: const Color(0xffFFD166).withOpacity(0.22),
+                color: const Color(0xffFFD166).withValues(alpha: 0.22),
               ),
             ),
 
@@ -504,7 +504,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               right: -30,
               child: _buildBlurBubble(
                 size: 130,
-                color: const Color(0xff845EC2).withOpacity(0.15),
+                color: const Color(0xff845EC2).withValues(alpha: 0.15),
               ),
             ),
 
@@ -514,7 +514,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               left: -35,
               child: _buildBlurBubble(
                 size: 160,
-                color: const Color(0xff2EC4B6).withOpacity(0.18),
+                color: const Color(0xff2EC4B6).withValues(alpha: 0.18),
               ),
             ),
 
@@ -524,7 +524,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               right: -40,
               child: _buildBlurBubble(
                 size: 170,
-                color: const Color(0xffFF6B8B).withOpacity(0.16),
+                color: const Color(0xffFF6B8B).withValues(alpha: 0.16),
               ),
             ),
 
@@ -569,13 +569,13 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 if (!keyboardOpen)
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.95),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(28),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _primaryBlue.withOpacity(0.06),
+                          color: _primaryBlue.withValues(alpha: 0.06),
                           blurRadius: 16,
                           offset: const Offset(0, -4),
                         ),
@@ -712,7 +712,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         border: Border.all(color: _line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -887,7 +887,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         border: Border.all(color: _line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1055,7 +1055,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               border: Border.all(color: _line),
               boxShadow: [
                 BoxShadow(
-                  color: _primaryBlue.withOpacity(0.08),
+                  color: _primaryBlue.withValues(alpha: 0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1121,7 +1121,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
                         boxShadow: [
                           BoxShadow(
                             color: (_isListening ? _danger : _primaryBlue)
-                                .withOpacity(0.3),
+                                .withValues(alpha: 0.3),
                             blurRadius: 14,
                             offset: const Offset(0, 5),
                           ),
@@ -1172,7 +1172,7 @@ class _LanguagePill extends StatelessWidget {
         color: active ? _primaryBlueLight : const Color(0xffF8FAFD),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: active ? _primaryBlue.withOpacity(0.35) : _line,
+          color: active ? _primaryBlue.withValues(alpha: 0.35) : _line,
         ),
       ),
       child: Row(
@@ -1246,7 +1246,7 @@ class _MainCard extends StatelessWidget {
         border: Border.all(color: _line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.025),
+            color: Colors.black.withValues(alpha: 0.025),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -1295,7 +1295,7 @@ class _TranslationCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1448,7 +1448,7 @@ class _PrimaryButton extends StatelessWidget {
           boxShadow: enabled
               ? [
                   BoxShadow(
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),

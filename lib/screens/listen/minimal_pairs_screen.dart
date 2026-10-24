@@ -23,7 +23,7 @@ class ListeningQuizItem {
 }
 
 class MinimalPairsScreen extends StatefulWidget {
-  const MinimalPairsScreen({Key? key}) : super(key: key);
+  const MinimalPairsScreen({super.key});
 
   @override
   State<MinimalPairsScreen> createState() => _MinimalPairsScreenState();

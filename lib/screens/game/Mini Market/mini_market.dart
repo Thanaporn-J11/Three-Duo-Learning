@@ -2146,9 +2146,9 @@ class _MarketGameScreenState extends State<MarketGameScreen>
   String? _praise; // ป้ายชมเชยเด้งๆ บนเคาน์เตอร์
   Timer? _praiseTimer;
   // ignore: unused_field
-  int _confettiSeq = 0;
+  final int _confettiSeq = 0;
   // ignore: unused_field
-  bool _showConfetti = false;
+  final bool _showConfetti = false;
   Timer? _confettiTimer;
   bool _hintIcons = false; // เปิดคำใบ้
   int _newCollected = 0; // สติกเกอร์ใหม่ที่ได้ในด่านนี้

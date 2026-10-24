@@ -39,7 +39,6 @@ class ScreenTimeGuard with WidgetsBindingObserver {
   static const String kDowntimeEndM = 'parent_downtime_end_m';
   static const String _kOverrideUntil = 'parent_lock_override_until';
 
-  Timer? _timer;
   DateTime? _lastTick;
   bool _foreground = true;
   bool _started = false;
@@ -55,7 +54,7 @@ class ScreenTimeGuard with WidgetsBindingObserver {
     _started = true;
     WidgetsBinding.instance.addObserver(this);
     _lastTick = DateTime.now();
-    _timer = Timer.periodic(_tick, (_) => _onTick());
+    Timer.periodic(_tick, (_) => _onTick());
     AppUsageSync.flush(); // days counted while offline
     // First check shortly after launch (e.g. opened during downtime).
     Timer(const Duration(seconds: 2), checkNow);

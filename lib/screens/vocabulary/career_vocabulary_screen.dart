@@ -12,9 +12,13 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class CareerItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String phonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   CareerItem({
@@ -565,12 +569,12 @@ class _CareerVocabularyScreenState extends State<CareerVocabularyScreen> {
               border: Border.all(color: const Color(0xFF1A237E), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0F1654).withOpacity(0.35),
+                  color: const Color(0xFF0F1654).withValues(alpha: 0.35),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -654,7 +658,7 @@ class _CareerVocabularyScreenState extends State<CareerVocabularyScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: ' / ${_wordCount}',
+                              text: ' / $_wordCount',
                               style: GoogleFonts.fredoka(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -677,7 +681,7 @@ class _CareerVocabularyScreenState extends State<CareerVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -785,7 +789,7 @@ class _CareerVocabularyScreenState extends State<CareerVocabularyScreen> {
                                   BoxShadow(
                                     color: const Color(
                                       0xFF1A237E,
-                                    ).withOpacity(0.35),
+                                    ).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),

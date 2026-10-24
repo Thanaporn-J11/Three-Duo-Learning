@@ -67,7 +67,7 @@ class HelpCenterScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF64748B).withOpacity(0.06),
+            color: const Color(0xFF64748B).withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),

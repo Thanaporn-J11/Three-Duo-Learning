@@ -221,7 +221,7 @@ class _GameScreenState extends State<GameScreen> {
           borderRadius: BorderRadius.circular(34),
           boxShadow: [
             BoxShadow(
-              color: borderDark.withOpacity(0.35),
+              color: borderDark.withValues(alpha: 0.35),
               offset: const Offset(0, 5),
               blurRadius: 4,
             ),
@@ -256,7 +256,7 @@ class _GameScreenState extends State<GameScreen> {
                       borderRadius: const BorderRadius.vertical(
                         bottom: Radius.elliptical(250, 45),
                       ),
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                     ),
                   ),
                 ),
@@ -291,7 +291,7 @@ class _GameScreenState extends State<GameScreen> {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white.withOpacity(0.95),
+                                color: Colors.white.withValues(alpha: 0.95),
                               ),
                             ),
                           ],

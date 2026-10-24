@@ -5,10 +5,10 @@ class ResultScreen extends StatelessWidget {
   final int scorePercentage;
 
   const ResultScreen({
-    Key? key,
+    super.key,
     this.totalCoins = 25,
     this.scorePercentage = 95,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -12,9 +12,13 @@ import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
 class NumberItem implements VocabularyWordView {
+  @override
   final String word;
+  @override
   final String thaiPhonetics;
+  @override
   final String translation;
+  @override
   final String imagePath;
 
   NumberItem({
@@ -572,12 +576,12 @@ class _NumberVocabularyScreenState extends State<NumberVocabularyScreen> {
               border: Border.all(color: const Color.fromARGB(255, 41, 103, 44), width: 3.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0F3813).withOpacity(0.35),
+                  color: const Color(0xFF0F3813).withValues(alpha: 0.35),
                   offset: const Offset(0, 10),
                   blurRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -661,7 +665,7 @@ class _NumberVocabularyScreenState extends State<NumberVocabularyScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: ' / ${_wordCount}',
+                              text: ' / $_wordCount',
                               style: GoogleFonts.fredoka(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
@@ -684,7 +688,7 @@ class _NumberVocabularyScreenState extends State<NumberVocabularyScreen> {
                     color: const Color(0xFFE2E8F0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withValues(alpha: 0.06),
                         blurRadius: 2,
                         offset: const Offset(0, 2),
                         spreadRadius: -1,
@@ -788,7 +792,7 @@ class _NumberVocabularyScreenState extends State<NumberVocabularyScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF1B5E20).withOpacity(0.35),
+                                    color: const Color(0xFF1B5E20).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),

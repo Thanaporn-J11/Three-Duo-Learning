@@ -530,7 +530,7 @@ class _PlacesFlashcardsScreenState extends State<PlacesFlashcardsScreen>
                               color: const Color(0xFFFFB74D), width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFFF6D00).withOpacity(0.15),
+                              color: const Color(0xFFFF6D00).withValues(alpha: 0.15),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -588,7 +588,7 @@ class _PlacesFlashcardsScreenState extends State<PlacesFlashcardsScreen>
                               color: (isFlipped
                                       ? const Color(0xFF00C853)
                                       : const Color(0xFFFF8F00))
-                                  .withOpacity(0.22),
+                                  .withValues(alpha: 0.22),
                               blurRadius: 18,
                               offset: const Offset(0, 10),
                             ),
@@ -769,7 +769,7 @@ class _PlacesFlashcardsScreenState extends State<PlacesFlashcardsScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFF8F00).withOpacity(0.35),
+                            color: const Color(0xFFFF8F00).withValues(alpha: 0.35),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -926,7 +926,7 @@ class _PlacesFlashcardsScreenState extends State<PlacesFlashcardsScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF00C853).withOpacity(0.35),
+                            color: const Color(0xFF00C853).withValues(alpha: 0.35),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -1006,7 +1006,7 @@ class _NavPillButton extends StatelessWidget {
             : null,
         boxShadow: [
           BoxShadow(
-            color: shadowColor.withOpacity(0.35),
+            color: shadowColor.withValues(alpha: 0.35),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -1061,7 +1061,7 @@ class _CoinPill extends StatelessWidget {
         border: Border.all(color: const Color(0xFFFFD43B), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

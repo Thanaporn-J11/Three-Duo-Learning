@@ -29,9 +29,9 @@ class WelcomeScreen extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xff5FB5F7).withOpacity(0.12),
-                    Colors.white.withOpacity(0.04),
-                    const Color(0xffEAF7FF).withOpacity(0.20),
+                    const Color(0xff5FB5F7).withValues(alpha: 0.12),
+                    Colors.white.withValues(alpha: 0.04),
+                    const Color(0xffEAF7FF).withValues(alpha: 0.20),
                   ],
                 ),
               ),
@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
             right: -45,
             child: _DecorCircle(
               size: 150,
-              color: const Color(0xff7EBBFF).withOpacity(0.18),
+              color: const Color(0xff7EBBFF).withValues(alpha: 0.18),
             ),
           ),
           Positioned(
@@ -52,7 +52,7 @@ class WelcomeScreen extends StatelessWidget {
             left: -55,
             child: _DecorCircle(
               size: 105,
-              color: const Color(0xffFFD36A).withOpacity(0.18),
+              color: const Color(0xffFFD36A).withValues(alpha: 0.18),
             ),
           ),
 
@@ -103,7 +103,7 @@ class _BottomPanel extends StatelessWidget {
         borderRadius: radius,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff4D7CFE).withOpacity(0.14),
+            color: const Color(0xff4D7CFE).withValues(alpha: 0.14),
             blurRadius: 30,
             offset: const Offset(0, -8),
           ),
@@ -124,13 +124,13 @@ class _BottomPanel extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.74),
-                  Colors.white.withOpacity(0.48),
+                  Colors.white.withValues(alpha: 0.74),
+                  Colors.white.withValues(alpha: 0.48),
                 ],
               ),
               border: Border(
                 top: BorderSide(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
                   width: 1.5,
                 ),
               ),
@@ -278,12 +278,12 @@ class _Mascot extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   blurRadius: 50,
                   spreadRadius: 10,
                 ),
                 BoxShadow(
-                  color: const Color(0xff4D9FFF).withOpacity(0.20),
+                  color: const Color(0xff4D9FFF).withValues(alpha: 0.20),
                   blurRadius: 36,
                   spreadRadius: 4,
                 ),
@@ -323,7 +323,7 @@ class _Cloud extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cloudColor = Colors.white.withOpacity(0.92);
+    final cloudColor = Colors.white.withValues(alpha: 0.92);
 
     Widget puff(double d) => Container(
           width: d,
@@ -348,7 +348,7 @@ class _Cloud extends StatelessWidget {
                 borderRadius: BorderRadius.circular(width),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xff4D9FFF).withOpacity(0.22),
+                    color: const Color(0xff4D9FFF).withValues(alpha: 0.22),
                     blurRadius: 22,
                     offset: const Offset(0, 8),
                   ),
@@ -403,7 +403,7 @@ class _GradientButton extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff4D7CFE).withOpacity(0.5),
+            color: const Color(0xff4D7CFE).withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -483,7 +483,7 @@ class _FeatureChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -495,7 +495,7 @@ class _FeatureChip extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.14),
+              color: color.withValues(alpha: 0.14),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, size: 15, color: color),

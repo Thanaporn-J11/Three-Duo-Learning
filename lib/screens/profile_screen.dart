@@ -242,8 +242,9 @@ class AvatarArt {
     canvas.clipRect(r);
     _paintSprite(canvas, r, _bodyLayers, pal);
     final int idx = outfit.type.index;
-    if (idx >= 0 && idx < _outfitLayers.length)
+    if (idx >= 0 && idx < _outfitLayers.length) {
       _paintSprite(canvas, r, _outfitLayers[idx], pal);
+    }
     canvas.restore();
   }
 
@@ -43767,7 +43768,7 @@ class _BackdropPainter extends CustomPainter {
     FontWeight weight = FontWeight.w900,
   }) {
     final String key =
-        '$s|${size.toStringAsFixed(1)}|${color.value}|${weight.index}';
+        '$s|${size.toStringAsFixed(1)}|${color.toARGB32()}|${weight.index}';
     return _tpCache.putIfAbsent(key, () {
       final TextPainter tp = TextPainter(
         text: TextSpan(
@@ -43810,7 +43811,7 @@ class _BackdropPainter extends CustomPainter {
       r,
       Paint()
         ..shader = RadialGradient(
-          colors: [color, color.withOpacity(0)],
+          colors: [color, color.withValues(alpha: 0)],
         ).createShader(Rect.fromCircle(center: center, radius: r)),
     );
   }
@@ -43820,14 +43821,14 @@ class _BackdropPainter extends CustomPainter {
   void _dropShadow(Canvas canvas, Path path, double depth) {
     final Path sp = path.shift(Offset(0, depth));
     const Color ink = Color(0xFF0F2F8C);
-    canvas.drawPath(sp, Paint()..color = ink.withOpacity(0.10));
+    canvas.drawPath(sp, Paint()..color = ink.withValues(alpha: 0.10));
     canvas.drawPath(
       sp,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeJoin = StrokeJoin.round
         ..strokeWidth = depth * 1.6
-        ..color = ink.withOpacity(0.07),
+        ..color = ink.withValues(alpha: 0.07),
     );
     canvas.drawPath(
       sp,
@@ -43835,7 +43836,7 @@ class _BackdropPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeJoin = StrokeJoin.round
         ..strokeWidth = depth * 3.2
-        ..color = ink.withOpacity(0.04),
+        ..color = ink.withValues(alpha: 0.04),
     );
   }
 
@@ -43857,7 +43858,7 @@ class _BackdropPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.2
-        ..color = Colors.white.withOpacity(0.45),
+        ..color = Colors.white.withValues(alpha: 0.45),
     );
   }
 
@@ -43910,19 +43911,19 @@ class _BackdropPainter extends CustomPainter {
         canvas,
         Offset(w * 0.50, vb * 0.46),
         w * 0.72,
-        Colors.white.withOpacity(0.28),
+        Colors.white.withValues(alpha: 0.28),
       );
       _glow(
         canvas,
         Offset(w * 0.95, 0),
         w * 0.60,
-        const Color(0xFF9DBBFF).withOpacity(0.55),
+        const Color(0xFF9DBBFF).withValues(alpha: 0.55),
       );
       _glow(
         canvas,
         Offset(w * 0.02, vb * 0.95),
         w * 0.70,
-        const Color(0xFF7FA8FF).withOpacity(0.35),
+        const Color(0xFF7FA8FF).withValues(alpha: 0.35),
       );
       return;
     }
@@ -43945,19 +43946,19 @@ class _BackdropPainter extends CustomPainter {
       canvas,
       Offset(w * 0.04, vb * 0.92),
       w * 0.75,
-      const Color(0xFF9DBBFF).withOpacity(0.45),
+      const Color(0xFF9DBBFF).withValues(alpha: 0.45),
     );
     _glow(
       canvas,
       Offset(w * 0.98, vb * 0.95),
       w * 0.65,
-      const Color(0xFF9DBBFF).withOpacity(0.40),
+      const Color(0xFF9DBBFF).withValues(alpha: 0.40),
     );
     _glow(
       canvas,
       Offset(w * 0.88, vb * 0.04),
       w * 0.60,
-      const Color(0xFF7FA8FF).withOpacity(0.50),
+      const Color(0xFF7FA8FF).withValues(alpha: 0.50),
     );
   }
 
@@ -43968,8 +43969,8 @@ class _BackdropPainter extends CustomPainter {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white.withOpacity(laurelStyle ? 0.20 : 0.26),
-              Colors.white.withOpacity(0.0),
+              Colors.white.withValues(alpha: laurelStyle ? 0.20 : 0.26),
+              Colors.white.withValues(alpha: 0.0),
             ],
           ).createShader(Rect.fromLTWH(0, 0, w, vb));
     for (int i = 0; i < 4; i++) {
@@ -43997,9 +43998,9 @@ class _BackdropPainter extends CustomPainter {
       Paint()
         ..shader = RadialGradient(
           colors: [
-            Colors.white.withOpacity(0.62),
-            const Color(0xFFD9E6FF).withOpacity(0.30),
-            Colors.white.withOpacity(0.0),
+            Colors.white.withValues(alpha: 0.62),
+            const Color(0xFFD9E6FF).withValues(alpha: 0.30),
+            Colors.white.withValues(alpha: 0.0),
           ],
           stops: const [0.0, 0.55, 1.0],
         ).createShader(Rect.fromCircle(center: c, radius: r)),
@@ -44019,7 +44020,7 @@ class _BackdropPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = widths[i] + 4 * breathe
-          ..color = cream.withOpacity(alphas[i] * (0.85 + 0.3 * breathe)),
+          ..color = cream.withValues(alpha: alphas[i] * (0.85 + 0.3 * breathe)),
       );
     }
     canvas.drawCircle(
@@ -44028,7 +44029,7 @@ class _BackdropPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.2
-        ..color = Colors.white.withOpacity(0.95),
+        ..color = Colors.white.withValues(alpha: 0.95),
     );
   }
 
@@ -44047,7 +44048,7 @@ class _BackdropPainter extends CustomPainter {
       canvas.drawCircle(
         o,
         size * (0.8 + 0.4 * k),
-        Paint()..color = col.withOpacity(0.25 + 0.70 * k),
+        Paint()..color = col.withValues(alpha: 0.25 + 0.70 * k),
       );
     }
   }
@@ -44071,8 +44072,8 @@ class _BackdropPainter extends CustomPainter {
         Paint()
           ..shader = RadialGradient(
             colors: [
-              const Color.fromARGB(255, 184, 203, 255).withOpacity(a),
-              const Color.fromARGB(255, 166, 188, 240).withOpacity(0),
+              const Color.fromARGB(255, 184, 203, 255).withValues(alpha: a),
+              const Color.fromARGB(255, 166, 188, 240).withValues(alpha: 0),
             ],
             stops: const [0.35, 1.0],
           ).createShader(rect),
@@ -44124,11 +44125,11 @@ class _BackdropPainter extends CustomPainter {
       canvas.drawCircle(
         o,
         r * 1.7,
-        Paint()..color = col.withOpacity(0.10 + 0.10 * k),
+        Paint()..color = col.withValues(alpha: 0.10 + 0.10 * k),
       );
       canvas.drawPath(
         _sparklePath(o, r * 1.3),
-        Paint()..color = col.withOpacity(0.50 + 0.50 * k),
+        Paint()..color = col.withValues(alpha: 0.50 + 0.50 * k),
       );
     }
   }
@@ -44243,7 +44244,7 @@ class _BackdropPainter extends CustomPainter {
       const Color(0xFFA78BFA),
     );
     final Offset eO = at(0.070, 92, 10, 0.05, 3);
-    if (fits(eO, 28 * s))
+    if (fits(eO, 28 * s)) {
       _block(
         canvas,
         eO,
@@ -44252,6 +44253,7 @@ class _BackdropPainter extends CustomPainter {
         'E',
         const Color(0xFFF2A99F),
       );
+    }
     final Offset gO = at(0.085, 160, 11, 0.70, 3);
     if (fits(gO, 40 * s)) _globe(canvas, gO, 40 * s, (t * 2 + 0.70) % 1.0);
     // right column
@@ -44260,7 +44262,7 @@ class _BackdropPainter extends CustomPainter {
     _desk(canvas, bookO + Offset(0, 25 * s), 92 * s);
     _bookOpen(canvas, bookO, 66 * s, 50 * s, tilt(-0.12, 8, 0.45));
     final Offset cO = at(0.920, 88, 11, 0.80, 4);
-    if (fits(cO, 40 * s))
+    if (fits(cO, 40 * s)) {
       _block(
         canvas,
         cO,
@@ -44269,8 +44271,9 @@ class _BackdropPainter extends CustomPainter {
         'C',
         const Color(0xFF5ED3B0),
       );
+    }
     final Offset dO = at(0.815, 150, 9, 0.15, 4);
-    if (fits(dO, 44 * s))
+    if (fits(dO, 44 * s)) {
       _block(
         canvas,
         dO,
@@ -44279,6 +44282,7 @@ class _BackdropPainter extends CustomPainter {
         'D',
         const Color(0xFFF1C068),
       );
+    }
   }
 
   // โต๊ะไม้ตัวเล็กไว้วางหนังสือ (o = กึ่งกลางหน้าโต๊ะ)
@@ -44329,19 +44333,19 @@ class _BackdropPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = size * 0.035
-        ..color = Colors.white.withOpacity(0.28),
+        ..color = Colors.white.withValues(alpha: 0.28),
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(-size * 0.40, -size * 0.42, size * 0.50, size * 0.14),
         Radius.circular(size * 0.07),
       ),
-      Paint()..color = Colors.white.withOpacity(0.28),
+      Paint()..color = Colors.white.withValues(alpha: 0.28),
     );
     final double fs = size * 0.58;
     _drawText(
       canvas,
-      _text(ch, fs, _darken(base, 0.16).withOpacity(0.55)),
+      _text(ch, fs, _darken(base, 0.16).withValues(alpha: 0.55)),
       Offset(size * 0.02, size * 0.05),
     );
     _drawText(canvas, _text(ch, fs, Colors.white), Offset(0, size * 0.02));
@@ -44366,7 +44370,7 @@ class _BackdropPainter extends CustomPainter {
     canvas.save();
     canvas.clipPath(circle);
     final Paint land =
-        Paint()..color = const Color(0xFF8ED88B).withOpacity(0.95);
+        Paint()..color = const Color(0xFF8ED88B).withValues(alpha: 0.95);
     for (int i = 0; i < 3; i++) {
       final double a = (spin + i / 3.0) % 1.0;
       final double x = o.dx - r * 1.4 + a * r * 2.8;
@@ -44383,7 +44387,7 @@ class _BackdropPainter extends CustomPainter {
     canvas.drawCircle(
       o + Offset(-r * 0.35, -r * 0.40),
       r * 0.18,
-      Paint()..color = Colors.white.withOpacity(0.40),
+      Paint()..color = Colors.white.withValues(alpha: 0.40),
     );
     canvas.drawCircle(
       o,
@@ -44391,7 +44395,7 @@ class _BackdropPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.0
-        ..color = Colors.white.withOpacity(0.45),
+        ..color = Colors.white.withValues(alpha: 0.45),
     );
   }
 
@@ -44483,7 +44487,7 @@ class _AvatarFramePainter extends CustomPainter {
     canvas.drawCircle(
       c,
       w * 0.49,
-      Paint()..color = Colors.white.withOpacity(0.14),
+      Paint()..color = Colors.white.withValues(alpha: 0.14),
     );
 
     void ring(double r, double width, double opacity) {
@@ -44493,7 +44497,7 @@ class _AvatarFramePainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = width
-          ..color = Colors.white.withOpacity(opacity),
+          ..color = Colors.white.withValues(alpha: opacity),
       );
     }
 
@@ -44524,7 +44528,7 @@ class _SkyPainter extends CustomPainter {
       r,
       Paint()
         ..shader = RadialGradient(
-          colors: [color, color.withOpacity(0)],
+          colors: [color, color.withValues(alpha: 0)],
         ).createShader(Rect.fromCircle(center: center, radius: r)),
     );
   }
@@ -44547,13 +44551,13 @@ class _SkyPainter extends CustomPainter {
       canvas,
       Offset(0, vb * 0.85),
       w * 0.65,
-      const Color(0xFF8FB4FF).withOpacity(0.35),
+      const Color(0xFF8FB4FF).withValues(alpha: 0.35),
     );
     _glow(
       canvas,
       Offset(w, vb * 0.10),
       w * 0.60,
-      const Color(0xFF6C9BFF).withOpacity(0.35),
+      const Color(0xFF6C9BFF).withValues(alpha: 0.35),
     );
 
     // 2) sunbeams fanning out from behind the avatar
@@ -44574,8 +44578,8 @@ class _SkyPainter extends CustomPainter {
       Paint()
         ..shader = RadialGradient(
           colors: [
-            Colors.white.withOpacity(0.24),
-            Colors.white.withOpacity(0.0),
+            Colors.white.withValues(alpha: 0.24),
+            Colors.white.withValues(alpha: 0.0),
           ],
         ).createShader(
           Rect.fromCircle(center: c, radius: math.min(w * 0.75, len)),
@@ -44583,8 +44587,8 @@ class _SkyPainter extends CustomPainter {
     );
 
     // 3) warm halo right behind the avatar
-    _glow(canvas, c, 112, Colors.white.withOpacity(0.55));
-    _glow(canvas, c, 84, const Color(0xFFD3E2FF).withOpacity(0.45));
+    _glow(canvas, c, 112, Colors.white.withValues(alpha: 0.55));
+    _glow(canvas, c, 84, const Color(0xFFD3E2FF).withValues(alpha: 0.45));
 
     canvas.restore();
   }
@@ -44624,15 +44628,16 @@ class _DoodlePainter extends CustomPainter {
         if (o.dx < 12 ||
             o.dx > size.width - 12 ||
             o.dy < 12 ||
-            o.dy > size.height - 12)
+            o.dy > size.height - 12) {
           continue;
+        }
 
         final Color col = _cols[seed % _cols.length];
         final double alpha = 0.10 + ((seed * 7) % 5) * 0.012;
-        final Paint fill = Paint()..color = col.withOpacity(alpha);
+        final Paint fill = Paint()..color = col.withValues(alpha: alpha);
         final Paint line =
             Paint()
-              ..color = col.withOpacity(alpha + 0.03)
+              ..color = col.withValues(alpha: alpha + 0.03)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 2.4
               ..strokeCap = StrokeCap.round
@@ -45045,7 +45050,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<OutfitItem> get maleOutfits => kMaleOutfits;
   List<OutfitItem> get femaleOutfits => kFemaleOutfits;
 
-  static const List<AccessoryItem> _femaleGlasses = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleGlasses = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'glasses'),
     AccessoryItem(name: 'Cat Eye\nแว่นตาแมว', id: 3, type: 'glasses'),
     AccessoryItem(name: 'Heart\nแว่นรูปหัวใจ', id: 5, type: 'glasses'),
@@ -45054,7 +45059,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Pastel Round\nแว่นกลมสีพาสเทล', id: 11, type: 'glasses'),
     AccessoryItem(name: 'Butterfly\nแว่นผีเสื้อ', id: 12, type: 'glasses'),
   ];
-  static const List<AccessoryItem> _maleGlasses = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleGlasses = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'glasses'),
     AccessoryItem(name: 'Round\nแว่นกลม', id: 1, type: 'glasses'),
     AccessoryItem(name: 'Thick Square\nแว่นเหลี่ยมกรอบหนา', id: 2, type: 'glasses'),
@@ -45066,7 +45071,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<AccessoryItem> get glassesList =>
       selectedGender == 'male' ? _maleGlasses : _femaleGlasses;
 
-  static const List<AccessoryItem> _femaleHat = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleHat = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'hat'),
     AccessoryItem(name: 'Yellow Cap\nหมวกแก๊ปสีเหลือง', id: 1, type: 'hat'),
     AccessoryItem(name: 'Pink Beanie\nหมวกไหมพรมสีชมพู', id: 22, type: 'hat'),
@@ -45082,7 +45087,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Santa\nหมวกซานตา', id: 8, type: 'hat'),
     AccessoryItem(name: 'Headphones\nหูฟัง', id: 13, type: 'hat'),
   ];
-  static const List<AccessoryItem> _maleHat = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleHat = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'hat'),
     AccessoryItem(name: 'Sport Cap\nหมวกแก๊ปกีฬา', id: 21, type: 'hat'),
     AccessoryItem(name: 'Beanie\nหมวกไหมพรม', id: 2, type: 'hat'),
@@ -45099,7 +45104,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<AccessoryItem> get hatList =>
       selectedGender == 'male' ? _maleHat : _femaleHat;
 
-  static const List<AccessoryItem> _femaleClip = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleClip = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'clip'),
     AccessoryItem(name: 'Star\nกิ๊บรูปดาว', id: 1, type: 'clip'),
     AccessoryItem(name: 'Daisy\nกิ๊บดอกเดซี่', id: 2, type: 'clip'),
@@ -45113,7 +45118,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Strawberry\nกิ๊บสตรอว์เบอร์รี', id: 15, type: 'clip'),
     AccessoryItem(name: 'Kitty\nกิ๊บแมวเหมียว', id: 16, type: 'clip'),
   ];
-  static const List<AccessoryItem> _maleClip = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleClip = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'clip'),
     AccessoryItem(name: 'Lightning\nกิ๊บสายฟ้า', id: 10, type: 'clip'),
     AccessoryItem(name: 'Bar Pins\nกิ๊บแท่ง', id: 11, type: 'clip'),
@@ -45124,7 +45129,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<AccessoryItem> get clipList =>
       selectedGender == 'male' ? _maleClip : _femaleClip;
 
-  static const List<AccessoryItem> _femaleEarring = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleEarring = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'earring'),
     AccessoryItem(name: 'Pearl\nต่างหูมุก', id: 1, type: 'earring'),
     AccessoryItem(name: 'Gold Hoops\nต่างหูห่วงทอง', id: 2, type: 'earring'),
@@ -45134,7 +45139,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Teardrop\nต่างหูหยดน้ำ', id: 6, type: 'earring'),
     AccessoryItem(name: 'Cherry\nต่างหูเชอร์รี่', id: 7, type: 'earring'),
   ];
-  static const List<AccessoryItem> _maleEarring = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleEarring = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'earring'),
     AccessoryItem(name: 'Diamond Stud\nต่างหูเพชร', id: 8, type: 'earring'),
     AccessoryItem(name: 'Cross\nต่างหูไม้กางเขน', id: 9, type: 'earring'),
@@ -45144,7 +45149,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<AccessoryItem> get earringList =>
       selectedGender == 'male' ? _maleEarring : _femaleEarring;
 
-  static const List<AccessoryItem> _femaleNeck = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleNeck = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'neck'),
     AccessoryItem(name: 'Pearls\nสร้อยมุก', id: 1, type: 'neck'),
     AccessoryItem(name: 'Heart Pendant\nสร้อยจี้หัวใจ', id: 2, type: 'neck'),
@@ -45154,7 +45159,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Pink Scarf\nผ้าพันคอสีชมพู', id: 8, type: 'neck'),
     AccessoryItem(name: 'Daisy Chain\nสร้อยดอกเดซี่', id: 9, type: 'neck'),
   ];
-  static const List<AccessoryItem> _maleNeck = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleNeck = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'neck'),
     AccessoryItem(name: 'Scarf\nผ้าพันคอ', id: 4, type: 'neck'),
     AccessoryItem(name: 'Gold Chain\nสร้อยทอง', id: 7, type: 'neck'),
@@ -45166,7 +45171,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   List<AccessoryItem> get neckList =>
       selectedGender == 'male' ? _maleNeck : _femaleNeck;
 
-  static const List<AccessoryItem> _femaleExtra = const <AccessoryItem>[
+  static const List<AccessoryItem> _femaleExtra = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'extra'),
     AccessoryItem(name: 'Freckles\nกระบนหน้า', id: 1, type: 'extra'),
     AccessoryItem(name: 'Star Sticker\nสติกเกอร์ดาว', id: 3, type: 'extra'),
@@ -45174,7 +45179,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     AccessoryItem(name: 'Sparkles\nประกายวิบวับ', id: 5, type: 'extra'),
     AccessoryItem(name: 'Face Gems\nอัญมณีติดหน้า', id: 6, type: 'extra'),
   ];
-  static const List<AccessoryItem> _maleExtra = const <AccessoryItem>[
+  static const List<AccessoryItem> _maleExtra = <AccessoryItem>[
     AccessoryItem(name: 'None\nไม่ใส่', id: 0, type: 'extra'),
     AccessoryItem(name: 'Band-Aid\nพลาสเตอร์ยา', id: 2, type: 'extra'),
     AccessoryItem(name: 'Scar\nรอยแผลเป็น', id: 7, type: 'extra'),
@@ -45262,14 +45267,14 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
           selected
               ? [
                 BoxShadow(
-                  color: const Color(0xFF2F63EA).withOpacity(0.32),
+                  color: const Color(0xFF2F63EA).withValues(alpha: 0.32),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),
               ]
               : [
                 BoxShadow(
-                  color: const Color(0xFF2F63EA).withOpacity(0.06),
+                  color: const Color(0xFF2F63EA).withValues(alpha: 0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -45287,7 +45292,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         border: Border.all(color: Colors.white, width: 1.8),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF22C55E).withOpacity(0.35),
+            color: const Color(0xFF22C55E).withValues(alpha: 0.35),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -45313,7 +45318,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFFA62B).withOpacity(0.35),
+                  color: const Color(0xFFFFA62B).withValues(alpha: 0.35),
                   blurRadius: 6,
                   offset: const Offset(0, 3),
                 ),
@@ -45361,7 +45366,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         border: Border.all(color: const Color(0xFFE3EBFA), width: 1.8),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3B73F5).withOpacity(0.10),
+            color: const Color(0xFF3B73F5).withValues(alpha: 0.10),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -45375,7 +45380,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
 
   // ignore: unused_element
   Widget _cloud(double w, {double opacity = 0.9}) {
-    final Color c = Colors.white.withOpacity(opacity);
+    final Color c = Colors.white.withValues(alpha: opacity);
     return SizedBox(
       width: w,
       height: w * 0.55,
@@ -45431,7 +45436,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     return Icon(
       Icons.star_rounded,
       size: size,
-      color: const Color(0xFFFFE066).withOpacity(opacity),
+      color: const Color(0xFFFFE066).withValues(alpha: opacity),
     );
   }
 
@@ -45454,7 +45459,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
           border: Border.all(color: Colors.white, width: 2.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.14),
+              color: Colors.black.withValues(alpha: 0.14),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -45497,7 +45502,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
               border: Border.all(color: const Color(0xFFBFD8F5), width: 2.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF0F2F8C).withOpacity(0.10),
+                  color: const Color(0xFF0F2F8C).withValues(alpha: 0.10),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -45521,12 +45526,12 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
             Positioned(
               top: -70,
               right: -50,
-              child: _softBubble(220, Colors.white.withOpacity(0.10)),
+              child: _softBubble(220, Colors.white.withValues(alpha: 0.10)),
             ),
             Positioned(
               bottom: -60,
               left: -40,
-              child: _softBubble(160, Colors.white.withOpacity(0.07)),
+              child: _softBubble(160, Colors.white.withValues(alpha: 0.07)),
             ),
             Positioned.fill(
               child: _ProfileBackdrop(
@@ -45568,17 +45573,17 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFFF1B8).withOpacity(0.85),
+            color: const Color(0xFFFFF1B8).withValues(alpha: 0.85),
             blurRadius: 26,
             spreadRadius: 2,
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.55),
+            color: Colors.white.withValues(alpha: 0.55),
             blurRadius: 44,
             spreadRadius: 6,
           ),
           BoxShadow(
-            color: const Color(0xFF0F2F8C).withOpacity(0.20),
+            color: const Color(0xFF0F2F8C).withValues(alpha: 0.20),
             blurRadius: 20,
             offset: const Offset(0, 12),
           ),
@@ -45620,7 +45625,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
               border: Border.all(color: const Color(0xFFFFD43B), width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
+                  color: Colors.black.withValues(alpha: 0.12),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),
@@ -45692,7 +45697,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
       child: IgnorePointer(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.55),
+            color: Colors.white.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(radius),
           ),
           child: Stack(
@@ -45814,8 +45819,9 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
       if (_ownsAvatar(
         ShopCatalog.outfitKey(selectedGender, i),
         ShopCatalog.outfitPrice(selectedGender, i),
-      ))
+      )) {
         n++;
+      }
     }
     return n;
   }
@@ -45868,7 +45874,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                               width: 44,
                               height: 5,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
@@ -45999,7 +46005,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF3B73F5).withOpacity(0.08),
+                            color: const Color(0xFF3B73F5).withValues(alpha: 0.08),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -46102,7 +46108,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
               BoxShadow(
                 color: const Color(
                   0xFF3B73F5,
-                ).withOpacity(selected ? 0.35 : 0.0),
+                ).withValues(alpha: selected ? 0.35 : 0.0),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -46181,14 +46187,14 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                   isSelected
                       ? [
                         BoxShadow(
-                          color: gradientColors.first.withOpacity(0.35),
+                          color: gradientColors.first.withValues(alpha: 0.35),
                           blurRadius: 18,
                           offset: const Offset(0, 10),
                         ),
                       ]
                       : [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -46208,8 +46214,8 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                         decoration: BoxDecoration(
                           color:
                               isSelected
-                                  ? Colors.white.withOpacity(0.22)
-                                  : gradientColors.first.withOpacity(0.10),
+                                  ? Colors.white.withValues(alpha: 0.22)
+                                  : gradientColors.first.withValues(alpha: 0.10),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -46296,14 +46302,14 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
               selected
                   ? [
                     BoxShadow(
-                      color: const Color(0xFFFFB627).withOpacity(0.45),
+                      color: const Color(0xFFFFB627).withValues(alpha: 0.45),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ]
                   : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.10),
+                      color: Colors.black.withValues(alpha: 0.10),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -46559,7 +46565,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                     color: outfit.primaryColor,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Colors.black.withOpacity(0.08),
+                                      color: Colors.black.withValues(alpha: 0.08),
                                     ),
                                   ),
                                 ),
@@ -46922,7 +46928,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2F63EA).withOpacity(0.30),
+                      color: const Color(0xFF2F63EA).withValues(alpha: 0.30),
                       blurRadius: 24,
                       offset: const Offset(0, 10),
                     ),
@@ -46945,7 +46951,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                     Text(
                                       'Hello !',
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.95),
+                                        color: Colors.white.withValues(alpha: 0.95),
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
                                         shadows: _softTextShadow,
@@ -46987,7 +46993,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFFE65100).withOpacity(0.45),
+                                          color: const Color(0xFFE65100).withValues(alpha: 0.45),
                                           blurRadius: 8,
                                           offset: const Offset(0, 3),
                                         ),
@@ -47033,7 +47039,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(
+                                            color: Colors.black.withValues(alpha: 
                                               0.20,
                                             ),
                                             blurRadius: 8,
@@ -47069,10 +47075,10 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.20),
+                                  color: Colors.white.withValues(alpha: 0.20),
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
-                                    color: Colors.white.withOpacity(0.35),
+                                    color: Colors.white.withValues(alpha: 0.35),
                                     width: 1.2,
                                   ),
                                 ),
@@ -47123,7 +47129,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                           ),
                           borderRadius: BorderRadius.circular(28),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.55),
+                            color: Colors.white.withValues(alpha: 0.55),
                             width: 1.5,
                           ),
                           boxShadow: [
@@ -47132,7 +47138,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                               offset: Offset(0, 5),
                             ),
                             BoxShadow(
-                              color: const Color(0xFFFF8A00).withOpacity(0.38),
+                              color: const Color(0xFFFF8A00).withValues(alpha: 0.38),
                               blurRadius: 20,
                               offset: const Offset(0, 12),
                             ),
@@ -47293,21 +47299,24 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         selectedItemColor: const Color.fromARGB(255, 0, 68, 255),
         unselectedItemColor: const Color(0xFF94A3B8),
         onTap: (index) {
-          if (index == 0)
+          if (index == 0) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const HomeScreen()),
             );
-          if (index == 1)
+          }
+          if (index == 1) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const CheckInScreen()),
             );
-          if (index == 2)
+          }
+          if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const SettingScreen()),
             );
+          }
           if (index == 3) setState(() => currentIndex = 3);
         },
         items: const [
@@ -47347,7 +47356,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2F63EA).withOpacity(0.10),
+            color: const Color(0xFF2F63EA).withValues(alpha: 0.10),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),
@@ -47616,10 +47625,10 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: color.withOpacity(0.45), width: 2),
+        border: Border.all(color: color.withValues(alpha: 0.45), width: 2),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.12),
+            color: color.withValues(alpha: 0.12),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -47633,7 +47642,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
               gradient: LinearGradient(
-                colors: [color.withOpacity(0.22), color.withOpacity(0.08)],
+                colors: [color.withValues(alpha: 0.22), color.withValues(alpha: 0.08)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

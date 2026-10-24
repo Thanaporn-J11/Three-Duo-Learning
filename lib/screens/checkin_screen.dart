@@ -942,7 +942,7 @@ BoxDecoration _cardDeco({
     border: border != null ? Border.all(color: border, width: 2.5) : null,
     boxShadow: [
       BoxShadow(
-        color: const Color(0xFF3B82F6).withOpacity(0.13),
+        color: const Color(0xFF3B82F6).withValues(alpha: 0.13),
         blurRadius: 24,
         offset: const Offset(0, 10),
       ),
@@ -977,7 +977,7 @@ class _SectionTitle extends StatelessWidget {
           height: box,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: tint.withOpacity(0.14),
+            color: tint.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(compact ? 13 : 16),
           ),
           child: Text(emoji, style: TextStyle(fontSize: compact ? 21 : 25)),
@@ -1907,7 +1907,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: _kBlue.withOpacity(0.30),
+            color: _kBlue.withValues(alpha: 0.30),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -1924,7 +1924,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                 height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.10),
+                  color: Colors.white.withValues(alpha: 0.10),
                 ),
               ),
             ),
@@ -1950,10 +1950,10 @@ class _CheckInScreenState extends State<CheckInScreen> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.22),
+                          color: Colors.white.withValues(alpha: 0.22),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.35),
+                            color: Colors.white.withValues(alpha: 0.35),
                             width: 1.5,
                           ),
                         ),
@@ -1999,7 +1999,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
@@ -2023,9 +2023,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.22),
+                        color: Colors.white.withValues(alpha: 0.22),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.45),
+                          color: Colors.white.withValues(alpha: 0.45),
                           width: 2.5,
                         ),
                       ),
@@ -2052,7 +2052,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 3),
         padding: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: tint.withOpacity(0.10),
+          color: tint.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -2316,7 +2316,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                           isChecked
                               ? [
                                 BoxShadow(
-                                  color: _kBlue.withOpacity(0.35),
+                                  color: _kBlue.withValues(alpha: 0.35),
                                   blurRadius: 7,
                                   offset: const Offset(0, 3),
                                 ),
@@ -2573,7 +2573,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFF59E0B).withOpacity(0.3),
+                              color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
                               blurRadius: 14,
                               offset: const Offset(0, 6),
                             ),
@@ -2953,7 +2953,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                   reached
                       ? [
                         BoxShadow(
-                          color: const Color(0xFFFFB300).withOpacity(0.45),
+                          color: const Color(0xFFFFB300).withValues(alpha: 0.45),
                           blurRadius: 12,
                           offset: const Offset(0, 5),
                         ),
@@ -3079,7 +3079,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
+        color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white, width: 3),
       ),
@@ -3099,7 +3099,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
               borderRadius: BorderRadius.circular(22),
               boxShadow: [
                 BoxShadow(
-                  color: _kBlue.withOpacity(0.10),
+                  color: _kBlue.withValues(alpha: 0.10),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
