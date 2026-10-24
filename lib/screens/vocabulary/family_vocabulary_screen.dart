@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../../models/vocabulary_word.dart';
+import '../../services/vocabulary_api_service.dart';
+import '../../services/vocabulary_progress_service.dart';
+import '../../services/lesson_progress.dart';
+import 'vocabulary_resume.dart';
+import '../../services/word_speaker.dart';
+import 'vocabulary_api_status_view.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
-class FamilyItem {
+class FamilyItem implements VocabularyWordView {
   final String word;
-  final String phonetics; // คำอ่านไทย
+  final String thaiPhonetics;
   final String translation;
   final String imagePath;
 
   FamilyItem({
     required this.word,
-    required this.phonetics,
+    required this.thaiPhonetics,
     required this.translation,
     required this.imagePath,
   });
+  @override
+  String get phonetics => '';
+  @override
+  String? get audioUrl => null;
+
 }
 
 class FamilyVocabularyScreen extends StatefulWidget {
@@ -26,149 +39,215 @@ class FamilyVocabularyScreen extends StatefulWidget {
 
 class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
   int currentIndex = 0;
-  late FlutterTts flutterTts;
+  List<VocabularyWord>? _apiWords;
+  bool _isLoading = true;
+  String? _loadError;
+
+  int get _wordCount => _apiWords?.length ?? familyList.length;
+  late AudioPlayer _audioPlayer;
   bool isSpeaking = false;
 
-  // 👨‍👩‍👧‍👦 ข้อมูลคำศัพท์หมวดครอบครัว (Family) ทั้ง 16 คำ
   final List<FamilyItem> familyList = [
     FamilyItem(
       word: 'Baby',
-      phonetics: 'เบ-บี',
+      thaiPhonetics: 'เบ บี',
       translation: 'เด็กทารก',
       imagePath: 'assets/images/vocabulary/family/Baby.png',
     ),
     FamilyItem(
       word: 'Brother',
-      phonetics: 'บรา-เธอร์',
+      thaiPhonetics: 'บรา เธอร์',
       translation: 'พี่ชาย / น้องชาย',
       imagePath: 'assets/images/vocabulary/family/Brother.png',
     ),
     FamilyItem(
       word: 'Child',
-      phonetics: 'ชายลด์',
+      thaiPhonetics: 'ชายลด์',
       translation: 'เด็ก',
       imagePath: 'assets/images/vocabulary/family/Child.png',
     ),
     FamilyItem(
       word: 'Daughter',
-      phonetics: 'ดอ-เทอร์',
+      thaiPhonetics: 'ดอ เทอร์',
       translation: 'ลูกสาว',
-      imagePath: 'assets/images/vocabulary/family/Daughter.jpg',
+      imagePath: 'assets/images/vocabulary/family/Daughter.png',
     ),
     FamilyItem(
       word: 'Family',
-      phonetics: 'แฟม-มิ-ลี',
+      thaiPhonetics: 'แฟม มะ ลี',
       translation: 'ครอบครัว',
       imagePath: 'assets/images/vocabulary/family/Family.png',
     ),
     FamilyItem(
       word: 'Father',
-      phonetics: 'ฟา-เธอร์',
+      thaiPhonetics: 'ฟา เธอร์',
       translation: 'พ่อ',
       imagePath: 'assets/images/vocabulary/family/Father.png',
     ),
     FamilyItem(
       word: 'Grandfather',
-      phonetics: 'แกรนด์-ฟา-เธอร์',
+      thaiPhonetics: 'แกรนด์ ฟา เธอร์',
       translation: 'ปู่ / ตา',
       imagePath: 'assets/images/vocabulary/family/Grandfather.png',
     ),
     FamilyItem(
       word: 'Grandmother',
-      phonetics: 'แกรนด์-มา-เธอร์',
+      thaiPhonetics: 'แกรนด์ มา เธอร์',
       translation: 'ย่า / ยาย',
-      imagePath: 'assets/images/vocabulary/family/Grandmother.jpg',
+      imagePath: 'assets/images/vocabulary/family/Grandmother.png',
     ),
     FamilyItem(
       word: 'Grandparents',
-      phonetics: 'แกรนด์-แพ-เรินท์ส',
+      thaiPhonetics: 'แกรนด์ แพ เรินท์ส',
       translation: 'ปู่ย่าตายาย',
-      imagePath: 'assets/images/vocabulary/family/Grandparents.jpg',
+      imagePath: 'assets/images/vocabulary/family/Grandparents.png',
     ),
     FamilyItem(
       word: 'Mother',
-      phonetics: 'มา-เธอร์',
+      thaiPhonetics: 'มา เธอร์',
       translation: 'แม่',
       imagePath: 'assets/images/vocabulary/family/Mother.png',
     ),
     FamilyItem(
       word: 'Parents',
-      phonetics: 'แพ-เรินท์ส',
+      thaiPhonetics: 'แพ เรินท์ส',
       translation: 'พ่อแม่ / ผู้ปกครอง',
       imagePath: 'assets/images/vocabulary/family/Parents.png',
     ),
     FamilyItem(
       word: 'Relative',
-      phonetics: 'เรล-ละ-ทิฟ',
+      thaiPhonetics: 'เรล ละ ทิฟ',
       translation: 'ญาติ',
-      imagePath: 'assets/images/vocabulary/family/Relative.jpg',
+      imagePath: 'assets/images/vocabulary/family/Relative.png',
     ),
     FamilyItem(
       word: 'Sibling',
-      phonetics: 'ซิบลืง',
+      thaiPhonetics: 'ซิบ ลิง',
       translation: 'พี่น้อง',
       imagePath: 'assets/images/vocabulary/family/Sibling.png',
     ),
     FamilyItem(
       word: 'Sister',
-      phonetics: 'ซิส-เตอร์',
+      thaiPhonetics: 'ซิส เตอร์',
       translation: 'พี่สาว / น้องสาว',
       imagePath: 'assets/images/vocabulary/family/Sister.png',
     ),
     FamilyItem(
       word: 'Son',
-      phonetics: 'ซัน',
+      thaiPhonetics: 'ซัน',
       translation: 'ลูกชาย',
       imagePath: 'assets/images/vocabulary/family/Son.png',
     ),
     FamilyItem(
       word: 'Twin',
-      phonetics: 'ทวิน',
+      thaiPhonetics: 'ทวิน',
       translation: 'ฝาแฝด',
-      imagePath: 'assets/images/vocabulary/family/Twin.jpg',
+      imagePath: 'assets/images/vocabulary/family/Twin.png',
     ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _initTts();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.onPlayerComplete.listen((event) {
+      if (mounted) {
+        setState(() => isSpeaking = false);
+      }
+    });
+    _loadWords().then((_) => _restorePosition());
   }
 
-  void _initTts() {
-    flutterTts = FlutterTts();
-    flutterTts.setLanguage("en-US");
-    flutterTts.setSpeechRate(0.45);
-    flutterTts.setVolume(1.0);
-    flutterTts.setPitch(1.0);
-
-    flutterTts.setStartHandler(() => setState(() => isSpeaking = true));
-    flutterTts.setCompletionHandler(() => setState(() => isSpeaking = false));
-    flutterTts.setErrorHandler((msg) => setState(() => isSpeaking = false));
+  Future<void> _loadWords() async {
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+    try {
+      final words = await VocabularyApiService.getWords('family');
+      if (!mounted) return;
+      setState(() {
+        // An empty list from the server -> use the built-in words.
+        _apiWords = words.isEmpty ? null : words;
+        _isLoading = false;
+      });
+    } catch (error) {
+      // Server down / offline: carry on with the words built into the app
+      // instead of stopping the child on an error page.
+      debugPrint('Vocabulary API error: $error');
+      if (!mounted) return;
+      setState(() {
+        _apiWords = null;
+        _loadError = null;
+        _isLoading = false;
+      });
+      _showOfflineNotice();
+    }
   }
 
-  Future<void> _speak(String text) async {
-    await flutterTts.stop();
-    await flutterTts.speak(text);
+  void _showOfflineNotice() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('ตอนนี้เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ใช้คำศัพท์ในเครื่องแทนนะ'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
+  void _useLocalWords() {
+    setState(() {
+      _apiWords = null;
+      _loadError = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('ใช้คำศัพท์ที่มีในเครื่องแทน')),
+    );
+  }
+
+
+  Future<void> _speak(String word, [String? providedAudioUrl]) async {
+    final cleanWord = word.replaceAll(RegExp(r'[^\w\s]'), '').trim();
+    try {
+      final audioUrl = providedAudioUrl != null && providedAudioUrl.isNotEmpty
+          ? providedAudioUrl
+          : "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${Uri.encodeComponent(cleanWord)}";
+
+      await _audioPlayer.stop();
+      await WordSpeaker.stop();
+      setState(() => isSpeaking = true);
+      await _audioPlayer
+          .play(UrlSource(audioUrl))
+          .timeout(const Duration(seconds: 6));
+    } catch (e) {
+      // Online voice unavailable (offline, blocked, too slow):
+      // read the word with the phone's own voice instead.
+      debugPrint("Audio Error: $e");
+      try {
+        await _audioPlayer.stop();
+      } catch (_) {}
+      if (mounted) setState(() => isSpeaking = false);
+      await WordSpeaker.speak(cleanWord);
+    }
   }
 
   @override
   void dispose() {
-    flutterTts.stop();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
-  // สร้างแบบทดสอบสุ่ม 10 ข้อสำหรับหมวดครอบครัว
   List<QuizItem> _generateFamilyQuiz() {
     final List<QuizItem> quizList = [];
-    final List<FamilyItem> shuffledList = List<FamilyItem>.from(familyList)..shuffle();
+    final List<FamilyItem> shuffledList =
+        List<FamilyItem>.from(familyList)..shuffle();
 
     for (int i = 0; i < 10 && i < shuffledList.length; i++) {
       final current = shuffledList[i];
-      final otherOptions = familyList.where((item) => item.word != current.word).toList()..shuffle();
+      final otherOptions =
+          familyList.where((item) => item.word != current.word).toList()
+            ..shuffle();
 
       if (i % 2 == 0) {
-        // รูปแบบที่ 1: ดูรูปภาพ -> เลือกคำศัพท์
         final wordOptions = [
           current.word,
           otherOptions[0].word,
@@ -176,17 +255,18 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
           otherOptions[2].word,
         ]..shuffle();
 
-        quizList.add(QuizItem(
-          questionText: 'รูปภาพนี้ตรงกับคำศัพท์ใด',
-          questionImage: current.imagePath,
-          correctWord: current.word,
-          correctTranslation: current.translation,
-          correctImage: current.imagePath,
-          options: wordOptions,
-          isImageOption: false,
-        ));
+        quizList.add(
+          QuizItem(
+            questionText: 'รูปภาพนี้ตรงกับคำศัพท์ใด',
+            questionImage: current.imagePath,
+            correctWord: current.word,
+            correctTranslation: current.translation,
+            correctImage: current.imagePath,
+            options: wordOptions,
+            isImageOption: false,
+          ),
+        );
       } else {
-        // รูปแบบที่ 2: ดูคำศัพท์ -> เลือกรูปภาพ
         final imageOptions = [
           current.imagePath,
           otherOptions[0].imagePath,
@@ -194,78 +274,152 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
           otherOptions[2].imagePath,
         ]..shuffle();
 
-        quizList.add(QuizItem(
-          questionText: 'รูปภาพใด คือ ${current.word}',
-          targetWord: current.word,
-          correctWord: current.word,
-          correctTranslation: current.translation,
-          correctImage: current.imagePath,
-          options: imageOptions,
-          isImageOption: true,
-        ));
+        quizList.add(
+          QuizItem(
+            questionText: 'รูปภาพใด คือ ${current.word}',
+            targetWord: current.word,
+            correctWord: current.word,
+            correctTranslation: current.translation,
+            correctImage: current.imagePath,
+            options: imageOptions,
+            isImageOption: true,
+          ),
+        );
       }
     }
     quizList.shuffle();
     return quizList;
   }
 
-  void _nextWord() {
-    if (currentIndex < familyList.length - 1) {
-      setState(() => currentIndex++);
+  /// Back to the word the child stopped at last time (asks first).
+  Future<void> _restorePosition() async {
+    if (!mounted || _isLoading || _loadError != null) return;
+    final saved = await LessonProgress.load('vocab_family', _wordCount);
+    if (!mounted || saved == null) return;
+    final api = _apiWords;
+    final preview =
+        api != null ? api[saved.index].term : familyList[saved.index].word;
+    final resume = await askVocabularyResume(
+      context,
+      wordNumber: saved.index + 1,
+      total: _wordCount,
+      wordPreview: preview,
+    );
+    if (!mounted) return;
+    if (resume) {
+      setState(() => currentIndex = saved.index);
     } else {
-      // เปิดหน้า GraduationScreen เพื่อเตรียมเริ่มทำแบบฝึกหัด
+      LessonProgress.clear('vocab_family');
+    }
+  }
+
+  /// Counts the word on screen as learned (for the parent report).
+  void _markCurrentWordLearned() {
+    final api = _apiWords;
+    final String word;
+    if (api != null) {
+      if (currentIndex >= api.length) return;
+      word = api[currentIndex].term;
+    } else {
+      if (currentIndex >= familyList.length) return;
+      word = familyList[currentIndex].word;
+    }
+    VocabularyProgress.markLearned('family', word);
+  }
+
+  void _nextWord() async {
+    await _audioPlayer.stop();
+    if (mounted) setState(() => isSpeaking = false);
+    _markCurrentWordLearned();
+
+    if (currentIndex < _wordCount - 1) {
+      setState(() => currentIndex++);
+      LessonProgress.save('vocab_family', currentIndex, 0);
+    } else {
+      // Went through every word: next time start from the first one.
+      LessonProgress.clear('vocab_family');
+      VocabularyProgress.markCategoryDone('family'); // green dot
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => GraduationScreen(
-            categoryTitle: 'ครอบครัว',
-            quizItems: _generateFamilyQuiz(),
-          ),
+          builder:
+              (context) => GraduationScreen(
+                categoryTitle: 'ครอบครัว',
+                categorySlug: 'family',
+                quizItems: _generateFamilyQuiz(),
+              ),
         ),
       );
     }
   }
 
-  void _previousWord() {
+  void _previousWord() async {
+    await _audioPlayer.stop();
+    if (mounted) setState(() => isSpeaking = false);
+
     if (currentIndex > 0) {
       setState(() => currentIndex--);
+      LessonProgress.save('vocab_family', currentIndex, 0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentItem = familyList[currentIndex];
-    final progress = (currentIndex + 1) / familyList.length;
+    if (_isLoading) {
+      return const VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'กำลังโหลดคำศัพท์...',
+        loading: true,
+      );
+    }
+    if (_loadError != null) {
+      return VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'โหลดคำศัพท์ไม่สำเร็จ $_loadError',
+        loading: false,
+        onRetry: _loadWords,
+        onUseLocal: _useLocalWords,
+      );
+    }
+    if (_apiWords?.isEmpty ?? false) {
+      return VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'ยังไม่มีคำศัพท์ในหมวดนี้',
+        loading: false,
+        onRetry: _loadWords,
+        onUseLocal: _useLocalWords,
+      );
+    }
+
+    final VocabularyWordView currentItem = _apiWords == null
+        ? familyList[currentIndex]
+        : _apiWords![currentIndex];
+    final progress = (currentIndex + 1) / _wordCount;
+    final double cardImageHeight = MediaQuery.of(context).size.height * 0.42;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF5FC),
+      backgroundColor: const Color(0xFF2E6F40), // สีเขียวเข้มตามการ์ดหมวดครอบครัว
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
             color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            size: 24,
           ),
-          child: IconButton(
-            icon: const Icon(Icons.close_rounded, color: Color(0xFF0D5C9E), size: 22),
-            onPressed: () => Navigator.pop(context),
-          ),
+          onPressed: () {
+            _audioPlayer.stop();
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           'คำศัพท์หมวดครอบครัว',
           style: TextStyle(
-            color: Color(0xFF0D5C9E),
-            fontWeight: FontWeight.w800,
-            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+            fontSize: 21,
             letterSpacing: 0.3,
           ),
         ),
@@ -273,243 +427,373 @@ class _FamilyVocabularyScreenState extends State<FamilyVocabularyScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF6FAFD),
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0D5C9E).withOpacity(0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(36),
+              // สีกรอบเข้ม: เขียวเข้มลึก (Deep Forest)
+              border: Border.all(color: const Color(0xFF1B4326), width: 3.5),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF112918).withOpacity(0.35),
+                  offset: const Offset(0, 10),
+                  blurRadius: 0,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Category Badge & Counter
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // ส่วนแสดงความคืบหน้าและป้ายกำกับ
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'คำศัพท์',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF0088FF),
-                                letterSpacing: 0.8,
-                              ),
-                            ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF9800),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE65100),
+                            offset: Offset(0, 3),
                           ),
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.groups_rounded,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 6),
                           Text(
-                            '${currentIndex + 1} / ${familyList.length}',
-                            style: const TextStyle(
+                            'ครอบครัว',
+                            style: GoogleFonts.mitr(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF5A789A),
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-
-                      // แถบ Progress Bar
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(begin: 0, end: progress),
-                          builder: (context, value, _) => LinearProgressIndicator(
-                            value: value,
-                            minHeight: 8,
-                            backgroundColor: const Color(0xFFDCEAF7),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0088FF)),
-                          ),
-                        ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
                       ),
-
-                      const Spacer(),
-
-                      // กล่องรูปภาพ (ความสูง 360 px กรอบสี่เหลี่ยมมุมมน)
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 350),
-                        transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
-                        child: Container(
-                          key: ValueKey<int>(currentIndex),
-                          height: 360,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF0D5C9E).withOpacity(0.08),
-                                blurRadius: 16,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(28),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Image.asset(
-                                currentItem.imagePath,
-                                width: double.infinity,
-                                height: double.infinity,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.image_not_supported_rounded, size: 80, color: Colors.grey),
-                              ),
-                            ),
-                          ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color(0xFFE2E8F0),
+                          width: 1.5,
                         ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE2E8F0),
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
-
-                      const SizedBox(height: 28),
-
-                      // คำศัพท์ + ปุ่มกดฟังเสียง
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: Column(
-                          key: ValueKey<int>(currentIndex),
+                      child: RichText(
+                        text: TextSpan(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    currentItem.word,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(0xFF1E293B),
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                GestureDetector(
-                                  onTap: () => _speak(currentItem.word),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: isSpeaking ? const Color(0xFF00C853) : const Color(0xFF0088FF),
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: (isSpeaking ? const Color(0xFF00C853) : const Color(0xFF0088FF)).withOpacity(0.35),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(
-                                      Icons.volume_up_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-
-                            // คำอ่านไทย
-                            Text(
-                              currentItem.phonetics,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade600,
+                            TextSpan(
+                              text: '${currentIndex + 1}',
+                              style: GoogleFonts.fredoka(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFFF9800),
                               ),
                             ),
-                            const SizedBox(height: 8),
-
-                            // คำแปลภาษาไทย
-                            Text(
-                              currentItem.translation,
-                              style: const TextStyle(
-                                fontSize: 24,
+                            TextSpan(
+                              text: ' / ${_wordCount}',
+                              style: GoogleFonts.fredoka(
+                                fontSize: 15,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF0D5C9E),
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                           ],
                         ),
                       ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
 
-                      const Spacer(flex: 2),
+                // หลอดพลัง Progress Bar
+                Container(
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFE2E8F0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
+                        spreadRadius: -1,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      tween: Tween<double>(begin: 0, end: progress),
+                      builder:
+                          (context, value, _) => LinearProgressIndicator(
+                            value: value,
+                            backgroundColor: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Color(0xFFFF9800),
+                            ),
+                          ),
+                    ),
+                  ),
+                ),
 
-                      // ปุ่มย้อนกลับและปุ่มถัดไป
+                const SizedBox(height: 18),
+
+                // กรอบรูปภาพ: สีส้มแอปริคอตพาสเทลอ่อน (อบอุ่น ไม่ซ้ำหมวดอื่น)
+                Container(
+                  height: cardImageHeight,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF0E6),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder:
+                          (child, anim) =>
+                              FadeTransition(opacity: anim, child: child),
+                      child: Container(
+                        key: ValueKey<int>(currentIndex),
+                        width: double.infinity,
+                        height: double.infinity,
+                        padding: const EdgeInsets.all(22.0),
+                        child: Image.asset(
+                          currentItem.imagePath,
+                          fit: BoxFit.contain,
+                          errorBuilder:
+                              (context, error, stackTrace) => const Icon(
+                                Icons.image_not_supported_rounded,
+                                size: 70,
+                                color: Colors.grey,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                // โซนแสดงคำศัพท์
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: Column(
+                    key: ValueKey<int>(currentIndex),
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: currentIndex > 0 ? _previousWord : null,
-                              icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                              label: const Text('ย้อนกลับ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF0D5C9E),
-                                side: const BorderSide(color: Color(0xFFCCE0F2), width: 1.5),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          Flexible(
+                            child: Text(
+                              currentItem.word,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.fredoka(
+                                fontSize:
+                                    currentItem.word.length > 11 ? 30 : 40,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF0F172A),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _nextWord,
-                              icon: Icon(
-                                currentIndex == familyList.length - 1 ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
-                                size: 18,
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () => _speak(currentItem.word, currentItem.audioUrl),
+                            child: Container(
+                              padding: const EdgeInsets.all(11),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSpeaking
+                                        ? const Color(0xFF00C853)
+                                        : const Color(0xFF2E6F40), // ปุ่มลำโพงโทนเดียวกับจอ
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF1B4326).withOpacity(0.35),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              label: Text(
-                                currentIndex == familyList.length - 1 ? 'เสร็จสิ้น' : 'ถัดไป',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0088FF),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                shadowColor: const Color(0xFF0088FF).withOpacity(0.3),
+                              child: const Icon(
+                                Icons.volume_up_rounded,
+                                color: Colors.white,
+                                size: 22,
                               ),
                             ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 4),
+                      // คำอ่านภาษาไทย: เว้นวรรคตามพยางค์
+                      Text(
+                        currentItem.thaiPhonetics,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.mitr(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // คำแปลภาษาไทย สีส้มสดใสขนาดใหญ่
+                      Text(
+                        currentItem.translation,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.mitr(
+                          fontSize:
+                              currentItem.translation.length > 14 ? 28 : 34,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF6D00),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                const Spacer(),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    // ปุ่มย้อนกลับ
+                    Expanded(
+                      child: Container(
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color:
+                              currentIndex > 0
+                                  ? Colors.white
+                                  : const Color(0xFFE2E8F0),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color:
+                                currentIndex > 0
+                                    ? const Color(0xFFCBD5E1)
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                          boxShadow:
+                              currentIndex > 0
+                                  ? const [
+                                    BoxShadow(
+                                      color: Color(0xFFCBD5E1),
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ]
+                                  : null,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: currentIndex > 0 ? _previousWord : null,
+                            child: Center(
+                              child: Text(
+                                'ย้อนกลับ',
+                                style: GoogleFonts.mitr(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color:
+                                      currentIndex > 0
+                                          ? const Color(0xFF64748B)
+                                          : const Color(0xFF94A3B8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    // ปุ่มถัดไป
+                    Expanded(
+                      child: Container(
+                        height: 54,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFFA726), Color(0xFFFF9800)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE65100),
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: _nextWord,
+                            child: Center(
+                              child: Text(
+                                currentIndex == _wordCount - 1
+                                    ? 'เสร็จสิ้น'
+                                    : 'ถัดไป',
+                                style: GoogleFonts.mitr(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

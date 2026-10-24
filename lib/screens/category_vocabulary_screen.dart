@@ -1,261 +1,619 @@
 import 'package:flutter/material.dart';
-import 'vocabulary/fruit_vocabulary_screen.dart'; // 1. หน้าคำศัพท์หมวดผลไม้
-import 'vocabulary/animal_vocabulary_screen.dart'; // 2. หน้าคำศัพท์หมวดสัตว์
-import 'vocabulary/color_vocabulary_screen.dart'; // 3. หน้าคำศัพท์หมวดสี
-import 'vocabulary/clothes_vocabulary_screen.dart'; // 4. หน้าคำศัพท์หมวดเสื้อผ้า
-import 'vocabulary/family_vocabulary_screen.dart'; // 5. หน้าคำศัพท์หมวดครอบครัว
-import 'vocabulary/vehicle_vocabulary_screen.dart'; // 6. หน้าคำศัพท์หมวดยานพาหนะ
-import 'vocabulary/career_vocabulary_screen.dart'; // 7. หน้าคำศัพท์หมวดอาชีพ
-import 'vocabulary/sport_vocabulary_screen.dart'; // 8. หน้าคำศัพท์หมวดกีฬา
-import 'vocabulary/day_vocabulary_screen.dart'; // 9. หน้าคำศัพท์หมวดวัน
-import 'vocabulary/month_vocabulary_screen.dart'; // 10. หน้าคำศัพท์หมวดเดือน
-import 'vocabulary/body_vocabulary_screen.dart'; // 11. หน้าคำศัพท์หมวดร่างกาย
-import 'vocabulary/number_vocabulary_screen.dart'; // 12. หน้าคำศัพท์หมวดตัวเลข
-import 'vocabulary/place_vocabulary_screen.dart'; // 13. หน้าคำศัพท์หมวดสถานที่
+import '../models/vocabulary_category.dart';
+import '../services/vocabulary_api_service.dart';
+import '../services/vocabulary_progress_service.dart';
+import '../services/lesson_progress.dart';
 
-// Model ข้อมูลหมวดหมู่
+// Import Screens หมวดหมู่
+import 'vocabulary/fruit_vocabulary_screen.dart';
+import 'vocabulary/animal_vocabulary_screen.dart';
+import 'vocabulary/color_vocabulary_screen.dart';
+import 'vocabulary/clothes_vocabulary_screen.dart';
+import 'vocabulary/family_vocabulary_screen.dart';
+import 'vocabulary/vehicle_vocabulary_screen.dart';
+import 'vocabulary/career_vocabulary_screen.dart';
+import 'vocabulary/sport_vocabulary_screen.dart';
+import 'vocabulary/day_vocabulary_screen.dart';
+import 'vocabulary/month_vocabulary_screen.dart';
+import 'vocabulary/body_vocabulary_screen.dart';
+import 'vocabulary/number_vocabulary_screen.dart';
+import 'vocabulary/place_vocabulary_screen.dart';
+import 'vocabulary/house_vocabulary_screen.dart';
+import 'vocabulary/daily_routine_vocabulary_screen.dart';
+import 'vocabulary/food_vocabulary_screen.dart';
+
 class CategoryItem {
-  final String titleEn;
+  final String slug;
   final String titleTh;
-  final int wordCount;
-  final IconData icon;
+  final IconData fallbackIcon;
+  final String imagePath;
+  final Color cardColor;
+  final Widget screen;
 
   CategoryItem({
-    required this.titleEn,
+    required this.slug,
     required this.titleTh,
-    required this.wordCount,
-    required this.icon,
+    required this.fallbackIcon,
+    required this.imagePath,
+    required this.cardColor,
+    required this.screen,
   });
 }
 
-class CategoryScreen extends StatelessWidget {
-  CategoryScreen({super.key});
+class CategoryVocabularyScreen extends StatefulWidget {
+  const CategoryVocabularyScreen({super.key});
 
-  // ข้อมูลหมวดหมู่ครบทั้ง 13 หมวด
-  final List<CategoryItem> categories = [
-    CategoryItem(titleEn: 'Family', titleTh: 'ครอบครัว', wordCount: 16, icon: Icons.people_alt_rounded),
-    CategoryItem(titleEn: 'Animal', titleTh: 'สัตว์', wordCount: 30, icon: Icons.pets_rounded),
-    CategoryItem(titleEn: 'Color', titleTh: 'สี', wordCount: 11, icon: Icons.palette_rounded),
-    CategoryItem(titleEn: 'Sport', titleTh: 'กีฬา', wordCount: 10, icon: Icons.sports_basketball_rounded),
-    CategoryItem(titleEn: 'Day', titleTh: 'วัน', wordCount: 7, icon: Icons.calendar_today_rounded),
-    CategoryItem(titleEn: 'Vehicle', titleTh: 'ยานพาหนะ', wordCount: 10, icon: Icons.directions_car_rounded),
-    CategoryItem(titleEn: 'Clothes', titleTh: 'เสื้อผ้า', wordCount: 10, icon: Icons.checkroom_rounded),
-    CategoryItem(titleEn: 'Body', titleTh: 'ร่างกาย', wordCount: 10, icon: Icons.accessibility_new_rounded),
-    CategoryItem(titleEn: 'Month', titleTh: 'เดือน', wordCount: 12, icon: Icons.date_range_rounded),
-    CategoryItem(titleEn: 'Number', titleTh: 'ตัวเลข', wordCount: 38, icon: Icons.pin_rounded),
-    CategoryItem(titleEn: 'Career', titleTh: 'อาชีพ', wordCount: 30, icon: Icons.work_rounded),
-    CategoryItem(titleEn: 'Fruit', titleTh: 'ผลไม้', wordCount: 30, icon: Icons.apple_rounded),
-    CategoryItem(titleEn: 'Place', titleTh: 'สถานที่', wordCount: 26, icon: Icons.location_on_rounded),
+  @override
+  State<CategoryVocabularyScreen> createState() => _CategoryVocabularyScreenState();
+}
+
+class _CategoryVocabularyScreenState extends State<CategoryVocabularyScreen> {
+  List<VocabularyCategory>? _apiCategories;
+  bool _isLoading = true;
+  String? _loadError;
+
+  /// Dot on each card: finished (green) / started (yellow) / new (white).
+  Set<String> _doneSlugs = {};
+  Set<String> _startedSlugs = {};
+  Map<String, int> _learnedOnServer = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+    _loadStatus();
+  }
+
+  static const List<String> _allSlugs = [
+    'food', 'animal', 'number', 'color', 'fruit', 'vehicle', 'career', 'sport',
+    'house', 'daily-routine', 'family', 'place', 'month', 'day', 'clothes', 'body',
   ];
+
+  Future<void> _loadStatus() async {
+    final done = await VocabularyProgress.doneCategories();
+    final started = <String>{};
+    for (final slug in _allSlugs) {
+      // Any saved position counts as started (validated against a big total).
+      if (await LessonProgress.load('vocab_$slug', 1 << 20) != null) {
+        started.add(slug);
+      }
+    }
+    if (mounted) {
+      setState(() {
+        _doneSlugs = done;
+        _startedSlugs = started;
+      });
+    }
+    // Words learned on any phone (server); used when online.
+    final learned = await VocabularyProgress.learnedCounts();
+    if (mounted && learned.isNotEmpty) setState(() => _learnedOnServer = learned);
+  }
+
+  /// green = went through every word, yellow = started, white = not yet.
+  Color _dotColor(String slug) {
+    final learned = _learnedOnServer[slug] ?? 0;
+    int? total;
+    for (final c in _apiCategories ?? const <VocabularyCategory>[]) {
+      if (c.slug == slug) total = c.wordCount;
+    }
+    final finished =
+        _doneSlugs.contains(slug) || (total != null && total > 0 && learned >= total);
+    if (finished) return const Color(0xFF22C55E);
+    if (_startedSlugs.contains(slug) || learned > 0) return const Color(0xFFFACC15);
+    return Colors.white.withOpacity(0.85);
+  }
+
+  Future<void> _loadCategories() async {
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+    try {
+      final categories = await VocabularyApiService.getCategories();
+      if (!mounted) return;
+      categories.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      setState(() {
+        _apiCategories = categories;
+        _isLoading = false;
+      });
+    } on VocabularyApiException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _apiCategories = null;
+        _loadError = error.message;
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _apiCategories = null;
+        _loadError = 'โหลดหมวดคำศัพท์ออนไลน์ไม่สำเร็จ';
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFF0088FF); // สีฟ้าหลัก
+    const topBarColor = Color(0xFF3886D8);
+
+    final List<CategoryItem> categories = [
+      CategoryItem(
+        slug: 'food',
+        titleTh: 'อาหาร',
+        fallbackIcon: Icons.restaurant_rounded,
+        imagePath: 'assets/images/Background/Vocabularyfood.png',
+        cardColor: const Color(0xFF00ACC1),
+        screen: const FoodVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'animal',
+        titleTh: 'สัตว์',
+        fallbackIcon: Icons.pets_rounded,
+        imagePath: 'assets/images/Background/Vocabularyanimal.png',
+        cardColor: const Color(0xFF1E88E5),
+        screen: const AnimalVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'number',
+        titleTh: 'ตัวเลข',
+        fallbackIcon: Icons.format_list_numbered_rounded,
+        imagePath: 'assets/images/Background/Vocabularynumber.png',
+        cardColor: const Color(0xFF43A047),
+        screen: const NumberVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'color',
+        titleTh: 'สีสัน',
+        fallbackIcon: Icons.palette_rounded,
+        imagePath: 'assets/images/Background/Vocabularycolor.png',
+        cardColor: const Color(0xFFE53935),
+        screen: const ColorVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'fruit',
+        titleTh: 'ผลไม้',
+        fallbackIcon: Icons.apple_rounded,
+        imagePath: 'assets/images/Background/Vocabularyfruit.png',
+        cardColor: const Color(0xFF5E35B1),
+        screen: const FruitVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'vehicle',
+        titleTh: 'ยานพาหนะ',
+        fallbackIcon: Icons.directions_car_rounded,
+        imagePath: 'assets/images/Background/Vocabularyvehicle.png',
+        cardColor: const Color(0xFF00897B),
+        screen: const VehicleVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'career',
+        titleTh: 'อาชีพ',
+        fallbackIcon: Icons.work_rounded,
+        imagePath: 'assets/images/Background/Vocabularycareer.png',
+        cardColor: const Color(0xFF3949AB),
+        screen: const CareerVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'sport',
+        titleTh: 'กีฬา',
+        fallbackIcon: Icons.sports_basketball_rounded,
+        imagePath: 'assets/images/Background/Vocabularysport.png',
+        cardColor: const Color(0xFFD81B60),
+        screen: const SportVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'house',
+        titleTh: 'บ้าน',
+        fallbackIcon: Icons.home_rounded,
+        imagePath: 'assets/images/Background/VocabularyHouse.png',
+        cardColor: const Color(0xFF0288D1),
+        screen: const HouseVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'daily-routine',
+        titleTh: 'กิจวัตรประจำวัน',
+        fallbackIcon: Icons.access_time_filled_rounded,
+        imagePath: 'assets/images/Background/VocabularyDailyroutine.png',
+        cardColor: const Color(0xFF00838F),
+        screen: const DailyRoutineVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'family',
+        titleTh: 'ครอบครัว',
+        fallbackIcon: Icons.people_alt_rounded,
+        imagePath: 'assets/images/Background/Vocabularyfamily.png',
+        cardColor: const Color(0xFF2E7D32),
+        screen: const FamilyVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'place',
+        titleTh: 'สถานที่',
+        fallbackIcon: Icons.location_on_rounded,
+        imagePath: 'assets/images/Background/Vocabularylocation.png',
+        cardColor: const Color(0xFFC2185B),
+        screen: const PlaceVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'month',
+        titleTh: 'เดือน',
+        fallbackIcon: Icons.date_range_rounded,
+        imagePath: 'assets/images/Background/Vocabularymonth.png',
+        cardColor: const Color(0xFFE65100),
+        screen: const MonthVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'day',
+        titleTh: 'วัน',
+        fallbackIcon: Icons.calendar_today_rounded,
+        imagePath: 'assets/images/Background/Vocabularyday.png',
+        cardColor: const Color(0xFF6A1B9A),
+        screen: const DayVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'clothes',
+        titleTh: 'เสื้อผ้า',
+        fallbackIcon: Icons.checkroom_rounded,
+        imagePath: 'assets/images/Background/Vocabularyclothes.png',
+        cardColor: const Color(0xFF1565C0),
+        screen: const ClothesVocabularyScreen(),
+      ),
+      CategoryItem(
+        slug: 'body',
+        titleTh: 'ร่างกาย',
+        fallbackIcon: Icons.accessibility_new_rounded,
+        imagePath: 'assets/images/Background/Vocabularybody.png',
+        cardColor: const Color(0xFF0097A7),
+        screen: const BodyVocabularyScreen(),
+      ),
+    ];
+    final metadataBySlug = {for (final item in categories) item.slug: item};
+    final visibleCategories = _apiCategories == null
+        ? categories
+        : _apiCategories!
+            .map((category) => metadataBySlug[category.slug])
+            .whereType<CategoryItem>()
+            .toList(growable: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F7FA), // สีพื้นหลังฟ้าอ่อน
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-          onPressed: () => Navigator.maybePop(context),
-        ),
-        title: const Text(
-          'หมวดหมู่คำศัพท์',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: categories.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.82,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-        ),
-        itemBuilder: (context, index) {
-          final item = categories[index];
-          return Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Icon Box
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(
-                    item.icon,
-                    size: 32,
-                    color: Colors.white,
-                  ),
-                ),
-
-                // Text Section
-                Column(
+      backgroundColor: const Color(0xFFF8FAFC),
+      body: Column(
+        children: [
+          // ----------------------------------------------------
+          // แถบด้านบน
+          // ----------------------------------------------------
+          Container(
+            color: topBarColor,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: Row(
                   children: [
-                    Text(
-                      item.titleTh,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                      onPressed: () => Navigator.maybePop(context),
+                    ),
+                    const Expanded(
+                      child: Text(
+                        'หมวดหมู่คำศัพท์',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${item.titleEn} • ${item.wordCount} คำ',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
+                    const SizedBox(width: 48),
                   ],
                 ),
+              ),
+            ),
+          ),
 
-                // Start Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 38,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (item.titleEn == 'Fruit') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FruitVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Animal') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AnimalVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Color') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ColorVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Clothes') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ClothesVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Family') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FamilyVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Vehicle') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const VehicleVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Career') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CareerVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Sport') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SportVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Day') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DayVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Month') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MonthVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Body') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const BodyVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Number') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NumberVocabularyScreen(),
-                          ),
-                        );
-                      } else if (item.titleEn == 'Place') {
-                        // ✅ เชื่อมต่อหมวด Place
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PlaceVocabularyScreen(),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'เริ่มเรียน',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+          // ----------------------------------------------------
+          // เนื้อหา
+          // ----------------------------------------------------
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. ภาพแบนเนอร์ด้านบน
+                  Image.asset(
+                    'assets/images/Background/BackgroundVocabulary.jpg',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      height: 180,
+                      color: const Color(0xFF3886D8),
+                      child: const Center(
+                        child: Icon(Icons.image_rounded, size: 48, color: Colors.white70),
                       ),
                     ),
                   ),
-                ),
-              ],
+
+                  if (_isLoading)
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LinearProgressIndicator(minHeight: 3),
+                          SizedBox(height: 6),
+                          Text('กำลังโหลดหมวดคำศัพท์ออนไลน์...'),
+                        ],
+                      ),
+                    ),
+                  if (_loadError != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFF7ED),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFFFDBA74)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.cloud_off_rounded, color: Color(0xFFC2410C)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                '$_loadError กำลังแสดงหมวดเดิมในเครื่อง',
+                                style: const TextStyle(color: Color(0xFF9A3412)),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: _isLoading ? null : _loadCategories,
+                              child: const Text('ลองอีกครั้ง'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                  // 2. แถบหัวข้อคั่นขนาดใหญ่ เด่นชัด
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: topBarColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      'เลือกหมวดหมู่คำศัพท์',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xFF0F172A),
+                                        letterSpacing: -0.3,
+                                      ),
+                                    ),
+                                    SizedBox(height: 3),
+                                    Text(
+                                      'แตะเพื่อเริ่มต้นฝึกออกเสียงและการเรียนรู้',
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF64748B),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+
+                        // ป้ายจำนวนหมวดหมู่
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2563EB),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF2563EB).withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            '${visibleCategories.length} หมวด',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 3. Grid การ์ดหมวดหมู่
+                  if (visibleCategories.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(24, 24, 24, 12),
+                      child: Center(
+                        child: Text(
+                          'ยังไม่มีหมวดคำศัพท์ให้แสดง',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xFF64748B), fontSize: 15),
+                        ),
+                      ),
+                    )
+                  else
+                    Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: visibleCategories.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.82,
+                        crossAxisSpacing: 14,
+                        mainAxisSpacing: 26,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = visibleCategories[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: item.cardColor,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: item.cardColor.withOpacity(0.35),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(24),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => item.screen),
+                                ).then((_) => _loadStatus()); // refresh the dot
+                              },
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  // จุดมุมขวาบน: เขียว = เรียนจบแล้ว, เหลือง = เรียนค้าง, ขาว = ยังไม่เรียน
+                                  Positioned(
+                                    top: 14,
+                                    right: 14,
+                                    child: Container(
+                                      width: 14,
+                                      height: 14,
+                                      decoration: BoxDecoration(
+                                        color: _dotColor(item.slug),
+                                        border: Border.all(color: Colors.white, width: 1.5),
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.12),
+                                            blurRadius: 3,
+                                            offset: const Offset(0, 1.5),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // จัดรูปภาพและวงกลมแสงให้อยู่กึ่งกลางพื้นที่การ์ด
+                                  Positioned.fill(
+                                    bottom: 22,
+                                    child: Center(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          // วงกลมแสงพื้นหลัง
+                                          Container(
+                                            width: 120,
+                                            height: 120,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withOpacity(0.18),
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          // รูปภาพขนาด 110x110 px ตรงกลาง
+                                          Image.asset(
+                                            item.imagePath,
+                                            height: 110,
+                                            width: 110,
+                                            fit: BoxFit.contain,
+                                            errorBuilder: (_, __, ___) => Icon(
+                                              item.fallbackIcon,
+                                              size: 64,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // ป้ายชื่อสีทอง 3D (เฉพาะภาษาไทย)
+                                  Positioned(
+                                    bottom: -15,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 7),
+                                      constraints: const BoxConstraints(minWidth: 110),
+                                      decoration: BoxDecoration(
+                                        gradient: const LinearGradient(
+                                          colors: [Color(0xFFFFCA28), Color(0xFFFFA000)],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.white, width: 2.2),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color(0xFFB45309).withOpacity(0.45),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        item.titleTh,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                          letterSpacing: 0.3,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

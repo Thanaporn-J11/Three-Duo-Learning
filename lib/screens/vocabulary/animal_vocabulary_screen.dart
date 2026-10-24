@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../../models/vocabulary_word.dart';
+import '../../services/vocabulary_api_service.dart';
+import '../../services/vocabulary_progress_service.dart';
+import '../../services/lesson_progress.dart';
+import 'vocabulary_resume.dart';
+import '../../services/word_speaker.dart';
+import 'vocabulary_api_status_view.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:google_fonts/google_fonts.dart'; // import google_fonts
 import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
-class AnimalItem {
+class AnimalItem implements VocabularyWordView {
   final String word;
-  final String phonetics; // คำอ่าน
+  final String phonetics;
+  final String thaiPhonetics;
   final String translation;
   final String imagePath;
 
   AnimalItem({
     required this.word,
-    required this.phonetics,
+    this.phonetics = '',
+    required this.thaiPhonetics,
     required this.translation,
     required this.imagePath,
   });
+  @override
+  String? get audioUrl => null;
+
 }
 
 class AnimalVocabularyScreen extends StatefulWidget {
@@ -26,232 +39,339 @@ class AnimalVocabularyScreen extends StatefulWidget {
 
 class _AnimalVocabularyScreenState extends State<AnimalVocabularyScreen> {
   int currentIndex = 0;
-  late FlutterTts flutterTts;
+  List<VocabularyWord>? _apiWords;
+  bool _isLoading = true;
+  String? _loadError;
+
+  int get _wordCount => _apiWords?.length ?? animals.length;
+  late AudioPlayer _audioPlayer;
   bool isSpeaking = false;
 
   final List<AnimalItem> animals = [
     AnimalItem(
       word: 'Bear',
-      phonetics: 'แบร์',
+      thaiPhonetics: 'แบร์',
       translation: 'หมี',
       imagePath: 'assets/images/vocabulary/animals/Bear.png',
     ),
     AnimalItem(
       word: 'Bee',
-      phonetics: 'บี',
+      thaiPhonetics: 'บี',
       translation: 'ผึ้ง',
-      imagePath: 'assets/images/vocabulary/animals/Bee.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Bee.png',
     ),
     AnimalItem(
       word: 'Bird',
-      phonetics: 'เบิร์ด',
+      thaiPhonetics: 'เบิร์ด',
       translation: 'นก',
-      imagePath: 'assets/images/vocabulary/animals/Bird.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Bird.png',
     ),
     AnimalItem(
       word: 'Butterfly',
-      phonetics: 'บัต-เตอร์-ฟลาย',
+      thaiPhonetics: 'บัต เตอร์ ฟลาย',
       translation: 'ผีเสื้อ',
-      imagePath: 'assets/images/vocabulary/animals/Butterfly.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Butterfly.png',
     ),
     AnimalItem(
       word: 'Cat',
-      phonetics: 'แคท',
+      thaiPhonetics: 'แคท',
       translation: 'แมว',
       imagePath: 'assets/images/vocabulary/animals/Cat.png',
     ),
     AnimalItem(
       word: 'Chicken',
-      phonetics: 'ชิค-เก้น',
+      thaiPhonetics: 'ชิค เก้น',
       translation: 'ไก่',
       imagePath: 'assets/images/vocabulary/animals/Chicken.png',
     ),
     AnimalItem(
       word: 'Cow',
-      phonetics: 'คาว',
+      thaiPhonetics: 'คาว',
       translation: 'วัว',
       imagePath: 'assets/images/vocabulary/animals/Cow.png',
     ),
     AnimalItem(
       word: 'Dog',
-      phonetics: 'ด็อก',
+      thaiPhonetics: 'ด็อก',
       translation: 'สุนัข',
-      imagePath: 'assets/images/vocabulary/animals/Dog.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Dog.png',
     ),
     AnimalItem(
       word: 'Dolphin',
-      phonetics: 'ดอล-ฟิน',
+      thaiPhonetics: 'ดอล เฟิน',
       translation: 'โลมา',
       imagePath: 'assets/images/vocabulary/animals/Dolphin.png',
     ),
     AnimalItem(
       word: 'Duck',
-      phonetics: 'ดัค',
+      thaiPhonetics: 'ดัค',
       translation: 'เป็ด',
       imagePath: 'assets/images/vocabulary/animals/Duck.png',
     ),
     AnimalItem(
       word: 'Elephant',
-      phonetics: 'เอล-เล-เฟินท์',
+      thaiPhonetics: 'เอล เล เฟินท์',
       translation: 'ช้าง',
-      imagePath: 'assets/images/vocabulary/animals/Elephant.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Elephant.png',
     ),
     AnimalItem(
       word: 'Fish',
-      phonetics: 'ฟิช',
+      thaiPhonetics: 'ฟิช',
       translation: 'ปลา',
-      imagePath: 'assets/images/vocabulary/animals/Fish.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Fish.png',
     ),
     AnimalItem(
       word: 'Frog',
-      phonetics: 'ฟรอก',
+      thaiPhonetics: 'ฟรอก',
       translation: 'กบ',
-      imagePath: 'assets/images/vocabulary/animals/Frog.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Frog.png',
     ),
     AnimalItem(
       word: 'Giraffe',
-      phonetics: 'จิ-ราฟ',
+      thaiPhonetics: 'จิ ราฟ',
       translation: 'ยีราฟ',
       imagePath: 'assets/images/vocabulary/animals/Giraffe.png',
     ),
     AnimalItem(
       word: 'Hippo',
-      phonetics: 'ฮิป-โป',
+      thaiPhonetics: 'ฮิป โป',
       translation: 'ฮิปโปโปเตมัส',
-      imagePath: 'assets/images/vocabulary/animals/Hippo.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Hippo.png',
     ),
     AnimalItem(
       word: 'Horse',
-      phonetics: 'ฮอร์ส',
+      thaiPhonetics: 'ฮอร์ส',
       translation: 'ม้า',
-      imagePath: 'assets/images/vocabulary/animals/Horse.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Horse.png',
     ),
     AnimalItem(
       word: 'Kangaroo',
-      phonetics: 'แคง-กะ-รู',
+      thaiPhonetics: 'แคง กะ รู',
       translation: 'จิงโจ้',
-      imagePath: 'assets/images/vocabulary/animals/Kangaroo.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Kangaroo.png',
     ),
     AnimalItem(
       word: 'Lion',
-      phonetics: 'ไล-เอิน',
+      thaiPhonetics: 'ไล เอิน',
       translation: 'สิงโต',
-      imagePath: 'assets/images/vocabulary/animals/Lion.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Lion.png',
     ),
     AnimalItem(
       word: 'Monkey',
-      phonetics: 'มัง-คี',
+      thaiPhonetics: 'มัง คี',
       translation: 'ลิง',
       imagePath: 'assets/images/vocabulary/animals/Monkey.png',
     ),
     AnimalItem(
       word: 'Octopus',
-      phonetics: 'อ็อค-โท-พุส',
+      thaiPhonetics: 'อ็อค โท พุส',
       translation: 'ปลาหมึกยักษ์',
-      imagePath: 'assets/images/vocabulary/animals/Octopus.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Octopus.png',
     ),
     AnimalItem(
       word: 'Owl',
-      phonetics: 'เอาล์',
+      thaiPhonetics: 'เอาล์',
       translation: 'นกฮูก',
-      imagePath: 'assets/images/vocabulary/animals/Owl.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Owl.png',
     ),
     AnimalItem(
       word: 'Panda',
-      phonetics: 'แพน-ด้า',
+      thaiPhonetics: 'แพน ด้า',
       translation: 'แพนด้า',
-      imagePath: 'assets/images/vocabulary/animals/Panda.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Panda.png',
     ),
     AnimalItem(
       word: 'Penguin',
-      phonetics: 'เพน-กวิน',
+      thaiPhonetics: 'เพน กวิน',
       translation: 'เพนกวิน',
-      imagePath: 'assets/images/vocabulary/animals/Penguin.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Penguin.png',
     ),
     AnimalItem(
       word: 'Pig',
-      phonetics: 'พิก',
+      thaiPhonetics: 'พิก',
       translation: 'หมู',
       imagePath: 'assets/images/vocabulary/animals/Pig.png',
     ),
     AnimalItem(
       word: 'Rabbit',
-      phonetics: 'แรบ-บิท',
+      thaiPhonetics: 'แรบ บิท',
       translation: 'กระต่าย',
-      imagePath: 'assets/images/vocabulary/animals/Rabbit.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Rabbit.png',
     ),
     AnimalItem(
       word: 'Sheep',
-      phonetics: 'ชีพ',
+      thaiPhonetics: 'ชีพ',
       translation: 'แกะ',
-      imagePath: 'assets/images/vocabulary/animals/Sheep.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Sheep.png',
     ),
     AnimalItem(
       word: 'Tiger',
-      phonetics: 'ไท-เกอร์',
+      thaiPhonetics: 'ไท เกอร์',
       translation: 'เสือ',
-      imagePath: 'assets/images/vocabulary/animals/Tiger.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Tiger.png',
     ),
     AnimalItem(
       word: 'Turtle',
-      phonetics: 'เทอร์-เทิล',
+      thaiPhonetics: 'เทอร์ เทิล',
       translation: 'เต่า',
       imagePath: 'assets/images/vocabulary/animals/Turtle.png',
     ),
     AnimalItem(
       word: 'Whale',
-      phonetics: 'เวล',
+      thaiPhonetics: 'เวล',
       translation: 'วาฬ',
-      imagePath: 'assets/images/vocabulary/animals/Whale.jpg',
+      imagePath: 'assets/images/vocabulary/animals/Whale.png',
     ),
     AnimalItem(
       word: 'Zebra',
-      phonetics: 'ซี-บรา',
+      thaiPhonetics: 'ซี บรา',
       translation: 'ม้าลาย',
       imagePath: 'assets/images/vocabulary/animals/Zebra.png',
+    ),
+    AnimalItem(
+      word: 'Crocodile',
+      thaiPhonetics: 'ครอค โค ไดล์',
+      translation: 'จระเข้',
+      imagePath: 'assets/images/vocabulary/animals/Crocodile.png',
+    ),
+    AnimalItem(
+      word: 'Koala',
+      thaiPhonetics: 'โค อา ลา',
+      translation: 'โคอาลา',
+      imagePath: 'assets/images/vocabulary/animals/Koala.png',
+    ),
+    AnimalItem(
+      word: 'Mosquito',
+      thaiPhonetics: 'มอส คี โท',
+      translation: 'ยุง',
+      imagePath: 'assets/images/vocabulary/animals/Mosquito.png',
+    ),
+    AnimalItem(
+      word: 'Peacock',
+      thaiPhonetics: 'พี ค็อก',
+      translation: 'นกยูง',
+      imagePath: 'assets/images/vocabulary/animals/Peacock.png',
+    ),
+    AnimalItem(
+      word: 'Shrimp',
+      thaiPhonetics: 'ชริมพ์',
+      translation: 'กุ้ง',
+      imagePath: 'assets/images/vocabulary/animals/Shrimp.png',
+    ),
+    AnimalItem(
+      word: 'Snake',
+      thaiPhonetics: 'สเนค',
+      translation: 'งู',
+      imagePath: 'assets/images/vocabulary/animals/Snake.png',
+    ),
+    AnimalItem(
+      word: 'Spider',
+      thaiPhonetics: 'สไป เดอร์',
+      translation: 'แมงมุม',
+      imagePath: 'assets/images/vocabulary/animals/Spider.png',
     ),
   ];
 
   @override
   void initState() {
     super.initState();
-    _initTts();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.onPlayerComplete.listen((event) {
+      if (mounted) setState(() => isSpeaking = false);
+    });
+    _loadWords().then((_) => _restorePosition());
   }
 
-  void _initTts() {
-    flutterTts = FlutterTts();
-    flutterTts.setLanguage("en-US");
-    flutterTts.setSpeechRate(0.45);
-    flutterTts.setVolume(1.0);
-    flutterTts.setPitch(1.0);
-
-    flutterTts.setStartHandler(() => setState(() => isSpeaking = true));
-    flutterTts.setCompletionHandler(() => setState(() => isSpeaking = false));
-    flutterTts.setErrorHandler((msg) => setState(() => isSpeaking = false));
+  Future<void> _loadWords() async {
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+    try {
+      final words = await VocabularyApiService.getWords('animal');
+      if (!mounted) return;
+      setState(() {
+        // An empty list from the server -> use the built-in words.
+        _apiWords = words.isEmpty ? null : words;
+        _isLoading = false;
+      });
+    } catch (error) {
+      // Server down / offline: carry on with the words built into the app
+      // instead of stopping the child on an error page.
+      debugPrint('Vocabulary API error: $error');
+      if (!mounted) return;
+      setState(() {
+        _apiWords = null;
+        _loadError = null;
+        _isLoading = false;
+      });
+      _showOfflineNotice();
+    }
   }
 
-  Future<void> _speak(String text) async {
-    await flutterTts.stop();
-    await flutterTts.speak(text);
+  void _showOfflineNotice() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('ตอนนี้เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ใช้คำศัพท์ในเครื่องแทนนะ'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
+  void _useLocalWords() {
+    setState(() {
+      _apiWords = null;
+      _loadError = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('ใช้คำศัพท์ที่มีในเครื่องแทน')),
+    );
+  }
+
+
+  Future<void> _speak(String word, [String? providedAudioUrl]) async {
+    final cleanWord = word.replaceAll(RegExp(r'[^\w\s]'), '').trim();
+    try {
+      final audioUrl = providedAudioUrl != null && providedAudioUrl.isNotEmpty
+          ? providedAudioUrl
+          : "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${Uri.encodeComponent(cleanWord)}";
+
+      await _audioPlayer.stop();
+      await WordSpeaker.stop();
+      setState(() => isSpeaking = true);
+      await _audioPlayer
+          .play(UrlSource(audioUrl))
+          .timeout(const Duration(seconds: 6));
+    } catch (e) {
+      // Online voice unavailable (offline, blocked, too slow):
+      // read the word with the phone's own voice instead.
+      debugPrint("Audio Error: $e");
+      try {
+        await _audioPlayer.stop();
+      } catch (_) {}
+      if (mounted) setState(() => isSpeaking = false);
+      await WordSpeaker.speak(cleanWord);
+    }
   }
 
   @override
   void dispose() {
-    flutterTts.stop();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
-  // สร้างแบบทดสอบสุ่ม 10 ข้อสำหรับหมวดสัตว์
   List<QuizItem> _generateAnimalQuiz() {
     final List<QuizItem> quizList = [];
-    final List<AnimalItem> shuffledList = List<AnimalItem>.from(animals)..shuffle();
+    final List<AnimalItem> shuffledList = List<AnimalItem>.from(animals)
+      ..shuffle();
 
     for (int i = 0; i < 10 && i < shuffledList.length; i++) {
       final current = shuffledList[i];
-      final otherOptions = animals.where((item) => item.word != current.word).toList()..shuffle();
+      final otherOptions =
+          animals.where((item) => item.word != current.word).toList()
+            ..shuffle();
 
       if (i % 2 == 0) {
-        // รูปแบบที่ 1: ดูรูปภาพ -> เลือกคำศัพท์
         final wordOptions = [
           current.word,
           otherOptions[0].word,
@@ -259,17 +379,18 @@ class _AnimalVocabularyScreenState extends State<AnimalVocabularyScreen> {
           otherOptions[2].word,
         ]..shuffle();
 
-        quizList.add(QuizItem(
-          questionText: 'รูปภาพนี้ตรงกับคำศัพท์ใด',
-          questionImage: current.imagePath,
-          correctWord: current.word,
-          correctTranslation: current.translation,
-          correctImage: current.imagePath,
-          options: wordOptions,
-          isImageOption: false,
-        ));
+        quizList.add(
+          QuizItem(
+            questionText: 'รูปภาพนี้ตรงกับคำศัพท์ใด',
+            questionImage: current.imagePath,
+            correctWord: current.word,
+            correctTranslation: current.translation,
+            correctImage: current.imagePath,
+            options: wordOptions,
+            isImageOption: false,
+          ),
+        );
       } else {
-        // รูปแบบที่ 2: ดูคำศัพท์ -> เลือกรูปภาพ
         final imageOptions = [
           current.imagePath,
           otherOptions[0].imagePath,
@@ -277,78 +398,152 @@ class _AnimalVocabularyScreenState extends State<AnimalVocabularyScreen> {
           otherOptions[2].imagePath,
         ]..shuffle();
 
-        quizList.add(QuizItem(
-          questionText: 'รูปภาพใด คือ ${current.word}',
-          targetWord: current.word,
-          correctWord: current.word,
-          correctTranslation: current.translation,
-          correctImage: current.imagePath,
-          options: imageOptions,
-          isImageOption: true,
-        ));
+        quizList.add(
+          QuizItem(
+            questionText: 'รูปภาพใด คือ ${current.word}',
+            targetWord: current.word,
+            correctWord: current.word,
+            correctTranslation: current.translation,
+            correctImage: current.imagePath,
+            options: imageOptions,
+            isImageOption: true,
+          ),
+        );
       }
     }
     quizList.shuffle();
     return quizList;
   }
 
-  void _nextWord() {
-    if (currentIndex < animals.length - 1) {
-      setState(() => currentIndex++);
+  /// Back to the word the child stopped at last time (asks first).
+  Future<void> _restorePosition() async {
+    if (!mounted || _isLoading || _loadError != null) return;
+    final saved = await LessonProgress.load('vocab_animal', _wordCount);
+    if (!mounted || saved == null) return;
+    final api = _apiWords;
+    final preview =
+        api != null ? api[saved.index].term : animals[saved.index].word;
+    final resume = await askVocabularyResume(
+      context,
+      wordNumber: saved.index + 1,
+      total: _wordCount,
+      wordPreview: preview,
+    );
+    if (!mounted) return;
+    if (resume) {
+      setState(() => currentIndex = saved.index);
     } else {
-      // เปิดหน้า GraduationScreen เพื่อเตรียมเริ่มทำแบบฝึกหัด
+      LessonProgress.clear('vocab_animal');
+    }
+  }
+
+  /// Counts the word on screen as learned (for the parent report).
+  void _markCurrentWordLearned() {
+    final api = _apiWords;
+    final String word;
+    if (api != null) {
+      if (currentIndex >= api.length) return;
+      word = api[currentIndex].term;
+    } else {
+      if (currentIndex >= animals.length) return;
+      word = animals[currentIndex].word;
+    }
+    VocabularyProgress.markLearned('animal', word);
+  }
+
+  void _nextWord() async {
+    await _audioPlayer.stop();
+    if (mounted) setState(() => isSpeaking = false);
+    _markCurrentWordLearned();
+
+    if (currentIndex < _wordCount - 1) {
+      setState(() => currentIndex++);
+      LessonProgress.save('vocab_animal', currentIndex, 0);
+    } else {
+      // Went through every word: next time start from the first one.
+      LessonProgress.clear('vocab_animal');
+      VocabularyProgress.markCategoryDone('animal'); // green dot
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => GraduationScreen(
-            categoryTitle: 'สัตว์',
-            quizItems: _generateAnimalQuiz(),
-          ),
+          builder:
+              (context) => GraduationScreen(
+                categoryTitle: 'สัตว์',
+                categorySlug: 'animal',
+                quizItems: _generateAnimalQuiz(),
+              ),
         ),
       );
     }
   }
 
-  void _previousWord() {
+  void _previousWord() async {
+    await _audioPlayer.stop();
+    if (mounted) setState(() => isSpeaking = false);
+
     if (currentIndex > 0) {
       setState(() => currentIndex--);
+      LessonProgress.save('vocab_animal', currentIndex, 0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentAnimal = animals[currentIndex];
-    final progress = (currentIndex + 1) / animals.length;
+    if (_isLoading) {
+      return const VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'กำลังโหลดคำศัพท์...',
+        loading: true,
+      );
+    }
+    if (_loadError != null) {
+      return VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'โหลดคำศัพท์ไม่สำเร็จ $_loadError',
+        loading: false,
+        onRetry: _loadWords,
+        onUseLocal: _useLocalWords,
+      );
+    }
+    if (_apiWords?.isEmpty ?? false) {
+      return VocabularyApiStatusView(
+        title: '\u0e04\u0e33\u0e28\u0e31\u0e1e\u0e17\u0e4c',
+        message: 'ยังไม่มีคำศัพท์ในหมวดนี้',
+        loading: false,
+        onRetry: _loadWords,
+        onUseLocal: _useLocalWords,
+      );
+    }
+
+    final VocabularyWordView currentAnimal = _apiWords == null
+        ? animals[currentIndex]
+        : _apiWords![currentIndex];
+    final progress = (currentIndex + 1) / _wordCount;
+    final double cardImageHeight = MediaQuery.of(context).size.height * 0.42;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF5FC),
+      backgroundColor: const Color(0xFF1886E4),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
             color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            size: 24,
           ),
-          child: IconButton(
-            icon: const Icon(Icons.close_rounded, color: Color(0xFF0D5C9E), size: 22),
-            onPressed: () => Navigator.pop(context),
-          ),
+          onPressed: () {
+            _audioPlayer.stop();
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           'คำศัพท์หมวดสัตว์',
           style: TextStyle(
-            color: Color(0xFF0D5C9E),
-            fontWeight: FontWeight.w800,
-            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.w900, // หรือ FontWeight.bold
+            fontSize: 21,
             letterSpacing: 0.3,
           ),
         ),
@@ -356,241 +551,367 @@ class _AnimalVocabularyScreenState extends State<AnimalVocabularyScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF6FAFD),
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0D5C9E).withOpacity(0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(36),
+              border: Border.all(color: const Color.fromARGB(255, 9, 98, 194), width: 3.5),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 14, 111, 201).withOpacity(0.35),
+                  offset: const Offset(0, 10),
+                  blurRadius: 0,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Category Badge & Counter
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Header Progress & Badge
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'คำศัพท์',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF0088FF),
-                                letterSpacing: 0.8,
-                              ),
-                            ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF9800),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE65100),
+                            offset: Offset(0, 3),
                           ),
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.pets_rounded,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 6),
                           Text(
-                            '${currentIndex + 1} / ${animals.length}',
-                            style: const TextStyle(
+                            'สัตว์',
+                            style: GoogleFonts.mitr(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF5A789A),
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-
-                      // แถบ Progress Bar
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(begin: 0, end: progress),
-                          builder: (context, value, _) => LinearProgressIndicator(
-                            value: value,
-                            minHeight: 8,
-                            backgroundColor: const Color(0xFFDCEAF7),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0088FF)),
-                          ),
-                        ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
                       ),
-
-                      const Spacer(),
-
-                      // กล่องพื้นหลังรูปภาพ
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 350),
-                        transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
-                        child: Container(
-                          key: ValueKey<int>(currentIndex),
-                          height: 360,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF0D5C9E).withOpacity(0.08),
-                                blurRadius: 16,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(28),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Image.asset(
-                                currentAnimal.imagePath,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.image_not_supported_rounded, size: 80, color: Colors.grey),
-                              ),
-                            ),
-                          ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color(0xFFE2E8F0),
+                          width: 1.5,
                         ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xFFE2E8F0),
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
-
-                      const SizedBox(height: 28),
-
-                      // คำศัพท์ + ปุ่มกดฟังเสียง
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: Column(
-                          key: ValueKey<int>(currentIndex),
+                      child: RichText(
+                        text: TextSpan(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    currentAnimal.word,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(0xFF1E293B),
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                GestureDetector(
-                                  onTap: () => _speak(currentAnimal.word),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: isSpeaking ? const Color(0xFF00C853) : const Color(0xFF0088FF),
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: (isSpeaking ? const Color(0xFF00C853) : const Color(0xFF0088FF)).withOpacity(0.35),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(
-                                      Icons.volume_up_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-
-                            // คำอ่าน
-                            Text(
-                              currentAnimal.phonetics,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade600,
+                            TextSpan(
+                              text: '${currentIndex + 1}',
+                              style: GoogleFonts.fredoka(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFFF9800),
                               ),
                             ),
-                            const SizedBox(height: 8),
-
-                            // คำแปลภาษาไทย
-                            Text(
-                              currentAnimal.translation,
-                              style: const TextStyle(
-                                fontSize: 24,
+                            TextSpan(
+                              text: ' / ${_wordCount}',
+                              style: GoogleFonts.fredoka(
+                                fontSize: 15,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF0D5C9E),
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                           ],
                         ),
                       ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
 
-                      const Spacer(flex: 2),
-
-                      // ปุ่มย้อนกลับและถัดไป
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: currentIndex > 0 ? _previousWord : null,
-                              icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                              label: const Text('ย้อนกลับ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF0D5C9E),
-                                side: const BorderSide(color: Color(0xFFCCE0F2), width: 1.5),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                              ),
+                // หลอดพลัง Progress Bar
+                Container(
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFE2E8F0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
+                        spreadRadius: -1,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      tween: Tween<double>(begin: 0, end: progress),
+                      builder:
+                          (context, value, _) => LinearProgressIndicator(
+                            value: value,
+                            backgroundColor: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Color(0xFFFF9800),
                             ),
                           ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _nextWord,
-                              icon: Icon(
-                                currentIndex == animals.length - 1 ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
-                                size: 18,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                // กรอบรูปภาพ: เขียวมินต์พาสเทล
+                Container(
+                  height: cardImageHeight,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 232, 197),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder:
+                          (child, anim) =>
+                              FadeTransition(opacity: anim, child: child),
+                      child: Container(
+                        key: ValueKey<int>(currentIndex),
+                        width: double.infinity,
+                        height: double.infinity,
+                        padding: const EdgeInsets.all(22.0),
+                        child: Image.asset(
+                          currentAnimal.imagePath,
+                          fit: BoxFit.contain,
+                          errorBuilder:
+                              (context, error, stackTrace) => const Icon(
+                                Icons.image_not_supported_rounded,
+                                size: 70,
+                                color: Colors.grey,
                               ),
-                              label: Text(
-                                currentIndex == animals.length - 1 ? 'เสร็จสิ้น' : 'ถัดไป',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                // โซนแสดงคำศัพท์ (สไตล์ที่ 2)
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: Column(
+                    key: ValueKey<int>(currentIndex),
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            currentAnimal.word,
+                            style: GoogleFonts.fredoka(
+                              fontSize: 44,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF0F172A),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () => _speak(currentAnimal.word, currentAnimal.audioUrl),
+                            child: Container(
+                              padding: const EdgeInsets.all(11),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSpeaking
+                                        ? const Color(0xFF00C853)
+                                        : const Color(0xFF1886E4),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFF0D47A1,
+                                    ).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0088FF),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                shadowColor: const Color(0xFF0088FF).withOpacity(0.3),
+                              child: const Icon(
+                                Icons.volume_up_rounded,
+                                color: Colors.white,
+                                size: 22,
                               ),
                             ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 4),
+                      // คำอ่านภาษาไทย
+                      Text(
+                        '${currentAnimal.thaiPhonetics}',
+                        style: GoogleFonts.mitr(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // คำแปลภาษาไทย สีส้มสดใสขนาดใหญ่
+                      Text(
+                        currentAnimal.translation,
+                        style: GoogleFonts.mitr(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF6D00),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                const Spacer(),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    // ปุ่มย้อนกลับ
+                    Expanded(
+                      child: Container(
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color:
+                              currentIndex > 0
+                                  ? Colors.white
+                                  : const Color(0xFFE2E8F0),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color:
+                                currentIndex > 0
+                                    ? const Color(0xFFCBD5E1)
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                          boxShadow:
+                              currentIndex > 0
+                                  ? const [
+                                    BoxShadow(
+                                      color: Color(0xFFCBD5E1),
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ]
+                                  : null,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: currentIndex > 0 ? _previousWord : null,
+                            child: Center(
+                              child: Text(
+                                'ย้อนกลับ',
+                                style: GoogleFonts.mitr(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color:
+                                      currentIndex > 0
+                                          ? const Color(0xFF64748B)
+                                          : const Color(0xFF94A3B8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    // ปุ่มถัดไป
+                    Expanded(
+                      child: Container(
+                        height: 54,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFFA726), Color(0xFFFF9800)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFFE65100),
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: _nextWord,
+                            child: Center(
+                              child: Text(
+                                currentIndex == _wordCount - 1
+                                    ? 'เสร็จสิ้น'
+                                    : 'ถัดไป',
+                                style: GoogleFonts.mitr(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

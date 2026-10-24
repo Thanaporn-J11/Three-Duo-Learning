@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "151583864342",
+    "project_id": "three-duo-learning",
+    "storage_bucket": "three-duo-learning.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151583864342:android:b9f7a980d62f903c976737",
+        "android_client_info": {
+          "package_name": "com.example.three_duo_learning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRXdOnIR4qgHM-nVvzJy4y72zW42C7e7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

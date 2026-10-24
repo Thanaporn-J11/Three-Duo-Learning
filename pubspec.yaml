@@ -1,4 +1,4 @@
-name: three_duo_learning
+name: threeduo_learning
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,10 +31,28 @@ dependencies:
   flutter:
     sdk: flutter
 
+  cupertino_icons: ^1.0.8
+  http: ^1.5.0
+  flutter_tts: ^4.2.5
+  firebase_core: ^3.10.1
+  firebase_auth: ^5.4.1
+  cloud_firestore: ^5.6.1
+  audioplayers: ^6.0.0
+  speech_to_text: ^7.0.0
+  video_player: ^2.8.2
+  shared_preferences: ^2.5.3
+  record: ^5.2.0         # ใช้บันทึกเสียงไมโครโฟน
+  path_provider: ^2.1.5   # ใช้หาโฟลเดอร์สำหรับเซฟไฟล์เสียงในเครื่อง
+  share_plus: ^10.1.4     # ใช้สำหรับปุ่มกดแชร์/ส่งออกไฟล์เสียงที่อัดไว้
+  google_fonts: ^6.3.2
+  flutter_local_notifications: ^17.2.3
+  timezone: ^0.9.4
+  package_info_plus: ^8.3.0 # อ่านเลขเวอร์ชันจริงของแอปมาแสดง
+  crypto: ^3.0.6 # hash รหัส PIN ผู้ปกครอง
+  url_launcher: ^6.3.1 # เปิดแอปอีเมลจากหน้า "ติดต่อเรา"
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  flutter_tts: ^4.2.5
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +76,21 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/
+    - assets/videos/
+    - assets/sounds/
+    - assets/audio/karaoke/
+    - assets/images/tale/
+    - assets/images/guess/
+    - assets/images/sentence/
+    - assets/images/Fruit/
+    - assets/images/Animal/
+    - assets/images/Sport/
+    - assets/images/Career/
+    - assets/images/Vehicle/
+    - assets/images/Place/
     - assets/images/vocabulary/fruits/
     - assets/images/vocabulary/animals/
     - assets/images/vocabulary/colors/
@@ -73,11 +105,31 @@ flutter:
     - assets/images/vocabulary/numbers/
     - assets/images/vocabulary/places/
     - assets/images/character/
+    - assets/images/shadowmatch/
+    - assets/images/Background/
+    - assets/images/guess/animal/
+    - assets/images/guess/fruit/
+    - assets/images/guess/Clothes/
+    - assets/images/guess/jobs/
+    - assets/images/guess/Sports/
+    - assets/images/guess/Body/
+    - assets/images/guess/Color/
+    - assets/images/guess/Places/
+    - assets/images/guess/Vehicles/
+    - assets/images/guess/dailyroutine/
+    - assets/images/guess/food/
+    - assets/images/guess/house/
+    - assets/images/phonics/
+    - assets/images/flashcards/
+    - assets/sounds/animal/
+    - assets/images/a_cute_pastel_cartoon_illustration_in_a_wide_roun.png
+    - assets/images/background_1.png
+    - assets/images/vocabulary/dailyroutine/
+    - assets/images/vocabulary/food/
+    - assets/images/vocabulary/house/
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/phonics/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -104,3 +156,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+dependency_overrides:
+  record_platform_interface: 1.2.0

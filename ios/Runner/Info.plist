@@ -4,8 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ใช้ไมโครโฟนเพื่ออัดเสียงร้องเพลงและฝึกพูดภาษาอังกฤษ</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>ใช้ฟังเสียงพูดภาษาอังกฤษเพื่อตรวจการออกเสียง</string>
 	<key>CFBundleDisplayName</key>
-	<string>Three Duo Learning</string>
+	<string>ThreeDuo Learning</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

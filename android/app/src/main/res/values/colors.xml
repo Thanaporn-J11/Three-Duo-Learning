@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Start screen light-blue gradient. splash_background is the middle
+         colour: the Android 12+ splash can only use one colour, and the logo
+         sits in the middle, so the change to the Flutter screen is smooth. -->
+    <color name="splash_gradient_top">#EAF7FF</color>
+    <color name="splash_background">#D6EEFF</color>
+    <color name="splash_gradient_bottom">#B8E1FF</color>
+</resources>
