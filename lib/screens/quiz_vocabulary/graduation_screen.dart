@@ -84,9 +84,12 @@ class _GraduationScreenState extends State<GraduationScreen>
     setState(() {
       _isStarting = true;
       _startError = null;
-      _idempotencyKey ??= ExerciseApiService.newIdempotencyKey();
     });
     try {
+      // Same key as the quiz left unfinished (if any) -> same questions.
+      _idempotencyKey ??= await ExerciseApiService.idempotencyKeyFor(
+        widget.categorySlug,
+      );
       final attempt = await ExerciseApiService.startAttempt(
         categorySlug: widget.categorySlug,
         idempotencyKey: _idempotencyKey!,
@@ -97,6 +100,8 @@ class _GraduationScreenState extends State<GraduationScreen>
         throw const ExerciseApiException('แบบทดสอบที่ได้รับไม่ตรงกับหมวดคำศัพท์');
       }
       if (loadedAttempt.status == 'expired') {
+        await ExerciseApiService.clearPendingQuiz(widget.categorySlug);
+        _idempotencyKey = null;
         throw const ExerciseApiException(
           'แบบทดสอบหมดเวลาแล้ว กรุณาเริ่มใหม่',
           code: 'ATTEMPT_EXPIRED',
@@ -104,6 +109,8 @@ class _GraduationScreenState extends State<GraduationScreen>
         );
       }
       if (loadedAttempt.status == 'completed') {
+        await ExerciseApiService.clearPendingQuiz(widget.categorySlug);
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -137,6 +144,7 @@ class _GraduationScreenState extends State<GraduationScreen>
         _startError = error.message;
         if (error.code == 'ATTEMPT_EXPIRED' || error.statusCode == 410) {
           _idempotencyKey = null;
+          ExerciseApiService.clearPendingQuiz(widget.categorySlug);
         }
       });
     } catch (_) {

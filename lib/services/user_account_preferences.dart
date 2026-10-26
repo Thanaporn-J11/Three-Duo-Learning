@@ -36,6 +36,19 @@ class UserAccountPreferences {
     await clearLocalSession();
   }
 
+  /// After the server deleted the account: signs out and also erases what
+  /// this phone kept for that account (settings, progress caches, PIN).
+  static Future<void> clearDeletedAccount() async {
+    final userId = await currentUserId();
+    await clearLocalSession();
+    if (userId == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    final suffix = '_user_$userId';
+    for (final key in prefs.getKeys().toList()) {
+      if (key.endsWith(suffix)) await prefs.remove(key);
+    }
+  }
+
   /// Forgets the sign-in on this phone only (no server call). Used when the
   /// server says the session has ended (expired, or logged out elsewhere).
   static Future<void> clearLocalSession() async {

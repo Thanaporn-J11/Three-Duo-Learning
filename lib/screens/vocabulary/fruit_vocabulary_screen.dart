@@ -12,7 +12,7 @@ class FruitVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'fruit',
       categoryTitle: 'ผลไม้',
-      words: _words,
+      words: kFruitWords,
       theme: _theme,
     );
   }
@@ -31,7 +31,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   wordLongSize: 32,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kFruitWords = [
   VocabularyItem(
     word: 'Apple',
     thaiPhonetics: 'แอป เปิล',

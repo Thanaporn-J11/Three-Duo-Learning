@@ -12,7 +12,7 @@ class VehicleVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'vehicle',
       categoryTitle: 'ยานพาหนะ',
-      words: _words,
+      words: kVehicleWords,
       theme: _theme,
     );
   }
@@ -30,7 +30,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   wordSize: 42,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kVehicleWords = [
   VocabularyItem(
     word: 'Airplane',
     thaiPhonetics: 'แอร์ เพลน',

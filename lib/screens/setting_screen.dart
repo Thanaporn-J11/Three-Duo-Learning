@@ -8,13 +8,14 @@ import '../services/account_settings_sync.dart';
 import '../services/app_version.dart';
 import '../services/parent_pin.dart';
 import '../services/screen_time_guard.dart';
+import '../widgets/delete_account_dialog.dart';
 import '../widgets/parent_pin_prompt.dart';
 import 'setting/learning_report_sheet.dart';
 import '../services/user_account_preferences.dart';
 import 'profile_screen.dart'; // มี AvatarProfile, AvatarPainter, kSkinTones, kHairColors, kMaleOutfits, kFemaleOutfits
 import 'setting/security_screen.dart';
 import 'setting/about_screen.dart';
-import 'login_screen.dart'; // TODO: เปลี่ยนเป็นชื่อไฟล์หน้า Login ของคุณ
+import 'welcome_screen.dart';
 import '../config/api_config.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -1311,6 +1312,34 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               ),
 
+              const SizedBox(height: 8),
+
+              //=========================
+              // DELETE ACCOUNT BUTTON
+              //=========================
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF94A3B8),
+                ),
+                onPressed: () async {
+                  final deleted = await showDeleteAccountDialog(context);
+                  if (deleted && context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  }
+                },
+                icon: const Icon(Icons.delete_forever_rounded, size: 20),
+                label: const Text(
+                  "ลบบัญชีผู้ใช้",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+
               const SizedBox(height: 20),
             ],
           ),
@@ -1770,7 +1799,7 @@ Widget _sectionLabel(String text, [IconData? icon]) {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
+                      builder: (context) => const WelcomeScreen(),
                     ),
                     (route) => false,
                   );

@@ -12,7 +12,7 @@ class SportVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'sport',
       categoryTitle: 'กีฬา',
-      words: _words,
+      words: kSportWords,
       theme: _theme,
     );
   }
@@ -30,7 +30,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   wordSize: 42,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kSportWords = [
   VocabularyItem(
     word: 'Badminton',
     thaiPhonetics: 'แบด มิน เทิน',

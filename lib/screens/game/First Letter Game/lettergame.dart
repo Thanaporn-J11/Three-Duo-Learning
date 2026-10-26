@@ -4,6 +4,14 @@ import 'package:flutter/services.dart';
 import '../../../services/coin_balance.dart';
 import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../services/letter_levels_service.dart';
+import '../../../services/letter_word_picker.dart';
+import '../../vocabulary/animal_vocabulary_screen.dart' show kAnimalWords;
+import '../../vocabulary/fruit_vocabulary_screen.dart' show kFruitWords;
+import '../../vocabulary/career_vocabulary_screen.dart' show kCareerWords;
+import '../../vocabulary/sport_vocabulary_screen.dart' show kSportWords;
+import '../../vocabulary/vehicle_vocabulary_screen.dart' show kVehicleWords;
+import '../../vocabulary/place_vocabulary_screen.dart' show kPlaceWords;
+import '../../vocabulary/vocabulary_lesson_screen.dart' show VocabularyItem;
 
 void main() {
   runApp(MaterialApp(
@@ -22,105 +30,95 @@ void main() {
 class CategorySelectionScreen extends StatelessWidget {
   const CategorySelectionScreen({super.key});
 
-  static const List<Map<String, dynamic>> categories = [
+  static List<String> _wordsOf(List<VocabularyItem> items) => [
+    for (final item in items) item.word.toUpperCase(),
+  ];
+
+  static Map<String, String> _imagesOf(List<VocabularyItem> items) => {
+    for (final item in items) item.word.toUpperCase(): item.imagePath,
+  };
+
+  static String _tagOf(List<VocabularyItem> items) => '${items.length} คำศัพท์';
+
+  // Every category plays with the same words as its vocabulary lessons.
+  static final List<Map<String, dynamic>> categories = [
     {
       'title': 'สัตว์น่ารัก',
       'subtitle': 'เพื่อนตัวน้อยรอบตัวเรา',
-      'tag': '30 คำศัพท์',
+      'tag': _tagOf(kAnimalWords),
       'primaryColor': Color(0xFF6C5CE7),
       'accentColor': Color(0xFF5142CA),
       'cardBg': Color(0xFFF3F0FF),
       'image': 'assets/images/vocabulary/animals/Dog.png',
       'icon': Icons.pets_rounded,
       'folder': 'animals',
-      'words': [
-        'BEAR', 'BEE', 'BIRD', 'BUTTERFLY', 'CAT', 'CHICKEN', 'COW', 'DOG',
-        'DOLPHIN', 'DUCK', 'ELEPHANT', 'FISH', 'FROG', 'GIRAFFE', 'HIPPO',
-        'HORSE', 'KANGAROO', 'LION', 'MONKEY', 'OCTOPUS', 'OWL', 'PANDA',
-        'PENGUIN', 'PIG', 'RABBIT', 'SHEEP', 'TIGER', 'TURTLE', 'WHALE', 'ZEBRA'
-      ],
+      'words': _wordsOf(kAnimalWords),
+      'imagePaths': _imagesOf(kAnimalWords),
     },
     {
       'title': 'ผลไม้แสนอร่อย',
       'subtitle': 'ผลไม้หวานฉ่ำ สีสันสดใส',
-      'tag': '28 คำศัพท์',
+      'tag': _tagOf(kFruitWords),
       'primaryColor': Color(0xFFFF5252),
       'accentColor': Color(0xFFE03838),
       'cardBg': Color(0xFFFFF0F0),
       'image': 'assets/images/vocabulary/fruits/Apple.png',
       'icon': Icons.apple_rounded,
       'folder': 'fruits',
-      'words': [
-        'APPLE', 'AVOCADO', 'BANANA', 'BLACKBERRY', 'BLUEBERRY', 'CHERRY',
-        'COCONUT', 'DURIAN', 'GRAPES', 'GUAVA', 'JACKFRUIT', 'KIWI', 'LEMON',
-        'LIME', 'LONGAN', 'LYCHEE', 'MANGO', 'MANGOSTEEN', 'ORANGE', 'PAPAYA',
-        'PEACH', 'PEAR', 'PINEAPPLE', 'POMEGRANATE', 'RAMBUTAN', 'RASPBERRY',
-        'STRAWBERRY', 'WATERMELON'
-      ],
+      'words': _wordsOf(kFruitWords),
+      'imagePaths': _imagesOf(kFruitWords),
     },
     {
       'title': 'อาชีพในฝัน',
       'subtitle': 'โตขึ้นน้อง ๆ อยากเป็นอะไรนะ ?',
-      'tag': '28 คำศัพท์',
+      'tag': _tagOf(kCareerWords),
       'primaryColor': Color(0xFFFF9F43),
       'accentColor': Color(0xFFE08328),
       'cardBg': Color(0xFFFFF7ED),
       'image': 'assets/images/vocabulary/careers/Nurse.png',
       'icon': Icons.work_rounded,
       'folder': 'careers',
-      'words': [
-        'ACCOUNTANT', 'ARCHITECT', 'ARTIST', 'CARPENTER', 'CASHIER', 'CHEF',
-        'DENTIST', 'DOCTOR', 'ELECTRICIAN', 'ENGINEER', 'FARMER', 'FIREFIGHTER',
-        'JOURNALIST', 'LAWYER', 'MECHANIC', 'MUSICIAN', 'NURSE', 'PHARMACIST',
-        'PHOTOGRAPHER', 'PILOT', 'PLUMBER', 'PROGRAMMER', 'SCIENTIST', 'SOLDIER',
-        'TEACHER', 'VETERINARIAN', 'WAITER', 'WAITRESS'
-      ],
+      'words': _wordsOf(kCareerWords),
+      'imagePaths': _imagesOf(kCareerWords),
     },
     {
       'title': 'กีฬาสุดสนุก',
       'subtitle': 'ออกกำลังกายให้แข็งแรง',
-      'tag': '10 คำศัพท์',
+      'tag': _tagOf(kSportWords),
       'primaryColor': Color(0xFFFF4081),
       'accentColor': Color(0xFFD81B60),
       'cardBg': Color(0xFFFFF0F5),
       'image': 'assets/images/vocabulary/sports/Archery.png',
       'icon': Icons.sports_soccer_rounded,
       'folder': 'sports',
-      'words': [
-        'BADMINTON', 'BASEBALL', 'BASKETBALL', 'CYCLING', 'RUNNING',
-        'SOCCER', 'SWIMMING', 'TABLE TENNIS', 'TENNIS', 'VOLLEYBALL'
-      ],
+      'words': _wordsOf(kSportWords),
+      'imagePaths': _imagesOf(kSportWords),
     },
     {
       'title': 'ยานพาหนะ',
       'subtitle': 'ออกเดินทางไปท่องโลกกว้าง',
-      'tag': '10 คำศัพท์',
+      'tag': _tagOf(kVehicleWords),
       'primaryColor': Color(0xFF10AC84),
       'accentColor': Color(0xFF0E8E6D),
       'cardBg': Color(0xFFE8F8F5),
       'image': 'assets/images/vocabulary/vehicles/Boat.png',
       'icon': Icons.directions_car_rounded,
       'folder': 'vehicles',
-      'words': [
-        'AIRPLANE', 'BICYCLE', 'BOAT', 'BUS', 'CAR', 'MOTORCYCLE',
-        'TAXI', 'TRAIN', 'TRUCK', 'VAN'
-      ],
+      'words': _wordsOf(kVehicleWords),
+      'imagePaths': _imagesOf(kVehicleWords),
     },
     {
       'title': 'สถานที่น่ารู้',
       'subtitle': 'รอบ ๆ ตัวเรามีที่ไหนบ้างนะ ?',
-      'tag': '20 คำศัพท์',
+      'tag': _tagOf(kPlaceWords),
       'primaryColor': Color(0xFFFECA57),
       'accentColor': Color(0xFFE1AF3C),
       'cardBg': Color(0xFFFFFBF0),
       'image': 'assets/images/vocabulary/places/School.png',
       'icon': Icons.storefront_rounded,
       'folder': 'places',
-      'words': [
-        'AIRPORT', 'BANK', 'BAKERY', 'BEACH' , 'CAFE', 'CINEMA', 'FACTORY',
-        'GYM', 'HOSPITAL', 'HOTEL', 'LIBRARY', 'MOUNTAIN', 'OFFICE', 'PARK', 'PHARMACY', 
-        'RESTAURANT', 'SCHOOL', 'SUPERMARKET', 'TEMPLE', 'ZOO'
-      ]
+      'words': _wordsOf(kPlaceWords),
+      'imagePaths': _imagesOf(kPlaceWords),
     }
   ];
 
@@ -1628,6 +1626,9 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
 
   /// สร้าง path รูปให้ตรงกับชื่อไฟล์จริง เช่น "TABLE TENNIS" -> "Table Tennis.png"
   String _imagePathFor(String folder, String word) {
+    final paths = widget.categoryData['imagePaths'] as Map<String, String>?;
+    final known = paths?[word.toUpperCase()];
+    if (known != null) return known;
     final String alias = _imageAlias['$folder/${word.toLowerCase()}'] ??
         _titleCase(word);
     return 'assets/images/vocabulary/$folder/$alias.png';
@@ -1701,24 +1702,22 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
     final int level = _level;
     final int tier = (level - 1) ~/ 5;
 
-    int len(String w) => w.replaceAll(' ', '').length;
     final List<String> all = List<String>.from(widget.categoryData['words']);
-    all.sort((a, b) {
-      final int c = len(a).compareTo(len(b));
-      return c != 0 ? c : a.compareTo(b);
-    });
-
     final int n = all.length;
     final int count = min(_questionCountFor(level), n);
-    final int window = min(n, max(count, (n * 0.4).ceil()));
-    final double d = (level - 1) / (LetterLevelStore.levelCount - 1);
-    final int start = ((n - window) * d).round();
-    final List<String> pool = all.sublist(start, start + window)
-      ..shuffle(_random);
-    final List<String> picked = pool.take(count).toList()
-      ..sort((a, b) => len(a).compareTo(len(b)));
-
     final String folder = widget.categoryData['folder'] as String;
+
+    // A category has few words for many levels: do not show again the words
+    // of the last levels while there are others to show.
+    final List<String> picked = pickLevelWords(
+      words: all,
+      level: level,
+      levelCount: LetterLevelStore.levelCount,
+      count: count,
+      recent: LetterRecentWords.of(folder),
+      random: _random,
+    );
+    LetterRecentWords.remember(folder, picked, max(0, min(n - count, n ~/ 2)));
 
     questions = picked.map((word) {
       final int missingIndex = _pickMissingIndex(word, tier);
@@ -1873,7 +1872,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isCorrect ? 'ถูกต้องแล้ว' : 'ยังไม่ถูกนะ ไม่เป็นไร!',
+                  isCorrect ? 'ถูกต้องแล้ว' : 'ยังไม่ถูกนะ ไม่เป็นไร !',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 24, fontWeight: FontWeight.w900, color: tone),

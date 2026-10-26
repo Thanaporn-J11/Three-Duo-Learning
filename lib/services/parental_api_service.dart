@@ -332,6 +332,18 @@ class ParentalApiService {
     );
   }
 
+  /// Permanently deletes the signed in account and all its data
+  /// (POST /api/profile/delete-account). Needs the account password; throws
+  /// [ParentalApiException] (`WRONG_PASSWORD`, `TOO_MANY_ATTEMPTS`, ...)
+  /// when the account was not deleted.
+  static Future<void> deleteAccount(String password) async {
+    await _request(
+      'POST',
+      '$_base/profile/delete-account',
+      body: {'password': password},
+    );
+  }
+
   static Future<Map<String, dynamic>> _request(
     String method,
     String url, {
@@ -392,6 +404,7 @@ class ParentalApiService {
       throw ParentalApiException(switch (code) {
         'WRONG_PASSWORD' => 'รหัสผ่านไม่ถูกต้อง',
         'TOO_MANY_ATTEMPTS' => 'ใส่รหัสผ่านผิดหลายครั้งเกินไป กรุณารอ 15 นาที',
+        'DELETE_ACCOUNT_FAILED' => 'ลบบัญชีไม่สำเร็จ กรุณาลองอีกครั้ง',
         'REPORT_LOAD_FAILED' => 'โหลดรายงานไม่สำเร็จ กรุณาลองอีกครั้ง',
         _ => 'ทำรายการไม่สำเร็จ (HTTP ${response.statusCode})',
       }, code: code);

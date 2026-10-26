@@ -12,7 +12,7 @@ class PlaceVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'place',
       categoryTitle: 'สถานที่',
-      words: _words,
+      words: kPlaceWords,
       theme: _theme,
     );
   }
@@ -30,7 +30,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   wordSize: 42,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kPlaceWords = [
   VocabularyItem(
     word: 'Airport',
     thaiPhonetics: 'แอร์ พอร์ต',

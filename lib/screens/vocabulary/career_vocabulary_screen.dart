@@ -12,7 +12,7 @@ class CareerVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'career',
       categoryTitle: 'อาชีพ',
-      words: _words,
+      words: kCareerWords,
       theme: _theme,
     );
   }
@@ -31,7 +31,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   wordLongSize: 34,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kCareerWords = [
   VocabularyItem(
     word: 'Accountant',
     thaiPhonetics: 'อะ เคาท์ เทินท์',

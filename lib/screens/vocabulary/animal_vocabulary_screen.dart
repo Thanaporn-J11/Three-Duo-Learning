@@ -12,7 +12,7 @@ class AnimalVocabularyScreen extends StatelessWidget {
     return const VocabularyLessonScreen(
       slug: 'animal',
       categoryTitle: 'สัตว์',
-      words: _words,
+      words: kAnimalWords,
       theme: _theme,
     );
   }
@@ -33,7 +33,8 @@ const VocabularyTheme _theme = VocabularyTheme(
   translationLongLength: 999,
 );
 
-const List<VocabularyItem> _words = [
+/// The words of this category (also used by the first-letter game).
+const List<VocabularyItem> kAnimalWords = [
   VocabularyItem(
     word: 'Bear',
     thaiPhonetics: 'แบร์',

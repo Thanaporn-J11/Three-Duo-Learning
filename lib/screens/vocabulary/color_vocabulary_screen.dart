@@ -8,6 +8,7 @@ import '../../services/word_speaker.dart';
 import 'vocabulary_api_status_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../services/exercise_api_service.dart';
 import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
@@ -283,6 +284,28 @@ class _ColorVocabularyScreenState extends State<ColorVocabularyScreen> {
   /// Back to the word the child stopped at last time (asks first).
   Future<void> _restorePosition() async {
     if (!mounted || _isLoading || _loadError != null) return;
+    // A quiz left unfinished comes first: go on with it, or drop it and learn
+    // the words again.
+    if (await ExerciseApiService.hasPendingQuiz('color')) {
+      if (!mounted) return;
+      if (await askQuizResume(context)) {
+        if (!mounted) return;
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => const GraduationScreen(
+                  categoryTitle: 'สีสัน',
+                  categorySlug: 'color',
+                  quizItems: [],
+                ),
+          ),
+        );
+        return;
+      }
+      await ExerciseApiService.clearPendingQuiz('color');
+      if (!mounted) return;
+    }
     final saved = await LessonProgress.load('vocab_color', _wordCount);
     if (!mounted || saved == null) return;
     final api = _apiWords;

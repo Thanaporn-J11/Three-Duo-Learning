@@ -1339,13 +1339,15 @@ class _KaraokeDetailScreenState extends State<KaraokeDetailScreen> {
   }
 
   /// The parent sends it: ask for the parent PIN first, so a child can't
-  /// send their voice to anyone by themselves. (No PIN set yet -> allowed.)
+  /// send their voice to anyone by themselves. With no PIN yet, the parent
+  /// creates one first (the parent zone then uses the same PIN).
   Future<void> _shareRecordedFile() async {
     final path = _recordedFilePath;
     if (path == null || !File(path).existsSync()) return;
     final allowed = await showParentPinPrompt(
       context,
       title: 'ผู้ปกครองยืนยันก่อนส่ง',
+      setupIfMissing: true,
     );
     if (!allowed || !mounted) return;
     await Share.shareXFiles([XFile(path)], text: karaokeShareText(widget.song));

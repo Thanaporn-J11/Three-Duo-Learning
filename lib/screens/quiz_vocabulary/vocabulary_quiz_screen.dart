@@ -324,6 +324,8 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
     try {
       final result = await ExerciseApiService.submitAttempt(widget.attempt.id);
       CoinBalance.refresh(); // coins at the top of the screens
+      // Finished: the next quiz of this category starts from the beginning.
+      await ExerciseApiService.clearPendingQuiz(widget.attempt.categorySlug);
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -342,6 +344,7 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
         submitError = error.message;
       });
       if (error.code == 'ATTEMPT_EXPIRED' || error.statusCode == 410) {
+        await ExerciseApiService.clearPendingQuiz(widget.attempt.categorySlug);
         await _showExpiredAttempt();
       }
     } catch (_) {

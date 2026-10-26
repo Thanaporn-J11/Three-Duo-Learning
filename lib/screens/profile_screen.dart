@@ -2555,6 +2555,18 @@ class _TwinkleState extends State<_Twinkle>
   }
 }
 
+/// Hair style, outfit and accessories one gender was wearing.
+typedef _GenderLook = ({
+  int hairStyle,
+  int outfit,
+  int glasses,
+  int hat,
+  int clip,
+  int earring,
+  int neck,
+  int extra,
+});
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -2575,6 +2587,16 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   String? _coinBalanceError;
   Set<String> _serverAvatarKeys = <String>{};
   ModalRoute<dynamic>? _subscribedRoute;
+
+  // While the "แต่งตัวอวตาร" sheet is open, choices only change what this
+  // screen shows (a draft). They are saved to the account when the child
+  // taps "เสร็จสิ้น"; closing the sheet any other way throws them away.
+  bool _avatarSheetOpen = false;
+  bool _avatarCommitted = false;
+
+  /// What each gender was wearing earlier in this sheet, so switching to the
+  /// other gender and back does not lose the outfit.
+  final Map<String, _GenderLook> _looks = <String, _GenderLook>{};
 
   String selectedGender = 'female';
   int selectedSkin = 3;
@@ -2635,7 +2657,7 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
   }
 
   void _onGlobalAvatarChanged() {
-    if (!mounted) return;
+    if (!mounted || _avatarSheetOpen) return; // keep the draft
     setState(_pullFromGlobal);
   }
 
@@ -2789,7 +2811,14 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     return '$day/$month/${date.year + 543}';
   }
 
+  /// A choice in the avatar sheet: kept as a draft until "เสร็จสิ้น".
   void _syncProfile() {
+    if (_avatarSheetOpen) return;
+    _commitProfile();
+  }
+
+  /// Saves what is chosen to the account (and to the avatar everywhere).
+  void _commitProfile() {
     final int safeOutfit =
         selectedOutfit < currentOutfits.length ? selectedOutfit : 0;
     AvatarProfile.instance.update(
@@ -3598,6 +3627,9 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
     int category = 0;
     HapticFeedback.lightImpact();
     _loadRewards();
+    _avatarSheetOpen = true;
+    _avatarCommitted = false;
+    _looks.clear();
 
     showModalBottomSheet(
       context: context,
@@ -3716,8 +3748,12 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
                                               ),
                                             ),
                                           ),
-                                          onPressed:
-                                              () => Navigator.pop(sheetContext),
+                                          onPressed: () {
+                                            _avatarCommitted = true;
+                                            _avatarSheetOpen = false;
+                                            _commitProfile();
+                                            Navigator.pop(sheetContext);
+                                          },
                                           child: const Text(
                                             'เสร็จสิ้น',
                                             style: TextStyle(
@@ -3830,7 +3866,42 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
         ),
         );
       },
+    ).whenComplete(_finishAvatarSheet);
+  }
+
+  /// The sheet is closed. Closed with the X, by swiping it down or with the
+  /// back button (not "เสร็จสิ้น"): go back to the saved avatar.
+  void _finishAvatarSheet() {
+    _avatarSheetOpen = false;
+    _looks.clear();
+    if (_avatarCommitted || !mounted) return;
+    setState(_pullFromGlobal);
+  }
+
+  /// Switching gender: remember what the old gender wears, and bring back
+  /// what the new one wore earlier (a first time starts from the first hair
+  /// style and outfit; the items are different for each gender).
+  void _switchGender(String gender) {
+    _looks[selectedGender] = (
+      hairStyle: selectedHairStyle,
+      outfit: selectedOutfit,
+      glasses: selectedGlasses,
+      hat: selectedHat,
+      clip: selectedClip,
+      earring: selectedEarring,
+      neck: selectedNeck,
+      extra: selectedExtra,
     );
+    selectedGender = gender;
+    final _GenderLook? look = _looks[gender];
+    selectedHairStyle = look?.hairStyle ?? 0;
+    selectedOutfit = look?.outfit ?? 0;
+    selectedGlasses = look?.glasses ?? 0;
+    selectedHat = look?.hat ?? 0;
+    selectedClip = look?.clip ?? 0;
+    selectedEarring = look?.earring ?? 0;
+    selectedNeck = look?.neck ?? 0;
+    selectedExtra = look?.extra ?? 0;
   }
 
   Widget _categoryButton({
@@ -3913,18 +3984,9 @@ class _ProfileScreenState extends State<ProfileScreen> with RouteAware {
       return Expanded(
         child: GestureDetector(
           onTap: () {
+            if (selectedGender == gender) return;
             HapticFeedback.selectionClick();
-            setState(() {
-              selectedGender = gender;
-              selectedHairStyle = 0;
-              selectedOutfit = 0;
-              selectedGlasses = 0;
-              selectedHat = 0;
-              selectedClip = 0;
-              selectedEarring = 0;
-              selectedNeck = 0;
-              selectedExtra = 0;
-            });
+            setState(() => _switchGender(gender));
             _syncProfile();
             setModalState(() {});
           },

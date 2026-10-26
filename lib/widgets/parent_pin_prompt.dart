@@ -20,12 +20,26 @@ String _lockedMessage(Duration left) {
 /// Asks for the parent PIN. Returns true when the right PIN was entered, or
 /// when the parent proved who they are with the account password ("ลืม PIN?"),
 /// in which case the PIN is cleared so a new one can be set.
-/// If no PIN has been set yet there is nothing to check, so it returns true.
+///
+/// If no PIN has been set yet there is nothing to check. By default it then
+/// returns true; with [setupIfMissing] the parent is asked to create a PIN
+/// first (so a child cannot get through just because no PIN exists), and
+/// the result is true only once a PIN was saved. The same PIN is then used
+/// by the parent zone.
 Future<bool> showParentPinPrompt(
   BuildContext context, {
   String title = 'ยืนยันรหัส PIN ผู้ปกครอง',
+  bool setupIfMissing = false,
 }) async {
-  if (!await ParentPin.hasPin()) return true;
+  if (!await ParentPin.hasPin()) {
+    if (!setupIfMissing || !context.mounted) return !setupIfMissing;
+    final created = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _SetupPinDialog(title: title),
+    );
+    return created ?? false;
+  }
   if (!context.mounted) return false;
   final result = await showDialog<String>(
     context: context,
@@ -50,6 +64,127 @@ Future<bool> showParentPinPrompt(
     }
   }
   return false;
+}
+
+/// First-time PIN: asks twice, saves it and closes with true.
+class _SetupPinDialog extends StatefulWidget {
+  const _SetupPinDialog({required this.title});
+
+  final String title;
+
+  @override
+  State<_SetupPinDialog> createState() => _SetupPinDialogState();
+}
+
+class _SetupPinDialogState extends State<_SetupPinDialog> {
+  final _pin = TextEditingController();
+  final _confirm = TextEditingController();
+  String? _error;
+  bool _busy = false;
+
+  @override
+  void dispose() {
+    _pin.dispose();
+    _confirm.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final pin = _pin.text.trim();
+    if (!ParentPin.isValidFormat(pin)) {
+      setState(() => _error = 'กรุณากรอกตัวเลข 4 หลัก');
+      return;
+    }
+    if (pin != _confirm.text.trim()) {
+      setState(() => _error = 'รหัส PIN ยืนยันไม่ตรงกัน');
+      return;
+    }
+    setState(() => _busy = true);
+    await ParentPin.setPin(pin);
+    if (mounted) Navigator.pop(context, true);
+  }
+
+  Widget _field(TextEditingController controller, String label) {
+    return TextField(
+      controller: controller,
+      enabled: !_busy,
+      obscureText: true,
+      keyboardType: TextInputType.number,
+      textAlign: TextAlign.center,
+      maxLength: 4,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      style: const TextStyle(fontSize: 24, letterSpacing: 10),
+      decoration: InputDecoration(
+        counterText: '',
+        hintText: '••••',
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      shape: _dialogShape(),
+      title: Row(
+        children: [
+          const Icon(Icons.lock_rounded, color: _brand, size: 24),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: _ink,
+              ),
+            ),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'ยังไม่ได้ตั้งรหัส PIN ผู้ปกครอง ตั้งรหัส 4 หลักก่อน '
+            '(ใช้รหัสเดียวกันกับโหมดผู้ปกครอง)',
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+          ),
+          const SizedBox(height: 12),
+          _field(_pin, 'รหัส PIN ใหม่'),
+          const SizedBox(height: 10),
+          _field(_confirm, 'ยืนยันรหัส PIN'),
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                _error!,
+                style: const TextStyle(color: Color(0xFFEF4444), fontSize: 12),
+              ),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.pop(context, false),
+          child: const Text('ยกเลิก'),
+        ),
+        ElevatedButton(
+          onPressed: _busy ? null : _submit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _brand,
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
+          child: const Text('ตั้งรหัส'),
+        ),
+      ],
+    );
+  }
 }
 
 class _PinDialog extends StatefulWidget {

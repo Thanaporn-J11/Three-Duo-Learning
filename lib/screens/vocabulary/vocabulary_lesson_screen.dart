@@ -8,6 +8,7 @@ import '../../services/word_speaker.dart';
 import 'vocabulary_api_status_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../services/exercise_api_service.dart';
 import '../quiz_vocabulary/graduation_screen.dart';
 import '../../models/quiz_vocabulary_item.dart';
 
@@ -290,6 +291,28 @@ class _VocabularyLessonScreenState extends State<VocabularyLessonScreen> {
   /// Back to the word the child stopped at last time (asks first).
   Future<void> _restorePosition() async {
     if (!mounted || _isLoading || _loadError != null) return;
+    // A quiz left unfinished comes first: go on with it, or drop it and learn
+    // the words again.
+    if (await ExerciseApiService.hasPendingQuiz(_slug)) {
+      if (!mounted) return;
+      if (await askQuizResume(context)) {
+        if (!mounted) return;
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => GraduationScreen(
+                  categoryTitle: widget.categoryTitle,
+                  categorySlug: _slug,
+                  quizItems: const [],
+                ),
+          ),
+        );
+        return;
+      }
+      await ExerciseApiService.clearPendingQuiz(_slug);
+      if (!mounted) return;
+    }
     final saved = await LessonProgress.load(_progressKey, _wordCount);
     if (!mounted || saved == null) return;
     final api = _apiWords;

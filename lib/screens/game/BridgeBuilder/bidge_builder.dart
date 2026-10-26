@@ -3311,20 +3311,32 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
                   return Column(
                     children: [
                       _buildHeaderArea(),
-                      // ฉากสะพานกินพื้นที่ที่เหลือทั้งหมด
+                      // พื้นที่ที่เหลือแบ่งให้ฉากสะพานเป็นส่วนใหญ่ และที่เหลือเป็น
+                      // ช่องไฟเท่า ๆ กันระหว่างบล็อก ทุกส่วนจึงเต็มหน้าและไม่เบียดกัน
                       Expanded(
+                        flex: 10,
                         child: LayoutBuilder(
                           builder: (context, b) {
-                            final h = (b.maxHeight - 16).clamp(90.0, 320.0).toDouble();
-                            return Align(alignment: Alignment.center, child: _buildScene(h));
+                            final top = 8 * _s;
+                            final h = (b.maxHeight - 16 - top).clamp(90.0, 380.0).toDouble();
+                            return Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: top),
+                                child: _buildScene(h),
+                              ),
+                            );
                           },
                         ),
                       ),
+                      const Spacer(),
                       _buildSentenceBoard(),
                       _buildTip(),
+                      const Spacer(),
                       _buildChoices(),
+                      const Spacer(),
                       _buildHelperBar(),
-                      SizedBox(height: 8 * _s),
+                      SizedBox(height: 16 * _s),
                     ],
                   );
                 },
@@ -3360,37 +3372,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
 
   /// แถบข้อมูลด้านบน + แถบความคืบหน้า + หลอดทดลองที่เลื่อนตามความคืบหน้า
   Widget _buildHeaderArea() {
-    final total = max(1, _questions.length);
-    int done = 0;
-    for (int i = 0; i < total; i++) {
-      if (i < _slotTier.length && _slotTier[i] >= 0) done++;
-    }
-    final reached = _finished ? total : min(total, done + 1);
-    return LayoutBuilder(
-      builder: (context, c) {
-        const hp = 14.0;
-        final trackW = c.maxWidth - hp * 2;
-        final tubeX = (hp + trackW * reached / total - 14).clamp(0.0, max(0.0, c.maxWidth - 24)).toDouble();
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Column(children: [_buildTopBarRow(), _buildProgressDots()]),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeOut,
-              left: tubeX,
-              bottom: -12,
-              child: IgnorePointer(
-                child: Transform.rotate(
-                  angle: -0.4,
-                  child: const SizedBox(width: 24, height: 46, child: CustomPaint(painter: _TubePainter())),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    return Column(children: [_buildTopBarRow(), _buildProgressDots()]);
   }
 
   Widget _buildTopBarRow() {
@@ -3858,7 +3840,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
       }
     }
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 0, 10, 6),
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 12 * _s),
       padding: const EdgeInsets.all(3.5),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -3983,8 +3965,9 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: double.infinity,
-      constraints: BoxConstraints(minHeight: 34 * _s),
-      margin: const EdgeInsets.fromLTRB(10, 0, 10, 6),
+      // สูงเท่ากับข้อความ 2 บรรทัด ฉากสะพานจะได้ไม่ขยับเมื่อข้อความเปลี่ยน
+      constraints: BoxConstraints(minHeight: 54 * _s),
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 12 * _s),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6 * _s),
       decoration: BoxDecoration(
         color: bg,
@@ -4015,9 +3998,12 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: LayoutBuilder(
         builder: (context, c) {
-          final itemW = (c.maxWidth - 10) / 2;
+          // 3 choices go in one row (not 2 + 1); otherwise two per row.
+          final columns = _opts.length == 3 ? 3 : 2;
+          const gap = 10.0;
+          final itemW = (c.maxWidth - gap * (columns - 1)) / columns;
           return Wrap(
-            spacing: 10,
+            spacing: gap,
             runSpacing: 8 * _s,
             alignment: WrapAlignment.center,
             children: List.generate(_opts.length, (i) {
@@ -4043,7 +4029,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
                       child: _PlankButton(
                         text: option,
                         colorIndex: i,
-                        fontSize: (pair ? 17 : 24) * _s,
+                        fontSize: (pair ? 17 : (_opts.length == 3 ? 22 : 24)) * _s,
                         onTap: () => _handleAnswer(option),
                       ),
                     ),
@@ -4104,7 +4090,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
 
   Widget _buildHelperBar() {
     return Padding(
-      padding: EdgeInsets.only(top: 6 * _s),
+      padding: EdgeInsets.only(top: 4 * _s),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -4324,42 +4310,6 @@ class _TreePainter extends CustomPainter {
         Paint()..color = body,
       );
     }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
-}
-
-/// หลอดทดลองสีเขียวบนแถบความคืบหน้า
-class _TubePainter extends CustomPainter {
-  const _TubePainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
-    final body = RRect.fromLTRBAndCorners(w * 0.25, h * 0.14, w * 0.75, h,
-        bottomLeft: Radius.circular(w * 0.25), bottomRight: Radius.circular(w * 0.25));
-    canvas.drawRRect(body, Paint()..color = const Color(0xCCFFFFFF));
-    canvas.save();
-    canvas.clipRRect(body);
-    final liquid = Rect.fromLTRB(0, h * 0.4, w, h);
-    canvas.drawRect(
-      liquid,
-      Paint()
-        ..shader = const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF8DF29B), Color(0xFF17B34A)],
-        ).createShader(liquid),
-    );
-    canvas.restore();
-    canvas.drawRRect(body, Paint()..color = const Color(0xFFB4C6DC)..style = PaintingStyle.stroke..strokeWidth = 1.6);
-    final rim = RRect.fromLTRBR(w * 0.12, h * 0.06, w * 0.88, h * 0.18, const Radius.circular(3));
-    canvas.drawRRect(rim, Paint()..color = const Color(0xFFE3ECF7));
-    canvas.drawRRect(rim, Paint()..color = const Color(0xFFB4C6DC)..style = PaintingStyle.stroke..strokeWidth = 1.2);
-    canvas.drawLine(Offset(w * 0.36, h * 0.3), Offset(w * 0.36, h * 0.8),
-        Paint()..color = const Color(0x99FFFFFF)..strokeWidth = 2..strokeCap = StrokeCap.round);
   }
 
   @override

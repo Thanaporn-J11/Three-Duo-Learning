@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/exercise_attempt.dart';
 import '../config/api_config.dart';
+import 'user_account_preferences.dart';
 
 class ExerciseApiException implements Exception {
   const ExerciseApiException(this.message, {this.code, this.statusCode});
@@ -33,6 +34,64 @@ class ExerciseApiService {
     final hex = bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
     return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-'
         '${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
+  }
+
+  /// How long the server keeps a started quiz open (15 minutes); a little
+  /// less here so we never offer a quiz that has just expired.
+  static const Duration pendingLifetime = Duration(minutes: 14);
+
+  static Future<String> _pendingKey(String categorySlug) async {
+    final base = 'quiz_pending_$categorySlug';
+    final userId = await UserAccountPreferences.currentUserId();
+    return userId == null ? base : UserAccountPreferences.keyFor(base, userId);
+  }
+
+  /// The idempotency key of the quiz this account started for the category
+  /// and has not finished. Starting with the same key gives back the same
+  /// questions (with the answers already given), so a child who left in the
+  /// middle can continue. A new key is made (and saved) when there is none
+  /// or the saved one is too old.
+  static Future<String> idempotencyKeyFor(String categorySlug) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = await _pendingKey(categorySlug);
+    final saved = _parsePending(prefs.getString(key));
+    if (saved != null &&
+        DateTime.now().difference(saved.savedAt) < pendingLifetime) {
+      return saved.idempotencyKey;
+    }
+    final fresh = newIdempotencyKey();
+    await prefs.setString(
+      key,
+      '$fresh|${DateTime.now().millisecondsSinceEpoch}',
+    );
+    return fresh;
+  }
+
+  /// True when the account has a quiz for the category that was started
+  /// recently and not finished.
+  static Future<bool> hasPendingQuiz(String categorySlug) async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = _parsePending(prefs.getString(await _pendingKey(categorySlug)));
+    return saved != null &&
+        DateTime.now().difference(saved.savedAt) < pendingLifetime;
+  }
+
+  /// The quiz was finished, or has expired: nothing to continue.
+  static Future<void> clearPendingQuiz(String categorySlug) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(await _pendingKey(categorySlug));
+  }
+
+  static ({String idempotencyKey, DateTime savedAt})? _parsePending(String? raw) {
+    if (raw == null) return null;
+    final parts = raw.split('|');
+    if (parts.length != 2) return null;
+    final ms = int.tryParse(parts[1]);
+    if (ms == null || parts[0].isEmpty) return null;
+    return (
+      idempotencyKey: parts[0],
+      savedAt: DateTime.fromMillisecondsSinceEpoch(ms),
+    );
   }
 
   static Future<ExerciseAttempt> startAttempt({
