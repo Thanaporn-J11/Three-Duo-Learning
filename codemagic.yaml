@@ -1,0 +1,28 @@
+workflows:
+  ios-unsigned:
+    name: iOS unsigned IPA (for Sideloadly)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: 3.29.3
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate iOS config
+        script: flutter build ios --config-only --release --no-codesign --dart-define=API_BASE_URL=https://api.threeduo.tech
+      - name: Raise minimum iOS to 13.0
+        script: |
+          sed -i '' "s/^# platform :ios, '.*'/platform :ios, '13.0'/" ios/Podfile
+          sed -i '' "s/^platform :ios, '.*'/platform :ios, '13.0'/" ios/Podfile
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 12.0;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' ios/Runner.xcodeproj/project.pbxproj
+      - name: Build without signing
+        script: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://api.threeduo.tech
+      - name: Package unsigned IPA
+        script: |
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
+          zip -qr threeduo-unsigned.ipa Payload
+    artifacts:
+      - threeduo-unsigned.ipa
