@@ -649,7 +649,7 @@ class _GlassSheet extends StatelessWidget {
   }
 }
 
-class _SheetBody extends StatelessWidget {
+class _SheetBody extends StatefulWidget {
   final Widget child;
   final EdgeInsets padding;
   final double contentWidth;
@@ -663,24 +663,38 @@ class _SheetBody extends StatelessWidget {
   });
 
   @override
+  State<_SheetBody> createState() => _SheetBodyState();
+}
+
+class _SheetBodyState extends State<_SheetBody> {
+  // One key for the whole form. The layout below switches between two
+  // different widget trees when the keyboard opens or closes; without a
+  // GlobalKey the text fields would be rebuilt from scratch on every switch,
+  // lose focus, close the keyboard and start the switch again (the screen
+  // "bounces" and nothing can be typed on some phones).
+  final GlobalKey _formKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
-    if (scrollable) {
+    final form = KeyedSubtree(key: _formKey, child: widget.child);
+
+    if (widget.scrollable) {
       return ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
-          padding: padding,
-          child: child,
+          padding: widget.padding,
+          child: form,
         ),
       );
     }
 
     return Padding(
-      padding: padding,
+      padding: widget.padding,
       child: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.topCenter,
-        child: SizedBox(width: contentWidth, child: child),
+        child: SizedBox(width: widget.contentWidth, child: form),
       ),
     );
   }
