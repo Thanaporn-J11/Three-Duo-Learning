@@ -25,7 +25,18 @@ class _SfxTapListenerState extends State<SfxTapListener> {
     WidgetsBinding.instance.hitTestInView(result, event.position, event.viewId);
     for (final entry in result.path) {
       final target = entry.target;
-      if (target is RenderSemanticsGestureHandler && target.onTap != null) {
+      // Anything the player can press: buttons and cards with a tap or
+      // long-press handler, switches, and anything marked as tappable.
+      if (target is RenderSemanticsGestureHandler &&
+          (target.onTap != null || target.onLongPress != null)) {
+        return true;
+      }
+      if (target is RenderSemanticsAnnotations &&
+          target.properties.onTap != null) {
+        return true;
+      }
+      if (target is RenderMouseRegion &&
+          target.cursor == SystemMouseCursors.click) {
         return true;
       }
     }

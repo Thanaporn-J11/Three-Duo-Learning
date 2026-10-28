@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// All the little sounds of the app:
 ///  * right / wrong answer and end of a level (games and quizzes)
 ///  * button tap, reward and welcome chime
-///  * quiet background music on the menu screens
+///  * quiet background music on every page (the player can turn it off in
+///    Settings)
 ///
 /// Files: `assets/sounds/sfx/<name>.wav`.
 ///
@@ -136,20 +137,7 @@ class Sfx {
   static bool _musicStarted = false;
   static bool _musicPlaying = false;
   static bool _appActive = true;
-  static int _musicScopes = 0;
   static Future<void> _musicChain = Future<void>.value();
-
-  /// A menu screen that wants music became visible.
-  static void musicScopeEnter() {
-    _musicScopes++;
-    _syncMusic();
-  }
-
-  /// That screen is covered or closed.
-  static void musicScopeExit() {
-    if (_musicScopes > 0) _musicScopes--;
-    _syncMusic();
-  }
 
   static void _setAppActive(bool value) {
     _appActive = value;
@@ -162,7 +150,7 @@ class Sfx {
   }
 
   static Future<void> _applyMusic() async {
-    final want = _musicOn && _musicScopes > 0 && _appActive;
+    final want = _musicOn && _appActive;
     try {
       if (want && !_musicPlaying) {
         var player = _music;

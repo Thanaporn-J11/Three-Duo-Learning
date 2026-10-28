@@ -18,7 +18,6 @@ import 'setting/about_screen.dart';
 import 'welcome_screen.dart';
 import '../config/api_config.dart';
 import '../services/sfx.dart';
-import '../widgets/music_scope.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -1098,10 +1097,7 @@ class _SettingScreenState extends State<SettingScreen> {
   // MAIN BUILD
   // ============================================================
   @override
-  Widget build(BuildContext context) =>
-      MusicScope(child: _buildScreen(context));
-
-  Widget _buildScreen(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bg,
 
@@ -1278,7 +1274,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 color: const Color(0xFFEC4899),
                 title: "เพลงพื้นหลัง",
                 subtitle: Sfx.musicEnabled
-                    ? "เปิดอยู่ • เพลงเบา ๆ ในหน้าหลัก"
+                    ? "เปิดอยู่ • เพลงเบา ๆ ตลอดการใช้งาน"
                     : "ปิดอยู่",
                 value: Sfx.musicEnabled,
                 onChanged: (v) {

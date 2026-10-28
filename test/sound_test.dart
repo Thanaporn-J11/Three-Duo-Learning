@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:threeduo_learning/services/sfx.dart';
 import 'package:threeduo_learning/widgets/bottom_bar_fill.dart';
-import 'package:threeduo_learning/widgets/music_scope.dart';
 import 'package:threeduo_learning/widgets/sfx_tap_listener.dart';
 
 void main() {
@@ -52,63 +51,11 @@ void main() {
       Sfx.reward();
       Sfx.tap();
       Sfx.welcomeOnce();
-      Sfx.musicScopeEnter();
-      Sfx.musicScopeExit();
-      Sfx.musicScopeExit(); // more exits than enters is harmless
-    });
-  });
-
-  group('MusicScope', () {
-    testWidgets('shows its child and follows the route', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          navigatorObservers: [musicRouteObserver],
-          home: Builder(
-            builder: (context) => const MusicScope(child: Text('home')),
-          ),
-        ),
-      );
-      expect(find.text('home'), findsOneWidget);
-
-      // Covered by another page, then shown again, then removed.
-      final navigator = tester.state<NavigatorState>(find.byType(Navigator));
-      navigator.push(
-        MaterialPageRoute<void>(
-          builder: (_) => const MusicScope(child: Text('other')),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('other'), findsOneWidget);
-      navigator.pop();
-      await tester.pumpAndSettle();
-      expect(find.text('home'), findsOneWidget);
-
-      await tester.pumpWidget(const SizedBox());
-    });
-
-    testWidgets('a dialog does not count as leaving the screen',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          navigatorObservers: [musicRouteObserver],
-          home: const MusicScope(child: Text('home')),
-        ),
-      );
-      final navigator = tester.state<NavigatorState>(find.byType(Navigator));
-      showDialog<void>(
-        context: navigator.context,
-        builder: (_) => const AlertDialog(content: Text('dialog')),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('dialog'), findsOneWidget);
-      navigator.pop();
-      await tester.pumpAndSettle();
-      expect(find.text('home'), findsOneWidget);
     });
   });
 
   group('SfxTapListener', () {
-    testWidgets('taps on buttons and background still work', (tester) async {
+    testWidgets('taps on buttons, switches and background still work', (tester) async {
       var taps = 0;
       await tester.pumpWidget(
         MaterialApp(
@@ -120,6 +67,7 @@ void main() {
                     onPressed: () => taps++,
                     child: const Text('go'),
                   ),
+                  Switch(value: false, onChanged: (_) => taps++),
                   const Text('plain'),
                 ],
               ),
@@ -129,9 +77,10 @@ void main() {
       );
 
       await tester.tap(find.text('go'));
+      await tester.tap(find.byType(Switch));
       await tester.tap(find.text('plain'));
       await tester.pump(const Duration(milliseconds: 200));
-      expect(taps, 1);
+      expect(taps, 2);
     });
 
     testWidgets('dragging and two fingers are not taps', (tester) async {

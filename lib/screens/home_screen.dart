@@ -10,7 +10,6 @@ import 'game/game_screen.dart';
 import 'phonics/phonics_category_screen.dart'; // แก้ไข: ชี้ไปยังหน้าหมวดหมู่ Phonics
 import 'listen/listen_screen.dart';
 import '../services/sfx.dart';
-import '../widgets/music_scope.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -121,10 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      MusicScope(child: _buildScreen(context));
-
-  Widget _buildScreen(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8EF),
       appBar: AppBar(

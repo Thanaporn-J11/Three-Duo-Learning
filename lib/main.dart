@@ -25,7 +25,6 @@ import 'services/coin_balance.dart';
 import 'services/user_account_preferences.dart';
 import 'services/screen_time_guard.dart';
 import 'services/sfx.dart';
-import 'widgets/music_scope.dart';
 import 'widgets/sfx_tap_listener.dart';
 import 'widgets/bottom_bar_fill.dart';
 
@@ -83,7 +82,7 @@ class ThreeDuoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: ScreenTimeGuard.instance.navigatorKey,
       title: 'ThreeDuo Learning',
-      navigatorObservers: [profileRouteObserver, musicRouteObserver],
+      navigatorObservers: [profileRouteObserver],
       // Soft pop on every button tap.
       builder: (context, child) {
         final app = SfxTapListener(child: child ?? const SizedBox.shrink());
