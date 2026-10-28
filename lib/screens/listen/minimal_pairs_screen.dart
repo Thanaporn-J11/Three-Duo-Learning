@@ -1036,8 +1036,17 @@ class _MinimalPairsScreenState extends State<MinimalPairsScreen> {
                   // ผังองค์ประกอบแนวตั้ง
                   SafeArea(
                     top: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 6, 20, 16),
+                    // Scrolls when the phone is too short to show everything, so
+                    // the check button is never cut off at the bottom.
+                    child: LayoutBuilder(
+                      builder: (context, box) {
+                        return SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(20, 6, 20, 16),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: box.maxHeight > 22 ? box.maxHeight - 22 : 0,
+                            ),
+                            child: IntrinsicHeight(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1202,6 +1211,10 @@ class _MinimalPairsScreenState extends State<MinimalPairsScreen> {
                           _buildCheckAnswerButton(),
                         ],
                       ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
