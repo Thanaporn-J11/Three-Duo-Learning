@@ -7,6 +7,11 @@ import 'rewards_api_service.dart';
 /// Must match COINS_PER_CORRECT in the backend (routes/games.js).
 const int kGameCoinsPerWord = 2;
 
+/// Coins for each right answer of a vocabulary quiz. The server adds them all
+/// when the quiz is submitted (score * 10, routes/exercises.js); the quiz
+/// screen shows them going up while the child answers.
+const int kQuizCoinsPerCorrect = 10;
+
 /// The signed-in child's coin balance, shared by every screen that shows it
 /// (CoinBalanceChip). Games update it right away from the server's reply
 /// when a coin is earned, so the number at the top goes up immediately.

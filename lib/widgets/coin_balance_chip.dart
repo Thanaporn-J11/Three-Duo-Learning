@@ -4,7 +4,11 @@ import '../services/coin_balance.dart';
 
 /// Small "🪙 123" pill for the top bar of game screens.
 class CoinBalanceChip extends StatefulWidget {
-  const CoinBalanceChip({super.key});
+  const CoinBalanceChip({super.key, this.extra = 0});
+
+  /// Coins earned on this screen that the server has not added to the
+  /// balance yet (shown on top of it).
+  final int extra;
 
   /// Fixed width, so a centred title next to it stays centred.
   static const double width = 76;
@@ -55,7 +59,7 @@ class _CoinBalanceChipState extends State<CoinBalanceChip> {
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        balance == null ? '-' : '$balance',
+                        balance == null ? '-' : '${balance + widget.extra}',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w900,

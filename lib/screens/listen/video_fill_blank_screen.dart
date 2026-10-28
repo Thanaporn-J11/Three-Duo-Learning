@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../services/lesson_progress.dart';
 import '../../services/listening_results_service.dart';
+import '../../services/sfx.dart';
 
 // -------------------------------------------------------------
 // 1. Data Models
@@ -1078,6 +1079,7 @@ class _VideoFillBlankExerciseScreenState extends State<VideoFillBlankExerciseScr
       }
     });
 
+    correct ? Sfx.correct() : Sfx.wrong();
     _showFeedbackSheet(correct);
   }
 
@@ -1203,6 +1205,7 @@ class _VideoFillBlankExerciseScreenState extends State<VideoFillBlankExerciseScr
   // หน้าจอแสดงผลสรุปเมื่อทำครบ (ธีมชมพูหวานสดใส 3D)
   // -------------------------------------------------------------
   void _showCompletionDialog() {
+    Sfx.complete();
     final int accuracyPercent = ((correctAnswersCount / widget.lessons.length) * 100).round();
 
     showGeneralDialog(

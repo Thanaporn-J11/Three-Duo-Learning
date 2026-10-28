@@ -12,6 +12,7 @@ import '../../../services/coin_balance.dart';
 import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../services/user_account_preferences.dart';
 import '../../../widgets/parent_pin_prompt.dart';
+import '../../../services/sfx.dart';
 
 final Random _rng = Random();
 T _pick<T>(List<T> l) => l[_rng.nextInt(l.length)];
@@ -2734,6 +2735,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
   }
 
   void _onCorrect() {
+    Sfx.correct();
     final q = _q;
     final slot = _currentQuestionIndex;
     _streak++;
@@ -2784,6 +2786,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
     final q = _q;
     final slot = _currentQuestionIndex;
     _tick?.cancel();
+    Sfx.wrong();
 
     if (option == null) {
       setState(() {
@@ -2871,6 +2874,7 @@ class _GrammarBridgeGameState extends State<GrammarBridgeGame>
   }
 
   void _onLevelClear() {
+    Sfx.complete();
     _finished = true;
     _tick?.cancel();
     _clearResume();

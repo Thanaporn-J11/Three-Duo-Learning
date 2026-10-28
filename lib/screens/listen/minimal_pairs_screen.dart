@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../services/lesson_progress.dart';
 import '../../services/listening_results_service.dart';
+import '../../services/sfx.dart';
 
 class ListeningQuizItem {
   final String soundFocus; // หมวดหมู่เสียงที่กำลังฝึก
@@ -467,6 +468,7 @@ class _MinimalPairsScreenState extends State<MinimalPairsScreen> {
       }
     });
 
+    isRight ? Sfx.correct() : Sfx.wrong();
     _showFeedbackSheet(isRight);
   }
 
@@ -584,6 +586,7 @@ class _MinimalPairsScreenState extends State<MinimalPairsScreen> {
 
   // หน้าจอแสดงผลเมื่อทำครบ 20 ข้อ (ธีมสีส้มทองสดใส 3D)
   void _showCompletionDialog() {
+    Sfx.complete();
     final int accuracyPercent = ((correctAnswersCount / quizList.length) * 100).round();
 
     showGeneralDialog(

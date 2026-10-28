@@ -6,6 +6,7 @@ import '../../widgets/coin_balance_chip.dart';
 import '../../models/exercise_attempt.dart';
 import '../../services/exercise_api_service.dart';
 import 'quiz_result_screen.dart';
+import '../../services/sfx.dart';
 
 class VocabularyQuizScreen extends StatefulWidget {
   final String categoryTitle;
@@ -30,6 +31,11 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
   String? answerError;
   String? submitError;
   final Set<String> answeredQuestionIds = <String>{};
+  // Right answers so far. The server pays kQuizCoinsPerCorrect for each one
+  // when the quiz is submitted; until then they are shown on top of the
+  // balance so the number at the top goes up as the child answers.
+  int _correctCount = 0;
+  bool _coinsCredited = false;
 
   static const _ink = Color(0xFF0D5C9E);
 
@@ -43,6 +49,9 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
           .where((question) => question.feedback != null)
           .map((question) => question.id),
     );
+    _correctCount = widget.attempt.questions
+        .where((question) => question.feedback?.isCorrect == true)
+        .length;
     currentIndex = unansweredIndex >= 0
         ? unansweredIndex
         : widget.attempt.questions.length - 1;
@@ -115,11 +124,14 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
         optionId: optionId,
       );
       if (!mounted) return;
+      final firstTime = !answeredQuestionIds.contains(currentQuestion.id);
       setState(() {
         answerFeedback = response.feedback;
         isSavingAnswer = false;
         answeredQuestionIds.add(currentQuestion.id);
+        if (firstTime && response.feedback.isCorrect) _correctCount++;
       });
+      response.feedback.isCorrect ? Sfx.correct() : Sfx.wrong();
       await _showAnswerFeedback(currentQuestion, response.feedback);
     } on ExerciseApiException catch (error) {
       if (!mounted) return;
@@ -323,6 +335,12 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
     });
     try {
       final result = await ExerciseApiService.submitAttempt(widget.attempt.id);
+      // The server has paid the coins: show them as part of the balance
+      // right away (no jump), then confirm with the server.
+      final shown = CoinBalance.value.value;
+      if (shown != null) CoinBalance.set(shown + result.coinsAwarded);
+      if (mounted) setState(() => _coinsCredited = true);
+      Sfx.complete();
       CoinBalance.refresh(); // coins at the top of the screens
       // Finished: the next quiz of this category starts from the beginning.
       await ExerciseApiService.clearPendingQuiz(widget.attempt.categorySlug);
@@ -669,9 +687,11 @@ class _VocabularyQuizScreenState extends State<VocabularyQuizScreen> {
               ),
             ),
           ),
-          const Align(
+          Align(
             alignment: Alignment.centerRight,
-            child: CoinBalanceChip(),
+            child: CoinBalanceChip(
+              extra: _coinsCredited ? 0 : _correctCount * kQuizCoinsPerCorrect,
+            ),
           ),
           Padding(
             // Room for the back button (left) and the coins (right).

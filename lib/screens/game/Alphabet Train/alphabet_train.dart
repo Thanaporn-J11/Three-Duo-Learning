@@ -7,6 +7,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../../services/alphabet_train_service.dart';
 import '../../../services/coin_balance.dart';
 import '../../../services/guess_progress_service.dart' show GuessCoinResult;
+import '../../../services/sfx.dart';
 
 // ==========================================
 // Helpers & Utilities
@@ -1312,6 +1313,7 @@ class _AlphabetGameScreenState extends State<AlphabetGameScreen>
     if (selectedLetter == _correctAnswer) {
       _busy = true;
       _stopTimer();
+      Sfx.correct();
 
       final coinFuture = AlphabetCoins.submit(selectedLetter);
       _levelCoins.add(coinFuture);
@@ -1356,6 +1358,7 @@ class _AlphabetGameScreenState extends State<AlphabetGameScreen>
       }
     } else {
       // A wrong guess costs 3 seconds, so tapping every letter doesn't pay.
+      Sfx.wrong();
       setState(() {
         _wrongOption = selectedLetter;
         _remainingSeconds = max(0, _remainingSeconds - _wrongPenaltySeconds);
@@ -1398,6 +1401,7 @@ class _AlphabetGameScreenState extends State<AlphabetGameScreen>
     await GameProgress.saveLevelResult(level: _stage, stars: _earnedStars);
     if (!mounted) return;
 
+    Sfx.complete();
     _showLevelCompleteDialog();
   }
 

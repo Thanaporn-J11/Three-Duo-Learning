@@ -6,6 +6,7 @@ import '../../../services/riddle_progress_service.dart';
 import '../../../widgets/coin_balance_chip.dart';
 import 'riddle_data.dart';
 import '../../../services/coin_balance.dart';
+import '../../../services/sfx.dart';
 
 export 'riddle_data.dart' show RiddleQuestion, RiddleCategoryItem;
 
@@ -262,6 +263,7 @@ class _RiddleGamePlayScreenState extends State<RiddleGamePlayScreen>
       });
       final isLast = _queue.length == 1;
       if (isLast) {
+        Sfx.complete();
         RiddleProgress.saveFinished(widget.category.key, _accuracy);
       } else {
         _saveProgress();
@@ -283,6 +285,7 @@ class _RiddleGamePlayScreenState extends State<RiddleGamePlayScreen>
         return result;
       });
 
+      if (!isLast) Sfx.correct();
       _speak(question.spoken, "en-US");
       final action = await _showAnswerFeedbackSheet(
         isCorrect: true,
@@ -294,6 +297,7 @@ class _RiddleGamePlayScreenState extends State<RiddleGamePlayScreen>
       if (!mounted || game != _gameId) return;
       if (action == _SheetAction.next) _nextQuestion();
     } else {
+      Sfx.wrong();
       setState(() {
         _hasError = true;
         _busy = true;

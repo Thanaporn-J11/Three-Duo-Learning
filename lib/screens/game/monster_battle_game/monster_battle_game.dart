@@ -7,6 +7,7 @@ import '../../../services/coin_balance.dart';
 import '../../../services/monster_battle_service.dart';
 import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../widgets/parent_pin_prompt.dart';
+import '../../../services/sfx.dart';
 import 'package:threeduo_learning/screens/profile_screen.dart'
     show AvatarProfile, AvatarPainter, OutfitItem, kSkinTones, kHairColors, kMaleOutfits, kFemaleOutfits;
 
@@ -3334,6 +3335,7 @@ class _BattleScreenState extends State<BattleScreen>
     }
 
     // ตอบผิด
+    Sfx.wrong();
     if (_retryLeft > 0) {
       _retryLeft--;
       HapticFeedback.lightImpact();
@@ -3349,6 +3351,7 @@ class _BattleScreenState extends State<BattleScreen>
 
   // ---------- ผู้เรียนตอบถูกก่อน -> โจมตีมอนสเตอร์ ----------
   void _heroWinsRound(String selected, {bool clash = false}) {
+    Sfx.correct();
     _ticker?.cancel();
     _clashTimer?.cancel();
     _noteLearning(correct: true);
@@ -3471,6 +3474,8 @@ class _BattleScreenState extends State<BattleScreen>
 
   // ---------- มอนสเตอร์ชนะรอบนี้ -> โจมตีผู้เรียนฟรี ----------
   void _monsterWinsRound({required String why, String? selected}) {
+    // A wrong answer already played its sound when it was tapped.
+    if (why != 'wrong') Sfx.wrong();
     _ticker?.cancel();
     _clashTimer?.cancel();
     _noteLearning(correct: false);
@@ -3864,6 +3869,7 @@ class _BattleScreenState extends State<BattleScreen>
   }
 
   void _onLevelCleared() {
+    Sfx.complete();
     _clearResume();
     final int stars = _calcStars();
     monsterProgress.completeLevel(widget.level, stars);

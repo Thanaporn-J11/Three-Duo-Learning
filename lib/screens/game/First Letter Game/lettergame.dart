@@ -12,6 +12,7 @@ import '../../vocabulary/sport_vocabulary_screen.dart' show kSportWords;
 import '../../vocabulary/vehicle_vocabulary_screen.dart' show kVehicleWords;
 import '../../vocabulary/place_vocabulary_screen.dart' show kPlaceWords;
 import '../../vocabulary/vocabulary_lesson_screen.dart' show VocabularyItem;
+import '../../../services/sfx.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -1805,6 +1806,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
     final bool isCorrect = letter == q['correctLetter'];
     final bool isLast = currentIndex >= questions.length - 1;
     final Color tone = isCorrect ? kGreen : kCoral;
+    isCorrect ? Sfx.correct() : Sfx.wrong();
 
     if (isCorrect) setState(() => score++);
 
@@ -1999,6 +2001,7 @@ class _FirstLetterGameState extends State<FirstLetterGame> {
     // Wait for the last coin replies, so the total below is complete.
     await Future.wait(List.of(_coinFutures));
     if (!mounted) return;
+    if (passed) Sfx.complete();
 
     showDialog(
       context: context,

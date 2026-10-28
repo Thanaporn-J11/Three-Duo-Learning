@@ -7,6 +7,7 @@ import '../../../services/word_search_progress_service.dart';
 import '../../../widgets/coin_balance_chip.dart';
 import 'word_search_data.dart';
 import '../../../services/coin_balance.dart';
+import '../../../services/sfx.dart';
 
 export 'word_search_data.dart' show WordSearchTarget, WordSearchCategoryItem;
 
@@ -486,7 +487,10 @@ class _WordSearchPlayScreenState extends State<WordSearchPlayScreen> {
       final tried = _draggedIndices.length;
       setState(() => _draggedIndices.clear());
       // A tap on one letter is not a try; a longer wrong line gets a message.
-      if (tried >= 2) _showFeedback('ยังไม่ใช่ ลองใหม่นะ', const Color(0xFFE11D48));
+      if (tried >= 2) {
+        Sfx.wrong();
+        _showFeedback('ยังไม่ใช่ ลองใหม่นะ', const Color(0xFFE11D48));
+      }
       return;
     }
     _onWordFound(match);
@@ -521,6 +525,11 @@ class _WordSearchPlayScreenState extends State<WordSearchPlayScreen> {
       revealed ? 'เฉลย : ${target.word}' : 'เยี่ยม ! ${target.word}',
       revealed ? const Color(0xFF7C3AED) : const Color(0xFF16A34A),
     );
+    if (_found.length >= _total) {
+      Sfx.complete();
+    } else if (!revealed) {
+      Sfx.correct();
+    }
     _speakWord(target);
 
     // 1 coin per word per day (the server decides); none for "เฉลย".

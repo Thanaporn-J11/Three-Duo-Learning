@@ -492,7 +492,18 @@ class _TranslationHistoryScreenState
             const SizedBox(height: 28),
 
             // 4. ปุ่มกดเริ่มแปล (ช่วยถ่วงน้ำหนักส่วนล่าง ไม่ให้โล่งลอย)
-            Material(
+            DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: _primaryBlue.withValues(alpha: 0.28),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Material(
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -502,13 +513,6 @@ class _TranslationHistoryScreenState
                   decoration: BoxDecoration(
                     color: _primaryBlue,
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: _primaryBlue.withValues(alpha: 0.28),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -527,7 +531,7 @@ class _TranslationHistoryScreenState
                   ),
                 ),
               ),
-            ),
+            )),
           ],
         ),
       ),

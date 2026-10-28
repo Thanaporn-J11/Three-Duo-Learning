@@ -11,6 +11,7 @@ import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../services/market_service.dart';
 import '../../../services/user_account_preferences.dart';
 import '../../../widgets/parent_pin_prompt.dart';
+import '../../../services/sfx.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -2585,6 +2586,7 @@ class _MarketGameScreenState extends State<MarketGameScreen>
   }
 
   void _onOrderSuccess() {
+    Sfx.correct();
     _patienceTimer?.cancel();
     _orderActive = false;
     _successes++;
@@ -2637,6 +2639,7 @@ class _MarketGameScreenState extends State<MarketGameScreen>
   }
 
   void _onOrderMistake() {
+    Sfx.wrong();
     _mistakes++;
     setState(() {
       _reaction = '🤔';
@@ -2655,6 +2658,7 @@ class _MarketGameScreenState extends State<MarketGameScreen>
   }
 
   void _onPatienceTimeout() {
+    Sfx.wrong();
     _orderActive = false;
     setState(() {
       _reaction = '😠';
@@ -2680,6 +2684,7 @@ class _MarketGameScreenState extends State<MarketGameScreen>
     final passed = stars > 0;
     if (passed) {
       gameProgress.completeLevel(widget.level, stars);
+      Sfx.complete();
     } else {
     }
     _showResult(stars, passed);

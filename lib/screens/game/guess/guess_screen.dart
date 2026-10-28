@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../../services/guess_progress_service.dart';
 import 'guess_data.dart';
 import '../../../services/coin_balance.dart';
+import '../../../services/sfx.dart';
 
 /// One question of a round: the picture's word + 4 answer choices.
 class GuessQuestion {
@@ -352,6 +353,7 @@ class _GuessScreenState extends State<GuessScreen> {
       if (correct) correctCount++;
     });
 
+    correct ? Sfx.correct() : Sfx.wrong();
     _speakWord(currentQ.correctAnswer);
 
     // Correct: ask the server for the coin (it checks the answer itself).
@@ -624,6 +626,7 @@ class _GuessScreenState extends State<GuessScreen> {
       setState(() {
         isGameCompleted = true;
       });
+      Sfx.complete();
     }
   }
 

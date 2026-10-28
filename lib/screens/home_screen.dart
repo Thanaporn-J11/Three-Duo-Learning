@@ -9,6 +9,8 @@ import 'translate/translate_screen.dart';
 import 'game/game_screen.dart';
 import 'phonics/phonics_category_screen.dart'; // แก้ไข: ชี้ไปยังหน้าหมวดหมู่ Phonics
 import 'listen/listen_screen.dart';
+import '../services/sfx.dart';
+import '../widgets/music_scope.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +21,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Sfx.welcomeOnce();
+  }
 
   final items = const [
     {
@@ -113,7 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      MusicScope(child: _buildScreen(context));
+
+  Widget _buildScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8EF),
       appBar: AppBar(
@@ -173,7 +184,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     Colors.white,
                   );
 
-                  return Material(
+                  // The shadow sits outside the Material: inside it, the shadow
+                  // was clipped to the card's rectangle (faint square corners).
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withValues(alpha: .16),
+                          blurRadius: 12,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Material(
                     color: paleColor,
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
@@ -191,13 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: color.withValues(alpha: .34),
                             width: 1.2,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withValues(alpha: .16),
-                              blurRadius: 12,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
                         ),
                         child: Stack(
                           children: [
@@ -284,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  );
+                  ));
                 },
               ),
             ),

@@ -6,6 +6,7 @@ import '../../../services/animal_sound_service.dart';
 import '../../../services/coin_balance.dart';
 import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../services/listening_results_service.dart';
+import '../../../services/sfx.dart';
 
 class AnimalSound extends StatefulWidget {
   const AnimalSound({super.key});
@@ -281,6 +282,7 @@ class _AnimalSoundState extends State<AnimalSound>
         (correctCount * 100 / questions.length).round().clamp(0, 100).toInt(),
       );
     }
+    Sfx.complete();
     _showCompletionDialog();
   }
 
@@ -355,6 +357,7 @@ class _AnimalSoundState extends State<AnimalSound>
 
     final String correctAnswer = questions[currentIndex]['correctAnswer'];
     final bool isCorrect = selected == correctAnswer;
+    isCorrect ? Sfx.correct() : Sfx.wrong();
 
     Future<GuessCoinResult>? coinFuture;
     if (isCorrect) {

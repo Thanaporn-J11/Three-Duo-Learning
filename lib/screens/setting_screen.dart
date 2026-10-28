@@ -17,6 +17,8 @@ import 'setting/security_screen.dart';
 import 'setting/about_screen.dart';
 import 'welcome_screen.dart';
 import '../config/api_config.dart';
+import '../services/sfx.dart';
+import '../widgets/music_scope.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -1096,7 +1098,10 @@ class _SettingScreenState extends State<SettingScreen> {
   // MAIN BUILD
   // ============================================================
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      MusicScope(child: _buildScreen(context));
+
+  Widget _buildScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: _bg,
 
@@ -1253,6 +1258,34 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               const SizedBox(height: 14),
               _buildNotificationCard(),
+              const SizedBox(height: 14),
+              _buildSoundToggleCard(
+                icon: Icons.volume_up_rounded,
+                color: const Color(0xFF8B5CF6),
+                title: "เสียงเอฟเฟกต์",
+                subtitle: Sfx.soundEnabled
+                    ? "เปิดอยู่ • เสียงกดปุ่ม ตอบถูก/ผิด และรางวัล"
+                    : "ปิดอยู่",
+                value: Sfx.soundEnabled,
+                onChanged: (v) {
+                  Sfx.setSoundEnabled(v);
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 14),
+              _buildSoundToggleCard(
+                icon: Icons.music_note_rounded,
+                color: const Color(0xFFEC4899),
+                title: "เพลงพื้นหลัง",
+                subtitle: Sfx.musicEnabled
+                    ? "เปิดอยู่ • เพลงเบา ๆ ในหน้าหลัก"
+                    : "ปิดอยู่",
+                value: Sfx.musicEnabled,
+                onChanged: (v) {
+                  Sfx.setMusicEnabled(v);
+                  setState(() {});
+                },
+              ),
               const SizedBox(height: 14),
               _buildSettingTile(
                 icon: Icons.info_rounded,
@@ -1583,18 +1616,20 @@ Widget _sectionLabel(String text, [IconData? icon]) {
   );
 }
 
-  BoxDecoration _cardDecoration(Color color) {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: color.withValues(alpha: 0.28), width: 2.5),
-      boxShadow: [
+  List<BoxShadow> _cardShadow(Color color) => [
         BoxShadow(
           color: color.withValues(alpha: 0.14),
           blurRadius: 14,
           offset: const Offset(0, 7),
         ),
-      ],
+      ];
+
+  BoxDecoration _cardDecoration(Color color, {bool shadow = true}) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: color.withValues(alpha: 0.28), width: 2.5),
+      boxShadow: shadow ? _cardShadow(color) : null,
     );
   }
 
@@ -1613,7 +1648,31 @@ Widget _sectionLabel(String text, [IconData? icon]) {
     );
   }
 
+  // The shadow sits outside the Material: inside it, the shadow was clipped to
+  // the card's rectangle and showed up as faint square corners.
   Widget _buildSettingTile({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: _cardShadow(color),
+      ),
+      child: _settingTileBody(
+        icon: icon,
+        color: color,
+        title: title,
+        subtitle: subtitle,
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _settingTileBody({
     required IconData icon,
     required Color color,
     required String title,
@@ -1627,7 +1686,7 @@ Widget _sectionLabel(String text, [IconData? icon]) {
         borderRadius: BorderRadius.circular(24),
         child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: _cardDecoration(color),
+          decoration: _cardDecoration(color, shadow: false),
           child: Row(
             children: [
               _iconBubble(icon, color),
@@ -1715,6 +1774,55 @@ Widget _sectionLabel(String text, [IconData? icon]) {
             value: isNotificationEnabled,
             activeColor: const Color(0xFF22C55E),
             onChanged: _toggleNotification,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoundToggleCard({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: _cardDecoration(color),
+      child: Row(
+        children: [
+          _iconBubble(icon, color),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: _ink,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade500,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: value,
+            activeColor: const Color(0xFF22C55E),
+            onChanged: onChanged,
           ),
         ],
       ),

@@ -8,6 +8,7 @@ import '../../../services/guess_progress_service.dart' show GuessCoinResult;
 import '../../../services/shadow_progress_service.dart';
 import 'shadow_match_data.dart';
 import '../../../services/coin_balance.dart';
+import '../../../services/sfx.dart';
 
 class ShadowMatchScreen extends StatefulWidget {
   final ShadowCategory category;
@@ -194,6 +195,7 @@ class _ShadowMatchScreenState extends State<ShadowMatchScreen> {
 
     if (realId != shadowId) {
       // Wrong pair: count it, show it briefly, then let them try again.
+      Sfx.wrong();
       setState(() {
         _mistakes++;
         _busy = true;
@@ -210,6 +212,7 @@ class _ShadowMatchScreenState extends State<ShadowMatchScreen> {
     }
 
     final matchedItem = _currentCategory.items.firstWhere((a) => a.id == realId);
+    Sfx.correct();
     setState(() {
       _matchedStatus[realId] = true;
       _matches++;
@@ -241,6 +244,7 @@ class _ShadowMatchScreenState extends State<ShadowMatchScreen> {
     if (stageDone) {
       await Future.delayed(const Duration(milliseconds: 350));
       if (!mounted || game != _gameId) return;
+      Sfx.complete();
       if (_roundIndex < _totalRounds - 1) {
         setState(() => _roundIndex++);
         _startNewRound();

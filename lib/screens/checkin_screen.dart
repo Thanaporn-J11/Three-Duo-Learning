@@ -15,6 +15,7 @@ import 'home_screen.dart';
 import 'profile_screen.dart';
 import 'setting_screen.dart';
 import '../config/api_config.dart';
+import '../services/sfx.dart';
 
 class Milestone {
   final int days;
@@ -1845,6 +1846,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
     if (result.success) {
       setState(() {});
+      Sfx.reward();
       _toast(
         'เช็คอินสำเร็จแล้ว ! ${result.newStreak} วันติดต่อกัน',
         Icons.stars_rounded,
@@ -1872,10 +1874,12 @@ class _CheckInScreenState extends State<CheckInScreen> {
         );
         return;
       }
+      Sfx.correct();
       setState(() {
         _quizMsg = null;
       });
     } else {
+      Sfx.wrong();
       setState(() {
         _wrongPicks.add(picked.word);
         _quizMsg = 'ลองอีกครั้งนะ สู้ๆ! 💪';
